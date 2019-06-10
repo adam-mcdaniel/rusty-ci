@@ -1,0 +1,22 @@
+[package]
+name = "rusty-ci"
+version = "0.1.0"
+authors = ["adam-mcdaniel <adam.mcdaniel17@gmail.com>"]
+edition = "2018"
+description = "A tool to generate buildbot projects from a YAML file"
+
+
+# Added bin target
+[[bin]]
+name = "rusty-ci"
+path = "src/bin.rs"
+
+
+# Build step tests
+[[test]]
+name = "step"
+path = "tests/step.rs"
+
+
+[dependencies]
+rusty-yaml="0.1.2"

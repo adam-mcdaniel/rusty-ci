@@ -1,0 +1,101 @@
+master:
+  repo:
+    - https://github.com/adam-mcdaniel/dragon
+  title:
+    - ASGarD CI
+  title-url:
+    - "https://code.ornl.gov/asgard/asgard"
+  webserver-ip:
+    - 10.94.71.124
+  poll-interval:
+    - 5
+
+workers:
+  dragon-vm-worker:
+    basedir:
+      - "/root/ci_bot/vm-worker"
+    masterhost:
+      - localhost
+    password:
+      - pass
+
+  IT_WORKED:
+    basedir:
+      - "/root/ci_bot/test-worker"
+    masterhost:
+      - localhost
+    password:
+      - pass
+
+  dragon-compiler-worker:
+    basedir:
+      - "/root/ci_bot/compiler-worker"
+    masterhost:
+      - localhost
+    password:
+      - pass
+
+schedulers:
+  vm-change:
+    branch:
+      - ".*"
+    triggers:
+      - '.*\.cpp'
+      - '.*\.hpp'
+    builders:
+      - dragon-vm-build
+
+  compiler-change:
+    branch:
+      - master
+    triggers:
+      - '.*\.py'
+    builders:
+      - dragon-compiler-build
+      - dragon-testing
+
+builders:
+  dragon-vm-build:
+    repo:
+      url:
+        - https://github.com/adam-mcdaniel/dragon
+      branch:
+        - master
+
+    workers:
+      - dragon-vm-worker
+
+    script:
+      - rm -Rf build
+      - mkdir build
+      - cd build
+      - cmake ..
+      - make
+
+  dragon-compiler-build:
+    repo:
+      url:
+        - https://github.com/adam-mcdaniel/dragon
+      branch:
+        - master
+
+    workers:
+      - dragon-compiler-worker
+
+    script:
+      - python3 -m pip install -U lark-parser
+      - python3 compiler/main.py -f examples/script.dn
+
+  dragon-testing:
+    repo:
+      url:
+        - https://github.com/adam-mcdaniel/dragon
+      branch:
+        - master
+
+    workers:
+      - IT_WORKED
+
+    script:
+      - python3 -m pip install -U lark-parser
+      - python3 compiler/main.py -f examples/script.dn
