@@ -5,8 +5,7 @@ use std::fmt::{Display, Error, Formatter};
 pub enum Step {
     // Represents a git clone operation
     GitClone {
-        url: String,    // The repo to clone
-        branch: String, // The branch to clone
+        url: String, // The repo to clone
     },
 
     // Represents a command line command
@@ -28,10 +27,11 @@ impl Step {
     }
 
     // Construct a git clone step
-    pub fn git_clone<S: Display>(url: S, branch: S) -> Self {
+    // pub fn git_clone<S: Display>(url: S, branch: S) -> Self {
+    pub fn git_clone<S: Display>(url: S) -> Self {
         Step::GitClone {
             url: url.to_string(),
-            branch: branch.to_string(),
+            // branch: branch.to_string(),
         }
     }
 }
@@ -42,8 +42,8 @@ impl Display for Step {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         match self {
             // Used by buildbot to get the updated repository
-            Step::GitClone { url, branch } => write!(f,
-                "steps.Git(repourl={}, mode=\"incremental\", branch=\"{}\", method=\"clobber\", submodules=True)", url, branch),
+            Step::GitClone { url } => write!(f,
+                "steps.Git(repourl={}, mode=\"incremental\", branch=\"master\", method=\"clobber\", submodules=True)", url),
 
             // Command with provided work directory
             Step::Command {command, workdir: Some(workdir)} => write!(
