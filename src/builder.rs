@@ -74,34 +74,15 @@ impl From<Yaml> for Builder {
         }
 
 
-        for sub_section in ["url", "branch"].iter() {
-            assert!(
-                yaml.get_section("repo").has_section(sub_section),
-                format!("{} section not specified for {} builder", sub_section, name)
-            )
-        }
-
-
         let mut steps: Vec<Step> = vec![];
         let mut workdir = PathBuf::new();
         workdir.push(START_DIR);
         let mut workers: Vec<String> = vec![];
 
+        let url: String =
+            yaml.get_section("repo").into_iter().collect::<Vec<Yaml>>()[0].to_string();
 
-        let url: String = yaml
-            .get_section("repo")
-            .get_section("url")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-        let branch: String = yaml
-            .get_section("repo")
-            .get_section("branch")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-
-        steps.push(Step::git_clone(url, branch));
+        steps.push(Step::git_clone(url));
 
 
         for instruction in yaml.get_section("script") {
