@@ -1,6 +1,6 @@
 # rusty-ci
 
-A tool to generate buildbot projects from a YAML file.
+A tool to generate buildbot projects from a YAML file
 
 ## Usage
 
