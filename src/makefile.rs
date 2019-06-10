@@ -42,7 +42,7 @@ all: start
 
 build: install_deps
 \t. venv/bin/activate; buildbot create-master $(masterdir);
-\tpython -c \"print(\\\"{master_setup}\\\")\" > $(masterdir)/master.cfg
+\tpython3 -c \"print(\\\"{master_setup}\\\")\" > $(masterdir)/master.cfg
 \t{workers_setup}
 
 start: build
@@ -78,7 +78,7 @@ install_deps:
                     "
 \tmkdir -p {worker_dir}
 \t-. venv/bin/activate; buildbot-worker create-worker {worker_dir} localhost {worker_dir} pass
-\tpython -c \"print(\\\"{script}\\\")\" > {worker_dir}/buildbot.tac",
+\tpython3 -c \"print(\\\"{script}\\\")\" > {worker_dir}/buildbot.tac",
                     worker_dir = w.get_dir(),
                     script = w.to_string().replace("\n", "\\n").replace("\"", "'")
                 ))
