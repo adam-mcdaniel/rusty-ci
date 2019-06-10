@@ -38,26 +38,27 @@ workerdirs := {worker_dirs}
 masterdir := \"master\"
 
 
-all: install start
+all: start
 
-start:
-\tbuildbot stop master
-\tbuildbot reconfig master
-\tbuildbot cleanupdb master
-\t. venv/bin/activate; buildbot start master;
+build: install_deps
+\t. venv/bin/activate; buildbot create-master $(masterdir);
+\tpython -c \"print(\\\"{master_setup}\\\")\" > $(masterdir)/master.cfg
+\t{workers_setup}
+
+start: build
+\t. venv/bin/activate; buildbot stop master; buildbot reconfig master; buildbot cleanupdb master; buildbot start master;
 \t-. venv/bin/activate; $(foreach dir,$(workerdirs),buildbot-worker restart $(dir);)
 
 
-install:
-\tsudo apt-get install python3-dev
-\tsudo apt-get install python3-pip
+install_deps:
+\tsudo apt-get install python3-dev -y
+\tsudo apt-get install python3-pip -y
+\tsudo apt-get install python3-venv -y
 
 \tpython3 -m venv venv
 \t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install 'buildbot[bundle]';
 \t. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial
-\t. venv/bin/activate; buildbot create-master $(masterdir);
-\techo \"{master_setup}\" > $(masterdir)/master.cfg
-\t{workers_setup}
+
 ",
             master_setup = self
                 .master
@@ -77,7 +78,7 @@ install:
                     "
 \tmkdir -p {worker_dir}
 \t-. venv/bin/activate; buildbot-worker create-worker {worker_dir} localhost {worker_dir} pass
-\techo \"{script}\" > {worker_dir}/buildbot.tac",
+\tpython -c \"print(\\\"{script}\\\")\" > {worker_dir}/buildbot.tac",
                     worker_dir = w.get_dir(),
                     script = w.to_string().replace("\n", "\\n").replace("\"", "'")
                 ))

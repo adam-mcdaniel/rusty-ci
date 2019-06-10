@@ -2,18 +2,18 @@ master:
   repo:
     - https://github.com/adam-mcdaniel/dragon
   title:
-    - ASGarD CI
+    - Dragon CI
   title-url:
-    - "https://code.ornl.gov/asgard/asgard"
+    - "https://github.com/adam-mcdaniel/dragon"
   webserver-ip:
-    - 10.94.71.124
+    - localhost
   poll-interval:
     - 5
 
 workers:
   dragon-vm-worker:
     basedir:
-      - "/root/ci_bot/vm-worker"
+      - "/home/adam/Desktop/ASGarD/cons-buildbot/examples/vm-worker"
     masterhost:
       - localhost
     password:
@@ -21,7 +21,7 @@ workers:
 
   IT_WORKED:
     basedir:
-      - "/root/ci_bot/test-worker"
+      - "/home/adam/Desktop/ASGarD/cons-buildbot/examples/test-worker"
     masterhost:
       - localhost
     password:
@@ -29,7 +29,7 @@ workers:
 
   dragon-compiler-worker:
     basedir:
-      - "/root/ci_bot/compiler-worker"
+      - "/home/adam/Desktop/ASGarD/cons-buildbot/examples/compiler-worker"
     masterhost:
       - localhost
     password:
@@ -58,7 +58,7 @@ builders:
   dragon-vm-build:
     repo:
       url:
-        - https://github.com/adam-mcdaniel/dragon
+        - "https://github.com/adam-mcdaniel/dragon"
       branch:
         - master
 
