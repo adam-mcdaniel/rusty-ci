@@ -57,10 +57,7 @@ schedulers:
 builders:
   dragon-vm-build:
     repo:
-      url:
-        - "https://github.com/adam-mcdaniel/dragon"
-      branch:
-        - master
+      - "https://github.com/adam-mcdaniel/dragon"
 
     workers:
       - dragon-vm-worker
@@ -74,10 +71,7 @@ builders:
 
   dragon-compiler-build:
     repo:
-      url:
-        - https://github.com/adam-mcdaniel/dragon
-      branch:
-        - master
+      - https://github.com/adam-mcdaniel/dragon
 
     workers:
       - dragon-compiler-worker
@@ -88,10 +82,7 @@ builders:
 
   dragon-testing:
     repo:
-      url:
-        - https://github.com/adam-mcdaniel/dragon
-      branch:
-        - master
+      - https://github.com/adam-mcdaniel/dragon
 
     workers:
       - IT_WORKED
