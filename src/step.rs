@@ -21,7 +21,7 @@ impl Step {
     // Construct a command line step
     pub fn command<S: Display>(command: S, workdir: Option<S>) -> Self {
         Step::Command {
-            command: command.to_string(),
+            command: command.to_string().trim().trim_start_matches("\"").trim_end_matches("\"").to_string(),
             workdir: workdir.and_then(|s| Some(s.to_string())),
         }
     }
@@ -30,7 +30,7 @@ impl Step {
     // pub fn git_clone<S: Display>(url: S, branch: S) -> Self {
     pub fn git_clone<S: Display>(url: S) -> Self {
         Step::GitClone {
-            url: url.to_string(),
+            url: url.to_string().trim().trim_start_matches("\"").trim_end_matches("\"").to_string(),
             // branch: branch.to_string(),
         }
     }

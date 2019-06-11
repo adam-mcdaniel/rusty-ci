@@ -31,8 +31,8 @@ impl Scheduler {
         Self {
             name: name.to_string(),
             branch: branch.to_string(),
-            file_triggers: file_triggers.iter().map(|s| s.to_string()).collect(),
-            buildernames: buildernames.iter().map(|s| s.to_string()).collect(),
+            file_triggers: file_triggers.iter().map(|s| s.to_string().trim().trim_start_matches("\"").trim_end_matches("\"").to_string()).collect(),
+            buildernames: buildernames.iter().map(|s| s.to_string().trim().trim_start_matches("\"").trim_end_matches("\"").to_string()).collect(),
         }
     }
 }
