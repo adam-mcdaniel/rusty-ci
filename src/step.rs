@@ -43,7 +43,7 @@ impl Display for Step {
         match self {
             // Used by buildbot to get the updated repository
             Step::GitClone { url } => write!(f,
-                "steps.Git(repourl={}, mode=\"incremental\", branch=\"master\", method=\"clobber\", submodules=True)", url),
+                "steps.Git(repourl=\"{}\", mode=\"incremental\", branch=\"master\", method=\"clobber\", submodules=True)", url),
 
             // Command with provided work directory
             Step::Command {command, workdir: Some(workdir)} => write!(
