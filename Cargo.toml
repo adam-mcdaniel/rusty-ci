@@ -1,6 +1,6 @@
 [package]
 name = "rusty-ci"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["adam-mcdaniel <adam.mcdaniel17@gmail.com>"]
 edition = "2018"
 license-file = "LICENSE"
@@ -22,4 +22,4 @@ path = "tests/step.rs"
 
 
 [dependencies]
-rusty-yaml="0.2.0"
+rusty-yaml="0.2.1"
