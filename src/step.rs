@@ -1,6 +1,7 @@
 use std::fmt::{Display, Error, Formatter};
 
-// This describes a step run by a builder in buildbot
+/// This describes a step executed by a builder in buildbot
+/// This is used by the Builder struct to construct the Builder config file
 #[derive(Clone, Debug)]
 pub enum Step {
     // Represents a git clone operation

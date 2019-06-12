@@ -1,3 +1,4 @@
+use std::process::exit;
 use crate::{Builder, Scheduler, Worker};
 
 use rusty_yaml::Yaml;
@@ -42,12 +43,14 @@ impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
 
         for section in ["master", "workers", "builders", "schedulers"].iter() {
-            assert!(
-                yaml.has_section(section),
-                format!("{} section not declared", section)
-            )
+            if !yaml.has_section(section) {
+                println!("There was an error creating the master configuration file: {} section was not declared", section);
+                exit(1);
+            }
         }
 
+        let master = yaml.get_section("master").unwrap();
+        
         for section in [
             "title",
             "title-url",
@@ -57,62 +60,33 @@ impl From<Yaml> for MasterConfig {
         ]
         .iter()
         {
-            assert!(
-                yaml.get_section("master").has_section(section),
-                format!("{} section not specified for master", section)
-            )
+            if !master.has_section(section) {
+                println!("There was an error creating the master configuration file: The '{}' section is not specified for master", section);
+                exit(1);
+            }
         }
 
+
         let mut schedulers = vec![];
-        for scheduler in yaml.get_section("schedulers") {
+        for scheduler in yaml.get_section("schedulers").unwrap() {
             schedulers.push(Scheduler::from(scheduler));
         }
 
         let mut builders = vec![];
-        for builder in yaml.get_section("builders") {
+        for builder in yaml.get_section("builders").unwrap() {
             builders.push(Builder::from(builder));
         }
 
         let mut workers = vec![];
-        for worker in yaml.get_section("workers") {
+        for worker in yaml.get_section("workers").unwrap() {
             workers.push(Worker::from(worker));
         }
 
-
-        let title: String = yaml
-            .get_section("master")
-            .get_section("title")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-
-        let title_url: String = yaml
-            .get_section("master")
-            .get_section("title-url")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-
-        let git_repo: String = yaml
-            .get_section("master")
-            .get_section("repo")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-
-        let webserver_ip: String = yaml
-            .get_section("master")
-            .get_section("webserver-ip")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-
-        let poll_interval: String = yaml
-            .get_section("master")
-            .get_section("poll-interval")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
+        let title: String = master.get_section("title").unwrap().nth(0).unwrap().to_string();
+        let title_url: String = master.get_section("title-url").unwrap().nth(0).unwrap().to_string();
+        let git_repo: String = master.get_section("repo").unwrap().nth(0).unwrap().to_string();
+        let webserver_ip: String = master.get_section("webserver-ip").unwrap().nth(0).unwrap().to_string();
+        let poll_interval: String = master.get_section("poll-interval").unwrap().nth(0).unwrap().to_string();
 
         Self::new(
             title,
@@ -199,14 +173,12 @@ c['db'] = {{
                 .collect::<Vec<String>>()
                 .join(", "),
             poll_interval = self.poll_interval,
-            schedulers = self
-                .schedulers
+            schedulers = self.schedulers
                 .iter()
                 .map(|s| s.to_string())
                 .collect::<Vec<String>>()
                 .join("\n\n"),
-            builders = self
-                .builders
+            builders = self.builders
                 .iter()
                 .map(|b| b.to_string())
                 .collect::<Vec<String>>()

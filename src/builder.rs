@@ -1,3 +1,4 @@
+use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
 use crate::step::Step;
@@ -67,10 +68,10 @@ impl From<Yaml> for Builder {
         let name = yaml.get_name();
 
         for section in ["workers", "script", "repo"].iter() {
-            assert!(
-                yaml.has_section(section),
-                format!("{} section not specified for {} builder", section, name)
-            )
+            if !yaml.has_section(section) {
+                println!("There was an error creating a scheduler: {} section not specified for {} builder", section, name);
+                exit(1);
+            }
         }
 
 
@@ -80,12 +81,12 @@ impl From<Yaml> for Builder {
         let mut workers: Vec<String> = vec![];
 
         let url: String =
-            yaml.get_section("repo").into_iter().collect::<Vec<Yaml>>()[0].to_string();
+            yaml.get_section("repo").unwrap().nth(0).unwrap().to_string();
 
         steps.push(Step::git_clone(url));
 
 
-        for instruction in yaml.get_section("script") {
+        for instruction in yaml.get_section("script").unwrap() {
             match instruction
                 .to_string()
                 .split_whitespace()
@@ -102,7 +103,7 @@ impl From<Yaml> for Builder {
             };
         }
 
-        for worker in yaml.get_section("workers") {
+        for worker in yaml.get_section("workers").unwrap() {
             workers.push(worker.to_string());
         }
 

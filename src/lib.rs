@@ -13,5 +13,8 @@ pub use worker::Worker;
 pub mod masterconfig;
 pub use masterconfig::MasterConfig;
 
+pub mod buildsystem;
+pub use buildsystem::*;
+
 pub mod makefile;
 pub use makefile::Makefile;

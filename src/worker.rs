@@ -1,7 +1,14 @@
 use rusty_yaml::Yaml;
+use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
-
+/// This struct holds the information that is used to build the worker `buildbot.tac` file
+/// Each worker has:
+/// - a name that is used by the builders to assign work,
+/// - a password that the master uses to access the worker
+/// - a working directory name that the bot will be created in
+/// - the host address of the master bot, the ip
+/// - the port of the master bot
 pub struct Worker {
     name: String,
     dir: String,
@@ -12,58 +19,61 @@ pub struct Worker {
 
 
 impl Worker {
-    fn new<S: ToString>(name: S, dir: S, password: S, masterhost: S) -> Self {
+    fn new<S: ToString>(name: S, dir: S, password: S, masterhost: S, masterport: S) -> Self {
         Self {
             name: name.to_string(),
             dir: dir.to_string(),
             password: password.to_string(),
             masterhost: masterhost.to_string(),
-            masterport: String::from("9989"),
+            masterport: masterport.to_string(),
         }
     }
 
+    /// Retrieves the name field of the struct
     pub fn get_name(&self) -> String {
         self.name.clone()
     }
 
+    /// Retrieves the working dir field of the struct
     pub fn get_dir(&self) -> String {
         self.dir.clone()
     }
 
+    /// Retrieves the password field of the struct
     pub fn get_password(&self) -> String {
         self.password.clone()
     }
 }
 
-
+/// Convert a Yaml section to a Worker
+///
+/// The worker requires that the yaml section has the following subsections:
+/// `masterhost`, `masterport`, `password`, and `basedir`.
+/// Masterhost holds the host address of the master bot,
+/// Masterport hold the host port of the master bot.
+/// Basedir holds the path of the working directory of the bot
 impl From<Yaml> for Worker {
     fn from(yaml: Yaml) -> Self {
         let name = yaml.get_name();
 
-        for section in ["masterhost", "basedir", "password"].iter() {
-            assert!(
-                yaml.has_section(section),
-                format!("{} section not specified for {} worker", section, name)
-            )
+        // Assert
+        for section in ["masterhost", "masterport", "basedir", "password"].iter() {
+            if !yaml.has_section(section) {
+                println!("There was an error creating a worker: The '{}' section is not specified for '{}'", section, name);
+                exit(1);
+            }
+            // assert!(
+            //     yaml.has_section(section),
+            //     format!("{} section not specified for {} worker", section, name)
+            // )
         }
 
-        let basedir = yaml
-            .get_section("basedir")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-        let password = yaml
-            .get_section("password")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
-        let masterhost = yaml
-            .get_section("masterhost")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
+        let basedir = yaml.get_section("basedir").unwrap().nth(0).unwrap().to_string();
+        let password = yaml.get_section("password").unwrap().nth(0).unwrap().to_string();
+        let masterhost = yaml.get_section("masterhost").unwrap().nth(0).unwrap().to_string();
+        let masterport = yaml.get_section("masterport").unwrap().nth(0).unwrap().to_string();
 
-        Self::new(name, basedir, password, masterhost)
+        Self::new(name, basedir, password, masterhost, masterport)
     }
 }
 
