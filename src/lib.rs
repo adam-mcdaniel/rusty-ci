@@ -1,20 +1,16 @@
-pub mod step;
-pub use step::Step;
+#[macro_use]
+pub mod helper;
+pub use helper::{File, Cmd};
 
-pub mod builder;
-pub use builder::Builder;
 
-pub mod scheduler;
-pub use scheduler::Scheduler;
-
-pub mod worker;
-pub use worker::Worker;
-
-pub mod masterconfig;
-pub use masterconfig::MasterConfig;
+pub mod buildbot;
+pub use buildbot::{
+    Worker,
+    MasterConfig,
+    Scheduler,
+    Builder,
+    Step,
+};
 
 pub mod buildsystem;
 pub use buildsystem::*;
-
-pub mod makefile;
-pub use makefile::Makefile;

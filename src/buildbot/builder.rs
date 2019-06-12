@@ -1,7 +1,7 @@
 use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
-use crate::step::Step;
+use crate::Step;
 use rusty_yaml::Yaml;
 use std::path::PathBuf;
 

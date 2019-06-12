@@ -122,7 +122,9 @@ s = Worker(buildmaster_host, port, workername, passwd, basedir,
            keepalive, umask=umask, maxdelay=maxdelay,
            numcpus=numcpus, allow_shutdown=allow_shutdown,
            maxRetries=maxretries)
-s.setServiceParent(application)"#,
+s.setServiceParent(application)
+
+"#,
             name = self.name,
             basedir = self.dir,
             password = self.password,

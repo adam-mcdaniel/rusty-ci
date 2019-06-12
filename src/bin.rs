@@ -1,15 +1,18 @@
-// use rusty_ci::Makefile;
-use rusty_ci::{BuildSystem, DefaultBuildSystem, BashBuildSystem, MasterConfig, Worker};
+#[macro_use]
+extern crate rusty_ci;
+
+use rusty_ci::File;
+use rusty_ci::{BuildSystem, BashBuildSystem, MasterConfig, Worker};
 use rusty_yaml::Yaml;
-use std::io::{self, Read};
-use std::fs::File;
 use std::process::exit;
 use clap::{clap_app, crate_version, AppSettings};
 
 
 fn install(b: impl BuildSystem) {
     match b.install() {
-        Ok(_) => {},
+        Ok(_) => {
+            println!("Successfully finished install");
+        },
         Err(e) => {
             println!("There was a problem while installing: {}", e);
         }
@@ -22,7 +25,7 @@ fn build(b: impl BuildSystem, yaml: Yaml) {
     let workers_section = match yaml.get_section("workers") {
         Ok(w) => w,
         Err(e) => {
-            println!("There was a reading the yaml file: {}", e);
+            error!("There was a problem reading the yaml file: {}", e);
             exit(1);
         }
     };
@@ -35,9 +38,11 @@ fn build(b: impl BuildSystem, yaml: Yaml) {
     match b.build(master, workers) {
         Ok(_) => {},
         Err(e) => {
-            println!("There was a problem while building: {}", e);
+            error!("There was a problem while building: {}", e);
         }
     };
+
+    println!("Successfully finished build");
 }
 
 
@@ -69,33 +74,17 @@ fn main() {
         Some("install") => install(buildsystem),
         Some("build") => {
             let yaml_path = matches.subcommand_matches("build").unwrap().value_of("YAML").unwrap();
-
-            match &mut File::open(&yaml_path) {
-                Ok(f) => {
-                    let mut content = String::from("");
-                    match f.read_to_string(&mut content) {
-                        Ok(_) => {},
-                        Err(e) => {
-                            println!("There was a problem reading {}: {}", yaml_path, e.to_string());
-                        }
-                    };
-                    let yaml = Yaml::from(content);
-                    println!("{}", yaml);
-                    build(buildsystem, yaml)
-                },
+            info!("Building rusty-ci from {}...", &yaml_path);
+            let content = match File::read(yaml_path) {
+                Ok(s) => s,
                 Err(e) => {
-                    println!("There was a problem trying to open {}: {}", yaml_path, e.to_string());
+                    error!("There was a problem reading {}: {}", yaml_path, e.to_string());
+                    exit(1);
                 }
-            }
+            };
+            let yaml = Yaml::from(content);
+            build(buildsystem, yaml)
         },
         _ => {}
     }
-
-    // let mut stdin = String::new();
-    // io::stdin().read_to_string(&mut stdin)?;
-    // if stdin.len() == 0 {
-    //     return Ok(());
-    // }
-    // let yaml = Yaml::from(stdin);
-    // println!("{}", Makefile::from(yaml));
 }

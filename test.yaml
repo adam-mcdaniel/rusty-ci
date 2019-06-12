@@ -1,0 +1,47 @@
+master:
+  repo:
+    - https://github.com/adam-mcdaniel/dragon
+  title:
+    - ITWORKS
+  title-url:
+    - "https://github.com/adam-mcdaniel/dragon"
+  webserver-ip:
+    - localhost
+  poll-interval:
+    - 5
+
+workers:
+  dragon-vm-worker:
+    basedir:
+      - "/home/adam/Desktop/rusty-ci/testing/vm-worker/"
+    password:
+      - pass
+    masterport:
+      - 9989
+    masterhost:
+      - localhost
+
+schedulers:
+  vm-change:
+    branch:
+      - .*
+    triggers:
+      - '.*\.cpp'
+      - '.*\.hpp'
+    builders:
+      - dragon-vm-build
+
+builders:
+  dragon-vm-build:
+    repo:
+      - "https://github.com/adam-mcdaniel/dragon"
+
+    workers:
+      - dragon-vm-worker
+
+    script:
+      - rm -Rf build
+      - mkdir build
+      - cd build
+      - cmake ..
+      - make
