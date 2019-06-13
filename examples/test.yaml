@@ -2,7 +2,7 @@ master:
   repo:
     - https://github.com/adam-mcdaniel/dragon
   title:
-    - Dragon CI
+    - ITWORKS
   title-url:
     - "https://github.com/adam-mcdaniel/dragon"
   webserver-ip:
@@ -13,27 +13,13 @@ master:
 workers:
   dragon-vm-worker:
     basedir:
-      - "/home/adam/Desktop/ASGarD/cons-buildbot/examples/vm-worker"
-    masterhost:
-      - localhost
+      - "/home/adam/Desktop/rusty-ci/testing/vm-worker"
     password:
       - pass
-
-  IT_WORKED:
-    basedir:
-      - "/home/adam/Desktop/ASGarD/cons-buildbot/examples/test-worker"
+    masterport:
+      - 9989
     masterhost:
       - localhost
-    password:
-      - pass
-
-  dragon-compiler-worker:
-    basedir:
-      - "/home/adam/Desktop/ASGarD/cons-buildbot/examples/compiler-worker"
-    masterhost:
-      - localhost
-    password:
-      - pass
 
 schedulers:
   vm-change:
@@ -44,15 +30,6 @@ schedulers:
       - '.*\.hpp'
     builders:
       - dragon-vm-build
-
-  compiler-change:
-    branch:
-      - master
-    triggers:
-      - '.*\.py'
-    builders:
-      - dragon-compiler-build
-      - dragon-testing
 
 builders:
   dragon-vm-build:
@@ -68,25 +45,3 @@ builders:
       - cd build
       - cmake ..
       - make
-
-  dragon-compiler-build:
-    repo:
-      - https://github.com/adam-mcdaniel/dragon
-
-    workers:
-      - dragon-compiler-worker
-
-    script:
-      - python3 -m pip install -U lark-parser
-      - python3 compiler/main.py -f examples/script.dn
-
-  dragon-testing:
-    repo:
-      - https://github.com/adam-mcdaniel/dragon
-
-    workers:
-      - IT_WORKED
-
-    script:
-      - python3 -m pip install -U lark-parser
-      - python3 compiler/main.py -f examples/script.dn

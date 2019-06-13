@@ -1,4 +1,5 @@
 use rusty_yaml::Yaml;
+use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
 
@@ -79,27 +80,23 @@ impl From<Yaml> for Scheduler {
         let name = yaml.get_name();
 
         for section in ["branch", "triggers", "builders"].iter() {
-            assert!(
-                yaml.has_section(section),
-                format!("{} section not specified for {} scheduler", section, name)
-            )
+            if !yaml.has_section(section) {
+                error!("There was an error creating a scheduler: The '{}' section is not specified for '{}'", section, name);
+                exit(1);
+            }
         }
 
 
-        let branch: String = yaml
-            .get_section("branch")
-            .into_iter()
-            .collect::<Vec<Yaml>>()[0]
-            .to_string();
+        let branch: String = yaml.get_section("branch").unwrap().nth(0).unwrap().to_string();
 
         let mut triggers = vec![];
-        for trigger in yaml.get_section("triggers") {
+        for trigger in yaml.get_section("triggers").unwrap() {
             triggers.push(trigger.to_string());
         }
 
 
         let mut builders = vec![];
-        for builder in yaml.get_section("builders") {
+        for builder in yaml.get_section("builders").unwrap() {
             builders.push(builder.to_string());
         }
 
