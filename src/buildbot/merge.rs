@@ -107,19 +107,6 @@ c['change_source'].append(changes.GitHubPullrequestPoller(
                 "print('We currently dont support building merge requests on your VCS.')"
             ),
         }
-        // def github_pull_check(pull_request):
-        //     sender = pull_request['user']["login"]
-        //     for author in whitelist_authors:
-        //         if author == sender:
-        //             return True
-        //     return False
-        //
-        // c['change_source'].append(changes.GitHubPullrequestPoller(
-        //         owner="adam-mcdaniel",
-        //         repo="rusty-ci",
-        //         pollInterval=10, pullrequest_filter=github_pull_check, repository_type="git",
-        //         token="645e23fc7a41d0afb98bd8aa55c1edd345795315"))
-
     }
 }
 
