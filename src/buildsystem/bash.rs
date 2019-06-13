@@ -7,13 +7,13 @@ use crate::buildsystem::BuildSystem;
 /// It writes the dependency installation instructions to a shell script file,
 /// And tells you how to use them.
 /// The process for building the master and the workers is set to the default.
-pub struct BashBuildSystem;
-impl BashBuildSystem {
+pub struct Bash;
+impl Bash {
     pub fn new() -> Self { Self {} }
 }
 
 
-impl BuildSystem for BashBuildSystem {
+impl BuildSystem for Bash {
     /// Writes install script to `install.sh` for user to run
     fn install(&mut self) -> Result<(), String> {
         info!("Writing install file to `./install.sh`");

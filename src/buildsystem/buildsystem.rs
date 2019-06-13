@@ -2,6 +2,7 @@ use crate::{MasterConfig, Worker, File, Cmd};
 use std::path::PathBuf;
 
 
+
 /// This trait describes how to build rusty-ci using a particular backend.
 /// For example, if you dont want to directly install the rusty-ci dependencies
 /// using the Cmd object as this trait defaults to, you can implement the trait
