@@ -1,11 +1,12 @@
 [package]
 name = "rusty-ci"
-version = "0.2.5"
+version = "0.2.6"
 authors = ["adam-mcdaniel <adam.mcdaniel17@gmail.com>"]
 edition = "2018"
 license-file = "LICENSE"
 readme = "README.md"
 description = "A tool to generate buildbot projects from a YAML file"
+documentation = "https://docs.rs/rusty-ci"
 homepage = "https://github.com/adam-mcdaniel/rusty-ci"
 repository = "https://github.com/adam-mcdaniel/rusty-ci"
 
@@ -22,6 +23,6 @@ path = "tests/step.rs"
 
 
 [dependencies]
-rusty-yaml = { path="/home/adam/Desktop/rusty-yaml", version="0.3.3" }
+rusty-yaml = "0.3.3"
 clap = "2.33"
 termcolor = "1.0.5"
