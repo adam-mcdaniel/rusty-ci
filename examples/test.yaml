@@ -1,40 +1,47 @@
 master:
+  repo:
+    - https://github.com/adam-mcdaniel/dragon
   title:
-    - "rusty-ci"
+    - ITWORKS
   title-url:
-    - "https://github.com/adam-mcdaniel/rusty-ci"
+    - "https://github.com/adam-mcdaniel/dragon"
   webserver-ip:
     - localhost
-  repo:
-    - "https://github.com/adam-mcdaniel/rusty-ci"
   poll-interval:
-    - 10
+    - 5
 
 workers:
-  test-worker:
-    masterhost:
-      - localhost
-    masterport:
-      - 9989
+  dragon-vm-worker:
     basedir:
-      - '/home/adam/Desktop/rusty-ci/testing/test-worker'
+      - "/home/adam/Desktop/rusty-ci/testing/vm-worker"
     password:
       - pass
+    masterport:
+      - 9989
+    masterhost:
+      - localhost
 
 schedulers:
-  ci-change:
+  vm-change:
     branch:
       - ".*"
     triggers:
-      - '.*\.yaml'
+      - '.*\.cpp'
+      - '.*\.hpp'
     builders:
-      - rusty-ci-test
+      - dragon-vm-build
 
 builders:
-  rusty-ci-test:
-    script:
-      - echo 'Hello world!'
-    workers:
-      - test-worker
+  dragon-vm-build:
     repo:
-      - "https://github.com/adam-mcdaniel/rusty-ci"
+      - "https://github.com/adam-mcdaniel/dragon"
+
+    workers:
+      - dragon-vm-worker
+
+    script:
+      - rm -Rf build
+      - mkdir build
+      - cd build
+      - cmake ..
+      - make
