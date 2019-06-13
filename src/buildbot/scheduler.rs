@@ -3,28 +3,27 @@ use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
 
-#[allow(dead_code)]
 pub struct Scheduler {
-    // Name of scheduler
+    /// Name of scheduler
     name: String,
 
-    // A regex expr that accepts a branch name.
-    // This scheduler will only operate on the
-    // branches with names that match this regex.
+    /// A regex expr that accepts a branch name.
+    /// This scheduler will only operate on the
+    /// branches with names that match this regex.
     branch: String,
 
-    // Regex exprs accepting file names.
-    // When these file names are changed in a branch,
-    // They will trigger the scheduler's workers.
+    /// Regex exprs accepting file names.
+    /// When these file names are changed in a branch,
+    /// They will trigger the scheduler's workers.
     file_triggers: Vec<String>,
 
-    // The builders to trigger
+    /// The builders to trigger
     buildernames: Vec<String>,
 }
 
 
 impl Scheduler {
-    // Create new scheduler
+    /// Create new scheduler
     fn new<S>(name: S, branch: S, file_triggers: Vec<S>, buildernames: Vec<S>) -> Self
     where
         S: Display,
