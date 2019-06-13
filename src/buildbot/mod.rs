@@ -10,5 +10,8 @@ pub use scheduler::Scheduler;
 mod worker;
 pub use worker::Worker;
 
+mod merge;
+pub use merge::MergeRequestHandler;
+
 mod masterconfig;
 pub use masterconfig::MasterConfig;

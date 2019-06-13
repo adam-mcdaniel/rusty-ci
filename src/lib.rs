@@ -7,6 +7,7 @@ pub mod buildbot;
 pub use buildbot::{
     Worker,
     MasterConfig,
+    MergeRequestHandler,
     Scheduler,
     Builder,
     Step,
