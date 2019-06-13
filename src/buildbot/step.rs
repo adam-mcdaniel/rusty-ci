@@ -48,8 +48,7 @@ impl Display for Step {
 
             // Command with provided work directory
             Step::Command {command, workdir: Some(workdir)} => write!(
-                f,
-                "steps.ShellCommand(command={command:?}, workdir=\"{workdir}\")",
+                f, "steps.ShellCommand(command={command:?}, workdir=\"{workdir}\")",
                 command = command
                     .split_whitespace()
                     .map(String::from)
@@ -59,8 +58,7 @@ impl Display for Step {
 
             // Command without provided work directory
             Step::Command {command, workdir: None} => write!(
-                f,
-                "steps.ShellCommand(command={:?})",
+                f, "steps.ShellCommand(command={:?})",
                 command.split_whitespace()
                     .map(String::from)
                     .collect::<Vec<String>>()

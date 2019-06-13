@@ -2,18 +2,41 @@ use crate::{MasterConfig, Worker, File, Cmd};
 use std::path::PathBuf;
 
 
-
+/// This trait describes how to build rusty-ci using a particular backend.
+/// For example, if you dont want to directly install the rusty-ci dependencies
+/// using the Cmd object as this trait defaults to, you can implement the trait
+/// for your type, and change the install method, similar to the BashBuildSystem
+/// implementation in this module.
 pub trait BuildSystem {
-    fn install(&self) -> Result<(), String> {
+
+    /// Preinstall is called by the install method unless it is overloaded.
+    /// This is usefult for printing a warning message or prompting the user before
+    /// installing the dependencies for rusty-ci
+    fn preinstall(&mut self) -> Result<(), String> {
+        Ok(())
+    }
+
+    /// This method installs rusty-ci's dependencies, python3 and buildbot.
+    fn install(&mut self) -> Result<(), String> {
+        self.preinstall()?; // Call the preinstall method
+
         info!("Installing Python...");
         self.install_python()?;
         info!("Installing Buildbot...");
         self.install_buildbot()?;
-
         Ok(())
     }
 
-    fn build(&self, master: MasterConfig, workers: Vec<Worker>) -> Result<(), String> {
+
+    /// This method is similar to preinstall, but it is called by the build
+    /// method instead of the install method
+    fn prebuild(&mut self) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn build(&mut self, master: MasterConfig, workers: Vec<Worker>) -> Result<(), String> {
+        self.prebuild()?; // Call the prebuild method
+
         info!("Creating master...");
         self.create_master()?;
         info!("Creating workers...");
@@ -27,13 +50,15 @@ pub trait BuildSystem {
         Ok(())
     }
 
-    fn start(&self, workers: &Vec<Worker>) -> Result<(), String> {
+    /// This starts the master and the workers
+    fn start(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         self.start_master()?;
         self.start_workers(workers)?;
         Ok(())
     }
 
-    fn start_master(&self) -> Result<(), String> {
+    /// This method is used by the `start` method to spin up the master
+    fn start_master(&mut self) -> Result<(), String> {
         let buildbot = |sub_command| -> Result<(), String> {
             Cmd::new("buildbot")
                 .arg(sub_command)
@@ -49,8 +74,8 @@ pub trait BuildSystem {
         Ok(())
     }
 
-
-    fn start_workers(&self, workers: &Vec<Worker>) -> Result<(), String> {
+    /// This method is used by the `start` method to spin up the workers
+    fn start_workers(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         let start_worker = |dir| -> Result<(), String> {
             Cmd::new("buildbot-worker")
                     .arg("restart")
@@ -66,7 +91,8 @@ pub trait BuildSystem {
         Ok(())
     }
 
-    fn create_workers(&self, workers: &Vec<Worker>) -> Result<(), String> {
+    /// Creates each worker in its proper directory
+    fn create_workers(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         let make_worker = |dir| -> Result<(), String> {
             Cmd::new("buildbot-worker")
                     .arg("create-worker")
@@ -86,8 +112,8 @@ pub trait BuildSystem {
         Ok(())
     }
 
-
-    fn write_worker_configs(&self, workers: &Vec<Worker>) -> Result<(), String> {
+    /// Writes the configuration `buildbot.tac` file for each worker
+    fn write_worker_configs(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         for worker in workers {
             let mut path = PathBuf::new();
             path.push(worker.get_dir());
@@ -99,7 +125,8 @@ pub trait BuildSystem {
         Ok(())
     }
 
-    fn create_master(&self) -> Result<(), String> {
+    /// Creates the master in the `master` directory
+    fn create_master(&mut self) -> Result<(), String> {
         Cmd::new("buildbot")
                 .arg("create-master")
                 .arg("master")
@@ -107,13 +134,18 @@ pub trait BuildSystem {
         Ok(())
     }
 
-    fn write_master_config(&self, master: &MasterConfig) -> Result<(), String> {
+    /// Writes the master configuration file
+    fn write_master_config(&mut self, master: &MasterConfig) -> Result<(), String> {
         File::write("master/master.cfg", master.to_string())?;
         Ok(())
     }
 
 
-    fn install_python(&self) -> Result<(), String> {
+    /// This method installs Python.
+    /// You probably do need to overload this, I dont know
+    /// for sure if it completely works. The bash impl of the buildsystem
+    /// is the most reliable for now.
+    fn install_python(&mut self) -> Result<(), String> {
         let apt_install = |package| -> Result<(), String> {
             Cmd::new("apt-get")
                 .arg("install")
@@ -129,7 +161,10 @@ pub trait BuildSystem {
         Ok(())
     }
 
-    fn install_buildbot(&self) -> Result<(), String> {
+    /// This method installs buildbot. Again, you probably want to overload this
+    /// because it does not use a Python virtual environment, or `venv`.
+    /// The `venv` is important because it does not modify the system wide packages.
+    fn install_buildbot(&mut self) -> Result<(), String> {
         Cmd::new("python3")
                 .arg("-m")
                 .arg("pip")

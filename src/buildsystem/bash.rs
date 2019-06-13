@@ -1,13 +1,21 @@
-use crate::File;
+use std::process::exit;
+use crate::{File, yes_or_no};
 use crate::buildsystem::BuildSystem;
 
+
+/// This is the best build system rusty-ci supports right now.
+/// It writes the dependency installation instructions to a shell script file,
+/// And tells you how to use them.
+/// The process for building the master and the workers is set to the default.
 pub struct BashBuildSystem;
 impl BashBuildSystem {
     pub fn new() -> Self { Self {} }
 }
 
+
 impl BuildSystem for BashBuildSystem {
-    fn install(&self) -> Result<(), String> {
+    /// Writes install script to `install.sh` for user to run
+    fn install(&mut self) -> Result<(), String> {
         info!("Writing install file to `./install.sh`");
         File::write("install.sh", "#!/bin/sh
 
@@ -25,6 +33,16 @@ python3 -m venv venv
         Ok(())
     }
 
-    fn install_python(&self) -> Result<(), String> {Ok(())}
-    fn install_buildbot(&self) -> Result<(), String> {Ok(())}
+    /// Prompts user to confirm they've already ran the install subcommand    
+    fn prebuild(&mut self) -> Result<(), String> {
+        if yes_or_no("Did you already run the install subcommand? (y/n) ") {
+            Ok(())
+        } else {
+            error!("You must run the install subcommand before the build subcommand!");
+            exit(0);
+        }
+    }
+
+    fn install_python(&mut self) -> Result<(), String> {Ok(())}
+    fn install_buildbot(&mut self) -> Result<(), String> {Ok(())}
 }

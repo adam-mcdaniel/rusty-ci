@@ -81,7 +81,7 @@ impl From<Yaml> for Scheduler {
 
         for section in ["branch", "triggers", "builders"].iter() {
             if !yaml.has_section(section) {
-                println!("There was an error creating a scheduler: The '{}' section is not specified for '{}'", section, name);
+                error!("There was an error creating a scheduler: The '{}' section is not specified for '{}'", section, name);
                 exit(1);
             }
         }

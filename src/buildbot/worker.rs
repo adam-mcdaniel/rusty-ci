@@ -56,16 +56,11 @@ impl From<Yaml> for Worker {
     fn from(yaml: Yaml) -> Self {
         let name = yaml.get_name();
 
-        // Assert
         for section in ["masterhost", "masterport", "basedir", "password"].iter() {
             if !yaml.has_section(section) {
-                println!("There was an error creating a worker: The '{}' section is not specified for '{}'", section, name);
+                error!("There was an error creating a worker: The '{}' section is not specified for '{}'", section, name);
                 exit(1);
             }
-            // assert!(
-            //     yaml.has_section(section),
-            //     format!("{} section not specified for {} worker", section, name)
-            // )
         }
 
         let basedir = yaml.get_section("basedir").unwrap().nth(0).unwrap().to_string();
@@ -77,7 +72,8 @@ impl From<Yaml> for Worker {
     }
 }
 
-
+/// This is similar to the Display impl for the MasterConfig struct.
+/// This returns the Python `buildbot.tac` file for an individual worker.
 impl Display for Worker {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(

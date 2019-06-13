@@ -1,10 +1,18 @@
 use std::process::exit;
 use crate::{Builder, Scheduler, Worker};
 
+
+/// This struct represents the configuration file for the master.
+/// This file contains the Python code for the builders and the schedulers.
+/// In addition, it contains some basic data such as the title for the web ui,
+/// the title url for the webui, and so on.
+/// 
+/// For more information on how the master configuration file works,
+/// see the documentation for buildbot on their website: https://buildbot.net/
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 pub struct MasterConfig {
-    title: String,
+    title: String, //
     title_url: String,
     git_repo: String,
     webserver_ip: String,
@@ -14,6 +22,8 @@ pub struct MasterConfig {
     workers: Vec<Worker>,
 }
 
+
+/// This is impl the for MasterConfig struct.
 impl MasterConfig {
     fn new(
         title: String,
@@ -38,19 +48,23 @@ impl MasterConfig {
     }
 }
 
-
+/// This impl converts a Yaml file into a MasterConfig object.
+/// This is intended to take the entire input yaml file.
 impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
-
+        // Verify that the yaml section contains all the necessary subsections
         for section in ["master", "workers", "builders", "schedulers"].iter() {
             if !yaml.has_section(section) {
-                println!("There was an error creating the master configuration file: {} section was not declared", section);
+                error!("There was an error creating the master configuration file: '{}' section was not declared", section);
                 exit(1);
             }
         }
 
+        // Get the master susbsection, the subsection holding the web gui and git information
         let master = yaml.get_section("master").unwrap();
         
+
+        // Verify the master subsection contains all the proper data
         for section in [
             "title",
             "title-url",
@@ -61,33 +75,42 @@ impl From<Yaml> for MasterConfig {
         .iter()
         {
             if !master.has_section(section) {
-                println!("There was an error creating the master configuration file: The '{}' section is not specified for master", section);
+                error!("There was an error creating the master configuration file: The '{}' section is not specified for master", section);
                 exit(1);
             }
         }
 
-
+        // Get schedulers, builders, and workers from the yaml file.
+        // Because we previously verified that each subsection exists, 
+        // we can unwrap the result without a problem.
         let mut schedulers = vec![];
         for scheduler in yaml.get_section("schedulers").unwrap() {
             schedulers.push(Scheduler::from(scheduler));
         }
 
+        // Because we previously verified that each subsection exists, 
+        // we can unwrap the result without a problem.
         let mut builders = vec![];
         for builder in yaml.get_section("builders").unwrap() {
             builders.push(Builder::from(builder));
         }
 
+        // Because we previously verified that each subsection exists, 
+        // we can unwrap the result without a problem.
         let mut workers = vec![];
         for worker in yaml.get_section("workers").unwrap() {
             workers.push(Worker::from(worker));
         }
 
+
+        // Get all the data from the master subsection
         let title: String = master.get_section("title").unwrap().nth(0).unwrap().to_string();
         let title_url: String = master.get_section("title-url").unwrap().nth(0).unwrap().to_string();
         let git_repo: String = master.get_section("repo").unwrap().nth(0).unwrap().to_string();
         let webserver_ip: String = master.get_section("webserver-ip").unwrap().nth(0).unwrap().to_string();
         let poll_interval: String = master.get_section("poll-interval").unwrap().nth(0).unwrap().to_string();
 
+        // Return the whole master configuration file
         Self::new(
             title,
             title_url,
@@ -101,7 +124,7 @@ impl From<Yaml> for MasterConfig {
     }
 }
 
-
+/// Converts a MasterConfig instance into the Python master configuration file for buildbot
 impl Display for MasterConfig {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(

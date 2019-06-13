@@ -8,7 +8,7 @@ use std::process::exit;
 use clap::{clap_app, crate_version, AppSettings};
 
 
-fn install(b: impl BuildSystem) {
+fn install(mut b: impl BuildSystem) {
     match b.install() {
         Ok(_) => {
             println!("Successfully finished install");
@@ -20,7 +20,7 @@ fn install(b: impl BuildSystem) {
 }
 
 
-fn build(b: impl BuildSystem, yaml: Yaml) {
+fn build(mut b: impl BuildSystem, yaml: Yaml) {
     let mut workers = vec![];
     let workers_section = match yaml.get_section("workers") {
         Ok(w) => w,
@@ -71,7 +71,10 @@ fn main() {
     
 
     match matches.subcommand_name() {
-        Some("install") => install(buildsystem),
+        Some("install") => {
+            info!("Installing dependencies for rusty-ci...");
+            install(buildsystem)
+        },
         Some("build") => {
             let yaml_path = matches.subcommand_matches("build").unwrap().value_of("YAML").unwrap();
             info!("Building rusty-ci from {}...", &yaml_path);
