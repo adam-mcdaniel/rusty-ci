@@ -2,6 +2,11 @@
 
 A tool to generate buildbot projects from a YAML file
 
+
+## Documentation
+
+You can find plenty of documentation [here](https://adam-mcdaniel.github.io/rusty-ci/).
+
 ## Usage
 
 Install rust.
