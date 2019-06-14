@@ -165,7 +165,7 @@ master:
 
   # The number of seconds to wait before checking for updates on your repository
   poll-interval:
-    - 10
+    - 120
 
 # This section holds data specific to the handler that will look for 
 # pull requests / merge requests on your repository
@@ -294,21 +294,6 @@ builders:
 
         </div>
 
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3001");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload(true); // force reload from server (not from cache)
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         
