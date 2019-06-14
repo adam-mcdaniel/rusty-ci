@@ -30,7 +30,7 @@ master:
 
   # The number of seconds to wait before checking for updates on your repository
   poll-interval:
-    - 10
+    - 120
 
 # This section holds data specific to the handler that will look for 
 # pull requests / merge requests on your repository
