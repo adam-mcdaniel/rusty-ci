@@ -19,18 +19,18 @@ fn main() {
                     )
                     (@subcommand install =>
                         (about: "Install python3 and buildbot")
-                        (version: "0.0.1")
+                        (version: "0.1.0")
                         (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                     )
                     (@subcommand build =>
                         (about: "Build and launch rusty-ci from an input yaml file")
-                        (version: "0.0.1")
+                        (version: "0.1.0")
                         (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                         (@arg YAML: +required "The path to the YAML file")
                     )
                     (@subcommand setup => 
                         (about: "Output a template YAML file for you to change to customize")
-                        (version: "0.0.1")
+                        (version: "0.1.0")
                         (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                     )
                     // (@subcommand tutorial => 
