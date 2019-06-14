@@ -109,8 +109,9 @@ master:
     - "https://github.com/adam-mcdaniel/rusty-ci"
 
   # The number of seconds to wait before checking for updates on your repository
+  # Two minutes is a good poll interval
   poll-interval:
-    - 10
+    - 120
 
 # This section holds data specific to the handler that will look for 
 # pull requests / merge requests on your repository

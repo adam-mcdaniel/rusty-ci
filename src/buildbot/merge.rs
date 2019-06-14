@@ -84,15 +84,18 @@ def github_pull_check(pull_request):
             return True
     return False
 
-c['change_source'].append(changes.GitHubPullrequestPoller(
-        owner=\"{owner}\",
-        repo=\"{name}\",
-        # right now just poll every 10 seconds
-        # this will need to change in the future, but this is just for testing.
-        pollInterval=10,
-        pullrequest_filter=github_pull_check,
-        repository_type=\"{repository_type}\",
-        token=\"{token}\"))
+try:
+    c['change_source'].append(changes.GitHubPullrequestPoller(
+            owner=\"{owner}\",
+            repo=\"{name}\",
+            # right now just poll every 60 seconds
+            # this will need to change in the future, but this is just for testing.
+            pollInterval=60,
+            pullrequest_filter=github_pull_check,
+            repository_type=\"{repository_type}\",
+            token=\"{token}\"))
+except Exception as e:
+    print(f\"Could not create merge request handler: {{str(e)}}\")
 ",
                 self.whitelist,
                 token = self.auth_token.trim_matches('"'),

@@ -1,0 +1,9 @@
+[book]
+authors = ["adam-mcdaniel"]
+multilingual = false
+src = "src"
+title = "Rusty-CI"
+
+
+[output.html]
+default-theme = "navy"
