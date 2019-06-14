@@ -13,7 +13,7 @@ fn main() {
         (version: crate_version!())
                     (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                     (about: "A continuous integration tool written in Rust")
-                    (@group BUILDSYSTEM +required =>
+                    (@group BUILDSYSTEM =>
                         (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
                         (@arg make: -m --make "Uses make to install and build rusty-ci's output")
                     )
