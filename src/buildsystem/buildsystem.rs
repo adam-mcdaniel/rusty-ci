@@ -173,15 +173,31 @@ pub trait BuildSystem {
                 .arg("-U")
                 .arg("pip")
                 .run();
-        
+
         Cmd::new("python3")
                 .arg("-m")
                 .arg("pip")
                 .arg("install")
-                .arg("install")
-                .arg("'buildbot[bundle]'")
+                .arg("-U")
+                .arg("buildbot[bundle]")
                 .run();
-        
+
+        Cmd::new("python3")
+                .arg("-m")
+                .arg("pip")
+                .arg("install")
+                .arg("-U")
+                .arg("txrequest")
+                .run();
+
+        Cmd::new("python3")
+                .arg("-m")
+                .arg("pip")
+                .arg("install")
+                .arg("-U")
+                .arg("treq")
+                .run();
+
         Cmd::new("python3")
                 .arg("-m")
                 .arg("pip")

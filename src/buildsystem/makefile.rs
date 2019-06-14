@@ -18,6 +18,8 @@ install:
 \tsudo apt-get install python3-dev -y
 \tsudo apt-get install python3-pip -y
 \tsudo apt-get install python3-venv -y
+\tsudo python3 -m pip install txrequest
+\tsudo python3 -m pip install treq
 
 \tpython3 -m venv venv
 \t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install 'buildbot[bundle]';
