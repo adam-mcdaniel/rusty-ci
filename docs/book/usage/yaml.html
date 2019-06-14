@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Input YAML - Rusty-CI</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="navy">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/yaml.html" class="active"><strong aria-hidden="true">3.5.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Rusty-CI</h1> 
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#input-yaml" id="input-yaml"><h1>Input YAML</h1></a>
+<p>The input YAML file is pretty simple, but here's an explanation of each section individually.</p>
+<a class="header" href="#the-master-section" id="the-master-section"><h2>The master section</h2></a>
+<p>The master section contains the data that controls the master, the bot that controls the workers.</p>
+<pre><code class="language-yaml"># This section holds data specific to the master of the workers
+master:
+  # The title subsection of the master holds the title of your web gui
+  title:
+    - &quot;Rusty-CI&quot;
+  title-url:
+    - &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
+
+  # This is the ip of the web-gui
+  # The port is 8010
+  webserver-ip:
+    - localhost
+
+  # The address of your repository
+  repo:
+    - &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
+
+  # The number of seconds to wait before checking for updates on your repository
+  # Two minutes is a good poll interval
+  poll-interval:
+    - 120
+</code></pre>
+<a class="header" href="#the-merge-request-handler-section" id="the-merge-request-handler-section"><h2>The merge-request-handler section</h2></a>
+<p>The merge-request-handler section holds information that determines how <code>buildbot</code> will handle merge and pull requests on your repository.</p>
+<p>You <strong><em>will</em></strong> need to edit the <code>auth-token</code> subsection for this feature to function properly.</p>
+<p>Right now, this is only supported for <code>github.com</code>.</p>
+<pre><code class="language-yaml"># This section holds data specific to the handler that will look for 
+# pull requests / merge requests on your repository
+merge-request-handler:
+  # This is basically the website you're using for version control
+  # Right now, github is the only supported site
+  # If you're using an unsupported version control system, no worries,
+  # rusty-ci just wont run on pull requests.
+  version-control-system:
+    - github
+  # The username of the owner of the repository
+  owner:
+    - adam-mcdaniel
+
+  # The name of the repository
+  repo-name:
+    - rusty-ci
+
+  # You dont want to run arbitrary code on your machine when anyone
+  # makes a pull request. Rusty-CI will not test anyone's pull request
+  # if their username is not in this list.
+  whitelist:
+    - adam-mcdaniel
+
+  # This is the authentication token from your version control system
+  auth-token:
+    - &quot;just-testing&quot;
+</code></pre>
+<a class="header" href="#the-workers-section" id="the-workers-section"><h2>The workers section</h2></a>
+<p>The workers section lists each worker and the information required to construct them and connect them to the master bot.</p>
+<pre><code class="language-bash"># This section holds each worker
+# You can have as many workers as youd like, just be sure to fill out
+# each of their fields out properly.
+workers:
+  # The name of this worker is `test-worker`
+  test-worker:
+    # The ip of the master
+    masterhost:
+      - localhost
+    # The port of the master
+    # This is not the same as the web gui port!
+    masterport:
+      - 9989
+    # The absolute path to the working directory of this worker
+    basedir:
+      - '/home/adam/Desktop/rusty-ci/testing/test-worker'
+    # The password for this worker
+    # This is used by the master to give the worker a job
+    password:
+      - pass
+</code></pre>
+<a class="header" href="#the-schedulers-section" id="the-schedulers-section"><h1>The schedulers section</h1></a>
+<p>This section lists each scheduler. Each scheduler has a regular expression that matches a branch to track, and a list of regular expressions that match file changes.</p>
+<p>Read the comments in the template YAML for more information.</p>
+<pre><code class="language-yaml"># This section holds each scheduler.
+# Like the workers section, you may have as many schedulers as youd like.
+schedulers:
+  # Create a scheduler named `ci-change`
+  # This scheduler will trigger the `rusty-ci-test` builder whenever it
+  # detects a change in a yaml file for any branch.
+  ci-change:
+    # This is a regular expression that matches a branch.
+    # If there is a change in a branch whos name matches this regex,
+    # it will be checked by the following triggers section.
+    # THIS WILL ONLY USE THE FIRST REGULAR EXPRESSION IN THIS SECTION TO MATCH THE BRANCH
+    branch:
+      - &quot;.*&quot;
+    # If a change has occurred in a branch that matches the regex in the branch section,
+    # Then the files that were changed are matched against the regular expressions in the
+    # triggers section. You can have any number of regular expressions in the triggers section.
+    # If any one of them matches the name of a file that was changed in a matched branch,
+    # then the builders in this scheduler's `builders` section are executed.
+    triggers:
+      - '.*\.yaml'
+      - '.*\.sh'
+      - '.*Makefile'
+    # This scheduler triggers the `rusty-ci-test` builder.
+    # You can put as many builders as youd like here, and the scheduler will start them all.
+    builders:
+      - rusty-ci-test
+</code></pre>
+<a class="header" href="#the-builders-section" id="the-builders-section"><h2>The builders section</h2></a>
+<p>The builders describe the tasks given to workers.</p>
+<pre><code class="language-yaml"># These are the builders that are executed by the schedulers
+# Each has its own specific task that is delegated to one or more workers
+# When a builder is run, its script is run on the command line.
+# You can have as many builders as youd like as well.
+builders:
+  # The name of the builder is `rusty-ci-test`
+  rusty-ci-test:
+    # This is the shell script that the workers will run when this builder is executed
+    # You can have as many instructions as youd like
+    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;... operators. Sadly, buildbot
+    # passes each item separated by whitespace as another parameter to function.
+    script:
+      - echo Hello world!
+      - echo Im an instruction in a script!
+    # These are the workers to delegate this build job to
+    workers:
+      - test-worker
+    # The repo to refresh from before running
+    repo:
+      - &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../usage/build.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../tldr.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../usage/build.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../tldr.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3001");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload(true); // force reload from server (not from cache)
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
