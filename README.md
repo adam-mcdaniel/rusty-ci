@@ -22,7 +22,3 @@ Build a makefile from a yaml file and run it!
 cat test.yaml | rusty-ci > Makefile
 make -j
 ```
-
-## TODO
-
-- [ ] Integrate CLAP for better command line usage
