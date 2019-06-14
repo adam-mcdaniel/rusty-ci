@@ -7,7 +7,7 @@
 use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
-use crate::Step;
+use crate::{Step, unwrap};
 use rusty_yaml::Yaml;
 use std::path::PathBuf;
 
@@ -107,7 +107,7 @@ impl From<Yaml> for Builder {
 
 
         // Get the url for the repo from the yaml section
-        let url: String = yaml.get_section("repo").unwrap().nth(0).unwrap().to_string();
+        let url= unwrap(&yaml, "repo");
 
         // Refresh your copy of the repository
         steps.push(Step::git_clone(url));

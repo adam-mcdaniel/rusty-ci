@@ -1,4 +1,5 @@
 use rusty_yaml::Yaml;
+use crate::unwrap;
 use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
@@ -63,10 +64,10 @@ impl From<Yaml> for Worker {
             }
         }
 
-        let basedir = yaml.get_section("basedir").unwrap().nth(0).unwrap().to_string();
-        let password = yaml.get_section("password").unwrap().nth(0).unwrap().to_string();
-        let masterhost = yaml.get_section("masterhost").unwrap().nth(0).unwrap().to_string();
-        let masterport = yaml.get_section("masterport").unwrap().nth(0).unwrap().to_string();
+        let basedir = unwrap(&yaml, "basedir");
+        let password = unwrap(&yaml, "password");
+        let masterhost = unwrap(&yaml, "masterhost");
+        let masterport = unwrap(&yaml, "masterport");
 
         Self::new(name, basedir, password, masterhost, masterport)
     }

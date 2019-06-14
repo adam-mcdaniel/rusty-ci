@@ -1,6 +1,6 @@
 
 use rusty_yaml::Yaml;
-
+use crate::unwrap;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
@@ -93,7 +93,6 @@ c['change_source'].append(changes.GitHubPullrequestPoller(
         pullrequest_filter=github_pull_check,
         repository_type=\"{repository_type}\",
         token=\"{token}\"))
-
 ",
                 self.whitelist,
                 token = self.auth_token.trim_matches('"'),
@@ -131,13 +130,8 @@ impl From<Yaml> for MergeRequestHandler {
         // Now that we've verified the required sections exist, continue
 
 
-        let vcs: VersionControlSystem = match yaml
-            .get_section("version-control-system")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string()
-            .as_str()
+        let vcs: VersionControlSystem = match 
+            unwrap(&yaml, "version-control-system").as_str()
         {
             "github" => VersionControlSystem::GitHub,
             _ => {
@@ -152,35 +146,30 @@ impl From<Yaml> for MergeRequestHandler {
         };
 
         // Get the username of the owner of the repository
-        let owner: String = yaml
-            .get_section("owner")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
+        let owner: String = unwrap(&yaml, "owner");
 
         // Get the name of the repository
-        let repo_name: String = yaml
-            .get_section("repo-name")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
+        let repo_name: String = unwrap(&yaml, "repo-name");
 
         // Iterate over the whitelist section to get the names
         // of the whitelisted authors
         let mut whitelist: Vec<String> = vec![];
         for author in yaml.get_section("whitelist").unwrap() {
-            whitelist.push(author.to_string());
+            whitelist.push(
+                author.to_string()
+                    .trim_matches('"')
+                    .trim_matches('\'')
+                    .to_string()
+                            );
         }
 
         // Get the authentication token
-        let auth_token: String = yaml
-            .get_section("auth-token")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
+        let auth_token: String = unwrap(&yaml, "auth-token");
+
+        if auth_token.len() == 0 {
+            error!("You cannot have an empty authentication token!");
+            exit(1);
+        }
 
         // Return the constructed Self
         Self::new(vcs, owner, repo_name, whitelist, auth_token)

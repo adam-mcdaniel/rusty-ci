@@ -1,4 +1,5 @@
 use rusty_yaml::Yaml;
+use crate::unwrap;
 use std::process::exit;
 use std::fmt::{Display, Error, Formatter};
 
@@ -86,7 +87,7 @@ impl From<Yaml> for Scheduler {
         }
 
 
-        let branch: String = yaml.get_section("branch").unwrap().nth(0).unwrap().to_string();
+        let branch: String = unwrap(&yaml, "branch");
 
         let mut triggers = vec![];
         for trigger in yaml.get_section("triggers").unwrap() {

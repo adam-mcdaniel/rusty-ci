@@ -1,5 +1,5 @@
 use rusty_yaml::Yaml;
-use crate::{Builder, Scheduler, Worker, MergeRequestHandler};
+use crate::{Builder, Scheduler, Worker, MergeRequestHandler, unwrap};
 use std::fmt::{Display, Formatter, Error};
 use std::process::exit;
 
@@ -110,36 +110,11 @@ impl From<Yaml> for MasterConfig {
 
 
         // Get all the data from the master subsection
-        let title: String = master
-            .get_section("title")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
-        let title_url: String = master
-            .get_section("title-url")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
-        let git_repo: String = master
-            .get_section("repo")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
-        let webserver_ip: String = master
-            .get_section("webserver-ip")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
-        let poll_interval: String = master
-            .get_section("poll-interval")
-            .unwrap()
-            .nth(0)
-            .unwrap()
-            .to_string();
+        let title = unwrap(&master, "title");
+        let title_url = unwrap(&master, "title-url");
+        let git_repo = unwrap(&master, "repo");
+        let webserver_ip = unwrap(&master, "webserver-ip");
+        let poll_interval = unwrap(&master, "poll-interval");
 
         // Return the whole master configuration file
         Self::new(
@@ -188,7 +163,7 @@ c['change_source'] = []
 {merge_request_handler}
 
 c['change_source'].append(changes.GitPoller(
-        {git_repo},
+        "{git_repo}",
         workdir='gitpoller-workdir', branches=True, # poll all branches
         pollInterval={poll_interval}))
 
@@ -201,7 +176,7 @@ c['builders'] = []
 c['services'] = []
 
 c['title'] = "{title}"
-c['titleURL'] = {title_url}
+c['titleURL'] = "{title_url}"
 
 c['buildbotURL'] = "http://{webserver_ip}:8010/"
 
