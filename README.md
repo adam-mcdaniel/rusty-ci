@@ -15,10 +15,3 @@ Install `rusty-ci`
 ```bash
 cargo install rusty-ci
 ```
-
-Build a makefile from a yaml file and run it!
-
-```bash
-cat test.yaml | rusty-ci > Makefile
-make -j
-```
