@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rusty_ci;
 
-use rusty_ci::{File, input};
+use rusty_ci::{File, input, yes_or_no};
 use rusty_ci::{BuildSystem, DefaultBuildSystem, Bash, Makefile, MasterConfig, Worker};
 use rusty_yaml::Yaml;
 use std::process::exit;
@@ -86,9 +86,11 @@ fn main() {
 
 /// This function writes a template YAML file for the user to edit as needed.
 fn setup() -> Result<(), String> {
-    let filename = input("Where do you want the output file to be? ");
-    info!("Writing template yaml file to {}...", filename);
-    File::write(filename, r#"
+    let filename = input("Where do you want the output template yaml to be? ");
+    if yes_or_no("Are you sure? (y/n) ") {
+
+		info!("Writing template yaml file to {}...", filename);
+		File::write(filename, r#"
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
@@ -207,7 +209,11 @@ builders:
     repo:
       - "https://github.com/adam-mcdaniel/rusty-ci"
 "#)?;
-    info!("All done!");
+		info!("All done!");
+    } else {
+		error!("You weren't sure!");
+	}
+
     Ok(())
 }
 
