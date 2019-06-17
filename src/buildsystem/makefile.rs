@@ -20,7 +20,7 @@ install:
 \tsudo apt-get install python3-venv -y
 
 \tpython3 -m venv venv
-\t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequest treq 'buildbot[bundle]';
+\t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequests treq 'buildbot[bundle]';
 \t. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial
 ")?;
         info!("Successfully wrote Makefile");
