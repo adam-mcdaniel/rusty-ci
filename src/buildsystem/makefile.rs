@@ -1,7 +1,7 @@
-use std::process::exit;
-use crate::{File, yes_or_no};
-use crate::BuildSystem;
 
+use crate::BuildSystem;
+use crate::{yes_or_no, File};
+use std::process::exit;
 pub struct Makefile;
 
 impl Makefile {
@@ -18,11 +18,9 @@ install:
 \tsudo apt-get install python3-dev -y
 \tsudo apt-get install python3-pip -y
 \tsudo apt-get install python3-venv -y
-\tsudo python3 -m pip install txrequest
-\tsudo python3 -m pip install treq
 
 \tpython3 -m venv venv
-\t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install 'buildbot[bundle]';
+\t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequest treq 'buildbot[bundle]';
 \t. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial
 ")?;
         info!("Successfully wrote Makefile");
@@ -40,6 +38,10 @@ install:
         }
     }
 
-    fn install_python(&mut self) -> Result<(), String> {Ok(())}
-    fn install_buildbot(&mut self) -> Result<(), String> {Ok(())}
+    fn install_python(&mut self) -> Result<(), String> {
+        Ok(())
+    }
+    fn install_buildbot(&mut self) -> Result<(), String> {
+        Ok(())
+    }
 }

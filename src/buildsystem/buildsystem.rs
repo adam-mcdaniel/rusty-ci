@@ -1,6 +1,5 @@
-use crate::{MasterConfig, Worker, File, Cmd};
+use crate::{Cmd, File, MasterConfig, Worker};
 use std::path::PathBuf;
-
 
 
 /// This trait describes how to build rusty-ci using a particular backend.
@@ -61,10 +60,7 @@ pub trait BuildSystem {
     /// This method is used by the `start` method to spin up the master
     fn start_master(&mut self) -> Result<(), String> {
         let buildbot = |sub_command| -> Result<(), String> {
-            Cmd::new("buildbot")
-                .arg(sub_command)
-                .arg("master")
-                .run();
+            Cmd::new("buildbot").arg(sub_command).arg("master").run();
             Ok(())
         };
 
@@ -78,17 +74,14 @@ pub trait BuildSystem {
     /// This method is used by the `start` method to spin up the workers
     fn start_workers(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         let start_worker = |dir| -> Result<(), String> {
-            Cmd::new("buildbot-worker")
-                    .arg("restart")
-                    .arg(&dir)
-                    .run();
+            Cmd::new("buildbot-worker").arg("restart").arg(&dir).run();
             Ok(())
         };
 
         for worker in workers {
             start_worker(worker.get_dir())?;
         }
-        
+
         Ok(())
     }
 
@@ -96,12 +89,12 @@ pub trait BuildSystem {
     fn create_workers(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         let make_worker = |dir| -> Result<(), String> {
             Cmd::new("buildbot-worker")
-                    .arg("create-worker")
-                    .arg(&dir)
-                    .arg("localhost")
-                    .arg(&dir)
-                    .arg("pass")
-                    .run();
+                .arg("create-worker")
+                .arg(&dir)
+                .arg("localhost")
+                .arg(&dir)
+                .arg("pass")
+                .run();
 
             Ok(())
         };
@@ -129,9 +122,9 @@ pub trait BuildSystem {
     /// Creates the master in the `master` directory
     fn create_master(&mut self) -> Result<(), String> {
         Cmd::new("buildbot")
-                .arg("create-master")
-                .arg("master")
-                .run();
+            .arg("create-master")
+            .arg("master")
+            .run();
         Ok(())
     }
 
@@ -167,45 +160,45 @@ pub trait BuildSystem {
     /// The `venv` is important because it does not modify the system wide packages.
     fn install_buildbot(&mut self) -> Result<(), String> {
         Cmd::new("python3")
-                .arg("-m")
-                .arg("pip")
-                .arg("install")
-                .arg("-U")
-                .arg("pip")
-                .run();
+            .arg("-m")
+            .arg("pip")
+            .arg("install")
+            .arg("-U")
+            .arg("pip")
+            .run();
 
         Cmd::new("python3")
-                .arg("-m")
-                .arg("pip")
-                .arg("install")
-                .arg("-U")
-                .arg("buildbot[bundle]")
-                .run();
+            .arg("-m")
+            .arg("pip")
+            .arg("install")
+            .arg("-U")
+            .arg("buildbot[bundle]")
+            .run();
 
         Cmd::new("python3")
-                .arg("-m")
-                .arg("pip")
-                .arg("install")
-                .arg("-U")
-                .arg("txrequest")
-                .run();
+            .arg("-m")
+            .arg("pip")
+            .arg("install")
+            .arg("-U")
+            .arg("txrequest")
+            .run();
 
         Cmd::new("python3")
-                .arg("-m")
-                .arg("pip")
-                .arg("install")
-                .arg("-U")
-                .arg("treq")
-                .run();
+            .arg("-m")
+            .arg("pip")
+            .arg("install")
+            .arg("-U")
+            .arg("treq")
+            .run();
 
         Cmd::new("python3")
-                .arg("-m")
-                .arg("pip")
-                .arg("install")
-                .arg("buildbot-worker")
-                .arg("setuptools-trial")
-                .run();
-    
+            .arg("-m")
+            .arg("pip")
+            .arg("install")
+            .arg("buildbot-worker")
+            .arg("setuptools-trial")
+            .run();
+
         Ok(())
     }
 }
