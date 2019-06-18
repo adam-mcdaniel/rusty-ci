@@ -1,4 +1,4 @@
-use crate::{Cmd, File, MasterConfig, Worker};
+use crate::{Cmd, File, MasterConfig, Worker, AUTH_TOKEN_PATH};
 use std::path::PathBuf;
 
 
@@ -24,6 +24,7 @@ pub trait BuildSystem {
         self.install_python()?;
         info!("Installing Buildbot...");
         self.install_buildbot()?;
+        info!("Next, write your VCS's api token to '{}', and then run the `build` subcommand", AUTH_TOKEN_PATH);
         Ok(())
     }
 
@@ -45,13 +46,13 @@ pub trait BuildSystem {
         self.write_master_config(&master)?;
         info!("Writing to worker configs...");
         self.write_worker_configs(&workers)?;
-        info!("Starting workers and masters...");
-        self.start(&workers)?;
+        info!("Next, run the `start` subcommand to execute the master and the workers");
         Ok(())
     }
 
     /// This starts the master and the workers
     fn start(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
+        info!("Starting workers and masters...");
         self.start_master()?;
         self.start_workers(workers)?;
         Ok(())

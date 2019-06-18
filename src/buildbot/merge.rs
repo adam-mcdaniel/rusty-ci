@@ -1,7 +1,6 @@
-
+use crate::{unwrap, File};
+use std::fmt::{Display, Formatter, Error};
 use rusty_yaml::Yaml;
-use crate::unwrap;
-use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
 /// A version control system is a system that allows programmers to manage
@@ -11,6 +10,10 @@ pub enum VersionControlSystem {
     GitHub,
     Unsupported,
 }
+
+/// This is the path to the file containing the auth / api token
+/// for the version control system
+pub const AUTH_TOKEN_PATH: &str = "auth.token";
 
 /// The purpose of a continuous integration tool is to continuously confirm the
 /// validity and robustness of code. It follows then that you must check code BEFORE
@@ -40,11 +43,10 @@ pub struct MergeRequestHandler {
     /// is `im_not_in_the_whitelist` then his code will not be run on our machines until his
     /// username is added to the whitelist.
     whitelist: Vec<String>,
-    /// This is the authentication token for the VCS
+    /// This is the authentication token for the VCS for write access to the repository
     auth_token: String,
-
     /// This field is not to be changed by the user because if youre using something other
-    /// than git, youre doing it wrong.
+    /// than git, youre doing it wrong :)
     repository_type: String,
 }
 
@@ -54,9 +56,22 @@ impl MergeRequestHandler {
         vcs: VersionControlSystem,
         owner: String,
         repo_name: String,
-        whitelist: Vec<String>,
-        auth_token: String,
+        whitelist: Vec<String>
     ) -> Self {
+
+        let auth_token = match File::read(AUTH_TOKEN_PATH) {
+            Ok(s) => s.trim().to_string(),
+            Err(e) => {
+                error!("Could not read authentication token from file '{}' because {}", AUTH_TOKEN_PATH, e);
+                exit(1);
+            }
+        };
+
+        if auth_token.len() == 0 {
+            error!("You didn't write your VCS's authentication token to '{}'!", AUTH_TOKEN_PATH);
+            exit(0);
+        }
+
         Self {
             vcs,
             owner,
@@ -116,15 +131,7 @@ except Exception as e:
 impl From<Yaml> for MergeRequestHandler {
     fn from(yaml: Yaml) -> Self {
         // Confirm that the merge request handler has the required sections
-        for section in [
-            "version-control-system",
-            "owner",
-            "repo-name",
-            "whitelist",
-            "auth-token",
-        ]
-        .iter()
-        {
+        for section in ["version-control-system", "owner", "repo-name", "whitelist"].iter() {
             if !yaml.has_section(section) {
                 error!("There was an error creating the merge request handler: '{}' section not specified", section);
                 exit(1);
@@ -132,10 +139,7 @@ impl From<Yaml> for MergeRequestHandler {
         }
         // Now that we've verified the required sections exist, continue
 
-
-        let vcs: VersionControlSystem = match 
-            unwrap(&yaml, "version-control-system").as_str()
-        {
+        let vcs: VersionControlSystem = match unwrap(&yaml, "version-control-system").as_str() {
             "github" => VersionControlSystem::GitHub,
             _ => {
                 warn!(
@@ -159,22 +163,17 @@ impl From<Yaml> for MergeRequestHandler {
         let mut whitelist: Vec<String> = vec![];
         for author in yaml.get_section("whitelist").unwrap() {
             whitelist.push(
-                author.to_string()
+                author
+                    .to_string()
                     .trim_matches('"')
                     .trim_matches('\'')
-                    .to_string()
-                            );
+                    .to_string(),
+            );
         }
 
-        // Get the authentication token
-        let auth_token: String = unwrap(&yaml, "auth-token");
 
-        if auth_token.len() == 0 {
-            error!("You cannot have an empty authentication token!");
-            exit(1);
-        }
-
+        
         // Return the constructed Self
-        Self::new(vcs, owner, repo_name, whitelist, auth_token)
+        Self::new(vcs, owner, repo_name, whitelist)
     }
 }

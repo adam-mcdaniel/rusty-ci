@@ -1,5 +1,5 @@
 
-use crate::BuildSystem;
+use crate::{BuildSystem, AUTH_TOKEN_PATH};
 use crate::{yes_or_no, File};
 use std::process::exit;
 pub struct Makefile;
@@ -12,19 +12,20 @@ impl Makefile {
 
 impl BuildSystem for Makefile {
     fn install(&mut self) -> Result<(), String> {
+        if !yes_or_no("Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) ") {
+            error!("You must install those packages before continuing!");
+            exit(0);
+        }
         info!("Writing install file to `./Makefile`");
         File::write("Makefile", "
 install:
-\tsudo apt-get install python3-dev -y
-\tsudo apt-get install python3-pip -y
-\tsudo apt-get install python3-venv -y
-
 \tpython3 -m venv venv
 \t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequests treq 'buildbot[bundle]';
 \t. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial
 ")?;
         info!("Successfully wrote Makefile");
         warn!("To install dependencies run `make install`");
+        info!("Next, write your VCS's api token to '{}', and then run the `build` subcommand", AUTH_TOKEN_PATH);
         Ok(())
     }
 
