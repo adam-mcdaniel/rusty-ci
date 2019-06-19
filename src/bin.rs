@@ -13,20 +13,24 @@ fn main() {
   (version: crate_version!())
               (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
               (about: "A continuous integration tool written in Rust")
-              (@group BUILDSYSTEM =>
-                  (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
-                  (@arg make: -m --make "Uses make to install and build rusty-ci's output")
-              )
               (@subcommand install =>
                   (about: "Install buildbot")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
+                  (@group BUILDSYSTEM +required =>
+                      (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
+                      (@arg make: -m --make "Uses make to install and build rusty-ci's output")
+                  )
               )
               (@subcommand build =>
                   (about: "Build rusty-ci from an input yaml file")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                   (@arg YAML: +required "The path to the YAML file")
+                  (@group BUILDSYSTEM =>
+                      (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
+                      (@arg make: -m --make "Uses make to install and build rusty-ci's output")
+                  )
               )
               (@subcommand start =>
                   (about: "Launch rusty-ci from an input yaml file")
@@ -43,26 +47,36 @@ fn main() {
   .setting(AppSettings::ArgRequiredElseHelp)
   .get_matches();
 
-  let buildsystem: Box<dyn BuildSystem>;
-  if matches.is_present("bash") {
-    buildsystem = Box::new(Bash::new());
-  } else if matches.is_present("make") {
-    buildsystem = Box::new(Makefile::new());
-  } else {
-    buildsystem = Box::new(DefaultBuildSystem::new());
-  }
+  let mut buildsystem: Box<dyn BuildSystem> = Box::new(DefaultBuildSystem::new());
 
   match matches.subcommand_name() {
     Some("install") => {
       info!("Installing dependencies for rusty-ci...");
-      install(buildsystem)
+      let install_matches = matches
+        .subcommand_matches("install")
+        .unwrap();
+      if install_matches.is_present("bash") {
+        buildsystem = Box::new(Bash::new());
+      } else if install_matches.is_present("make") {
+        buildsystem = Box::new(Makefile::new());
+      }
+      install(buildsystem);
     }
     Some("build") => {
-      let yaml_path = matches
+
+      let build_matches = matches
         .subcommand_matches("build")
-        .unwrap()
+        .unwrap();
+      let yaml_path = build_matches
         .value_of("YAML")
         .unwrap();
+
+      if build_matches.is_present("bash") {
+        buildsystem = Box::new(Bash::new());
+      } else if build_matches.is_present("make") {
+        buildsystem = Box::new(Makefile::new());
+      }
+
       info!("Building rusty-ci from {}...", &yaml_path);
       let content = match File::read(yaml_path) {
         Ok(s) => s,
@@ -101,12 +115,13 @@ fn main() {
     }
     Some("setup") => {
       match setup() {
-        Ok(_) => {}
+        Ok(_) => {},
         Err(e) => {
           error!("There was a problem writing the template yaml file: {}", e);
           exit(1);
         }
       };
+      info!("Next, run the `install` subcommand command using either the `bash` or `make` flag");
     }
     _ => {}
   }
@@ -137,7 +152,7 @@ master:
   # Two minutes is a good poll interval
   poll-interval: 120
 
-# This section holds data specific to the handler that will look for 
+# This section holds data specific to the handler that will look for
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
@@ -161,9 +176,6 @@ merge-request-handler:
   # to mark it for testing; that is if the pull request was made by a non-whitelisted
   # user. If the pull request was made by a whitelisted user, it is automatically run.
   password: "ok to test"
-
-  # This is the authentication token from your version control system
-  auth-token: "just-testing"
 
 
 # This section holds each worker
