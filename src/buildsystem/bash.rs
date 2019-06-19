@@ -1,6 +1,6 @@
 
 use crate::buildsystem::BuildSystem;
-use crate::{yes_or_no, File};
+use crate::{yes_or_no, File, AUTH_TOKEN_PATH};
 use std::process::exit;
 
 /// This is the best build system rusty-ci supports right now.
@@ -18,12 +18,12 @@ impl Bash {
 impl BuildSystem for Bash {
     /// Writes install script to `install.sh` for user to run
     fn install(&mut self) -> Result<(), String> {
+        if !yes_or_no("Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) ") {
+            error!("You must install those packages before continuing!");
+            exit(0);
+        }
         info!("Writing install file to `./install.sh`");
         File::write("install.sh", "#!/bin/sh
-
-sudo apt-get install python3-dev -y
-sudo apt-get install python3-pip -y
-sudo apt-get install python3-venv -y
 
 python3 -m venv venv
 . venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequests treq 'buildbot[bundle]';
@@ -32,6 +32,7 @@ python3 -m venv venv
         info!("Successfully wrote install file");
         warn!("To install dependencies run `install.sh`");
         warn!("Before building from a YAML file, be sure to run `. venv/bin/activate`");
+        info!("Next, write your VCS's api token to '{}', and then run the `build` subcommand", AUTH_TOKEN_PATH);
         Ok(())
     }
 

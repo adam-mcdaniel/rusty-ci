@@ -1,13 +1,13 @@
-/// Because we cannot impl<T, E> From <T> for Result<T, E>,
+use std::fmt::{Display, Error, Formatter};
 /// we cannot use result for from trait definitions.
-/// 
+///
 /// This means we must handle the error some other way.
-/// For now, Im using exit. I might 
+/// For now, Im using exit. I might
 /// change this in the future, as needed.
 use std::process::exit;
-use std::fmt::{Display, Error, Formatter};
 
-use crate::{Step, unwrap};
+
+use crate::{unwrap, Step};
 use rusty_yaml::Yaml;
 use std::path::PathBuf;
 
@@ -21,9 +21,9 @@ const START_DIR: &str = "./build";
 /// The Builder struct encapsulates all the operations involved in
 /// defining a builder in buildbot. A builder works by giving tasks
 /// called steps to workers.
-/// 
+///
 /// A Builder object is composed of the name of the builder, the list
-/// of worker names that the builder will give the steps to, and the 
+/// of worker names that the builder will give the steps to, and the
 /// steps themselves.
 pub struct Builder {
     name: String,
@@ -86,7 +86,10 @@ impl From<Yaml> for Builder {
         // If not, tell user, and exit with error code 1.
         for section in ["workers", "script", "repo"].iter() {
             if !yaml.has_section(section) {
-                error!("There was an error creating a builder: '{}' section not specified for '{}'", section, name);
+                error!(
+                    "There was an error creating a builder: '{}' section not specified for '{}'",
+                    section, name
+                );
                 exit(1);
             }
         }
@@ -97,7 +100,7 @@ impl From<Yaml> for Builder {
         // Because of the way buildbot processes shell commands,
         // you cannot call the change directory, or cd command as an instruction.
         // Well, you can, but it wont change the directory.
-        //  
+        //
         // To fix this, we keep track of the current working directory using a PathBuf.
         // When the script uses the `cd` command, it will modify this path.
         let mut workdir = PathBuf::new();
@@ -105,9 +108,8 @@ impl From<Yaml> for Builder {
         workdir.push(START_DIR);
 
 
-
         // Get the url for the repo from the yaml section
-        let url= unwrap(&yaml, "repo");
+        let url = unwrap(&yaml, "repo");
 
         // Refresh your copy of the repository
         steps.push(Step::git_clone(url));

@@ -5,6 +5,7 @@ pub use helper::{File, Cmd, input, yes_or_no, unwrap};
 
 pub mod buildbot;
 pub use buildbot::{
+    AUTH_TOKEN_PATH,
     Worker,
     MasterConfig,
     MergeRequestHandler,
