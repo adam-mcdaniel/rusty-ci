@@ -7,7 +7,6 @@ pub fn unwrap<S: ToString>(yaml: &Yaml, section: S) -> String {
     let result = yaml.get_section(section.to_string())
         .unwrap()
         .nth(0)
-        .unwrap()
         .to_string();
 
 	let first = match result.chars().nth(0) {Some(v) => v, None => ' '};
