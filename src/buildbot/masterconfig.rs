@@ -1,6 +1,7 @@
+use crate::{unwrap, Builder, MergeRequestHandler, Scheduler, Worker};
+
 use rusty_yaml::Yaml;
-use crate::{Builder, Scheduler, Worker, MergeRequestHandler, unwrap};
-use std::fmt::{Display, Formatter, Error};
+use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
 
@@ -56,7 +57,15 @@ impl MasterConfig {
 impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
         // Verify that the yaml section contains all the necessary subsections
-        for section in ["master", "workers", "builders", "schedulers", "merge-request-handler"].iter() {
+        for section in [
+            "master",
+            "workers",
+            "builders",
+            "schedulers",
+            "merge-request-handler",
+        ]
+        .iter()
+        {
             if !yaml.has_section(section) {
                 error!("There was an error creating the master configuration file: '{}' section was not declared", section);
                 exit(1);
@@ -83,7 +92,8 @@ impl From<Yaml> for MasterConfig {
             }
         }
 
-        let merge_request_handler = MergeRequestHandler::from(yaml.get_section("merge-request-handler").unwrap());
+        let merge_request_handler =
+            MergeRequestHandler::from(yaml.get_section("merge-request-handler").unwrap());
 
 
         // Get schedulers, builders, and workers from the yaml file.
@@ -140,7 +150,11 @@ impl Display for MasterConfig {
 # -*- python -*-
 # ex: set filetype=python:
 import re
+import json
+import requests as req
+from dateutil.parser import parse as dateparse
 from buildbot.plugins import *
+from buildbot.www.hooks.github import GitHubEventHandler
 
 # This is a sample buildmaster config file. It must be installed as
 # 'master.cfg' in your buildmaster's base directory.
@@ -157,6 +171,9 @@ c = BuildmasterConfig = {{}}
 c['workers'] = [{worker_info}]
 c['protocols'] = {{'pb': {{'port': 9989}}}}
 
+
+c['www'] = dict(port=8010,
+                plugins=dict(waterfall_view={{}}, console_view={{}}, grid_view={{}}))
 
 c['change_source'] = []
 
@@ -179,9 +196,6 @@ c['title'] = "{title}"
 c['titleURL'] = "{title_url}"
 
 c['buildbotURL'] = "http://{webserver_ip}:8010/"
-
-c['www'] = dict(port=8010,
-                plugins=dict(waterfall_view={{}}, console_view={{}}, grid_view={{}}))
 
 c['db'] = {{
     # This specifies what database buildbot uses to store its state.  You can leave
