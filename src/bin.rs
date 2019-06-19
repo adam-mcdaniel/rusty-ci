@@ -3,7 +3,7 @@ extern crate rusty_ci;
 
 use clap::{clap_app, crate_version, AppSettings};
 use rusty_ci::{input, yes_or_no, File};
-use rusty_ci::{Bash, BuildSystem, DefaultBuildSystem, Makefile, MasterConfig, Worker};
+use rusty_ci::{Bash, BuildSystem, Makefile, MasterConfig, Worker};
 use rusty_yaml::Yaml;
 use std::process::exit;
 
@@ -17,7 +17,7 @@ fn main() {
                   (about: "Install buildbot")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
-                  (@group BUILDSYSTEM +required =>
+                  (@group BUILDSYSTEM =>
                       (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
                       (@arg make: -m --make "Uses make to install and build rusty-ci's output")
                   )
@@ -27,10 +27,11 @@ fn main() {
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                   (@arg YAML: +required "The path to the YAML file")
-                  (@group BUILDSYSTEM =>
-                      (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
-                      (@arg make: -m --make "Uses make to install and build rusty-ci's output")
-                  )
+                  // We can add support for different build systems for building in the future
+                  // (@group BUILDSYSTEM =>
+                  //     (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
+                  //     (@arg make: -m --make "Uses make to install and build rusty-ci's output")
+                  // )
               )
               (@subcommand start =>
                   (about: "Launch rusty-ci from an input yaml file")
@@ -47,35 +48,37 @@ fn main() {
   .setting(AppSettings::ArgRequiredElseHelp)
   .get_matches();
 
-  let mut buildsystem: Box<dyn BuildSystem> = Box::new(DefaultBuildSystem::new());
+  // Figure out the proper backend buildsystem to use
+  let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
+    Some(subcommand) => {
+      let sub_matches = matches
+        .subcommand_matches(subcommand)
+        .unwrap();
+      if sub_matches.is_present("bash") {
+        Box::new(Bash::new())
+      } else if sub_matches.is_present("make") {
+        Box::new(Makefile::new())
+      } else {
+        // Default is bash
+        Box::new(Bash::new())
+      }
+    },
+    // Default is bash
+    None => Box::new(Bash::new())
+  };
+
 
   match matches.subcommand_name() {
     Some("install") => {
       info!("Installing dependencies for rusty-ci...");
-      let install_matches = matches
-        .subcommand_matches("install")
-        .unwrap();
-      if install_matches.is_present("bash") {
-        buildsystem = Box::new(Bash::new());
-      } else if install_matches.is_present("make") {
-        buildsystem = Box::new(Makefile::new());
-      }
       install(buildsystem);
     }
     Some("build") => {
-
-      let build_matches = matches
+      let yaml_path = matches
         .subcommand_matches("build")
-        .unwrap();
-      let yaml_path = build_matches
+        .unwrap()
         .value_of("YAML")
         .unwrap();
-
-      if build_matches.is_present("bash") {
-        buildsystem = Box::new(Bash::new());
-      } else if build_matches.is_present("make") {
-        buildsystem = Box::new(Makefile::new());
-      }
 
       info!("Building rusty-ci from {}...", &yaml_path);
       let content = match File::read(yaml_path) {
