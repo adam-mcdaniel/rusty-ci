@@ -146,7 +146,7 @@ try:
             repo=\"{name}\",
             # right now just poll every 60 seconds
             # this will need to change in the future, but this is just for testing.
-            pollInterval=10,
+            pollInterval=20,
             pullrequest_filter=github_pull_check,
             repository_type=\"{repository_type}\",
             token=\"{token}\"))

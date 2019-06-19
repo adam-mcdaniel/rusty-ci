@@ -23,6 +23,6 @@ path = "tests/step.rs"
 
 
 [dependencies]
-rusty-yaml = "0.4.0"
+rusty-yaml = "0.5.0"
 clap = "2.33"
 termcolor = "1.0.5"
