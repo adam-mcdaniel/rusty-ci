@@ -154,13 +154,12 @@ except Exception as e:
     print(f\"Could not create merge request handler: {{str(e)}}\")
 
 
-
-
 context = util.Interpolate(\"buildbot/%(prop:buildername)s\")
 github_status_service = reporters.GitHubStatusPush(token='{token}',
                                 context=context,
                                 startDescription='Build started.',
                                 endDescription='Build done.')
+
 c['services'].append(github_status_service)
 
 ",
