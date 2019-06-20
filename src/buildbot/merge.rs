@@ -152,6 +152,17 @@ try:
             token=\"{token}\"))
 except Exception as e:
     print(f\"Could not create merge request handler: {{str(e)}}\")
+
+
+
+
+context = util.Interpolate(\"buildbot/%(prop:buildername)s\")
+github_status_service = reporters.GitHubStatusPush(token='{token}',
+                                context=context,
+                                startDescription='Build started.',
+                                endDescription='Build done.')
+c['services'].append(github_status_service)
+
 ",
                 self.whitelist,
                 password = self.password.trim_matches('"'),
@@ -173,7 +184,15 @@ except Exception as e:
 impl From<Yaml> for MergeRequestHandler {
     fn from(yaml: Yaml) -> Self {
         // Confirm that the merge request handler has the required sections
-        for section in ["version-control-system", "owner", "repo-name", "whitelist", "password"].iter() {
+        for section in [
+            "version-control-system",
+            "owner",
+            "repo-name",
+            "whitelist",
+            "password",
+        ]
+        .iter()
+        {
             if !yaml.has_section(section) {
                 error!("There was an error creating the merge request handler: '{}' section not specified", section);
                 exit(1);

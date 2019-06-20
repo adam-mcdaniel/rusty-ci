@@ -75,7 +75,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html" class="active"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.5.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html" class="active"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -144,24 +144,23 @@
 <p>Rusty-CI has four subcommands, the first of which is the <code>help</code> subcommand.
 To run the help subcommand, run <code>rusty-ci help</code> or alternatively <code>rusty-ci</code>.
 If you dont provide any arguments to <code>rusty-ci</code>, it will print the help message by default.</p>
-<pre><code>rusty_ci 0.4.2
+<pre><code>rusty_ci 0.5.2
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
 A continuous integration tool written in Rust
 
 USAGE:
-    rusty-ci [FLAGS] [SUBCOMMAND]
+    rusty-ci [SUBCOMMAND]
 
 FLAGS:
-    -b, --bash       Uses bash to install and build rusty-ci's output
     -h, --help       Prints help information
-    -m, --make       Uses make to install and build rusty-ci's output
     -V, --version    Prints version information
 
 SUBCOMMANDS:
-    build      Build and launch rusty-ci from an input yaml file
+    build      Build rusty-ci from an input yaml file
     help       Prints this message or the help of the given subcommand(s)
-    install    Install python3 and buildbot
+    install    Install buildbot
     setup      Output a template YAML file for you to change to customize
+    start      Launch rusty-ci from an input yaml file
 </code></pre>
 <p>This tells you more about the program, but it doesn't go into any depth.
 Let me explain each subcommand individually.</p>

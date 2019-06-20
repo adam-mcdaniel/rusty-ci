@@ -176,6 +176,7 @@ c['www'] = dict(port=8010,
                 plugins=dict(waterfall_view={{}}, console_view={{}}, grid_view={{}}))
 
 c['change_source'] = []
+c['services'] = []
 
 {merge_request_handler}
 
@@ -190,7 +191,6 @@ c['builders'] = []
 {schedulers}
 {builders}
 
-c['services'] = []
 
 c['title'] = "{title}"
 c['titleURL'] = "{title_url}"

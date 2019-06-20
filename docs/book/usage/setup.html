@@ -75,7 +75,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html" class="active"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.5.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html" class="active"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -147,30 +147,28 @@ Where do you want the output template yaml to be? out.yaml
 Are you sure? (y/n) y
 ==[INFO]===&gt; Writing template yaml file to out.yaml...
 ==[INFO]===&gt; All done!
+==[INFO]===&gt; Next, run the `install` subcommand command using either the `bash` or `make` flag
 </code></pre>
-<pre><code>$ more out.yaml 
+<pre><code>$ more out.yaml
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
-  title:
-    - &quot;Rusty-CI&quot;
-  title-url:
-    - &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
+  title: &quot;Rusty-CI&quot;
+  title-url: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # This is the ip of the web-gui
   # The port is 8010
-  webserver-ip:
-    - localhost
+  webserver-ip: localhost
 
   # The address of your repository
-  repo:
-    - &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
+  repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # The number of seconds to wait before checking for updates on your repository
-  poll-interval:
-    - 10
+  # Two minutes is a good poll interval
+  poll-interval: 120
 
-# This section holds data specific to the handler that will look for 
+# This section holds data specific to the handler that will look for
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control

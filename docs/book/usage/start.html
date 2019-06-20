@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Build Subcommand - Rusty-CI</title>
+        <title>Start Subcommand - Rusty-CI</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,7 +75,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html" class="active"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html" class="active"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -140,41 +140,30 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="#build-subcommand" id="build-subcommand"><h1>Build Subcommand</h1></a>
-<p>The <code>build</code> subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.</p>
-<pre><code>rusty-ci-build 0.1.0
-Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
-Build rusty-ci from an input yaml file
-
-USAGE:
-    rusty-ci build &lt;YAML&gt;
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
-ARGS:
-    &lt;YAML&gt;    The path to the YAML file
-</code></pre>
-<a class="header" href="#usage" id="usage"><h2>Usage</h2></a>
-<p>Before you build your yaml file, you need to get an API or authentication token from your respective Version Control System, and write it to <code>auth.token</code>. This is so the output buildbot project has access to push commit statuses to your repository, and other things like that.</p>
-<p>To build from a yaml file, simply run this command.</p>
-<pre><code class="language-bash">rusty-ci build my_ci.yaml
-</code></pre>
-<p>Now, run the start subcommand.</p>
+                        <a class="header" href="#start-subcommand" id="start-subcommand"><h1>Start Subcommand</h1></a>
+<a class="header" href="#usage" id="usage"><h1>Usage</h1></a>
+<p>Before doing anything, confirm you're in your venv by running <code>. venv/bin/activate</code>!</p>
+<p>After running all the other rusty-ci subcommands, run <code>rusty-ci start YOUR_YAML_FILE.yaml</code></p>
+<p>This will kill the master and workers that were previously running, and start new instances of them.</p>
+<p>Now, to view your web gui, go to <a href="http://localhost:8010">http://localhost:8010</a>.</p>
+<a class="header" href="#not-working" id="not-working"><h2>Not working?</h2></a>
+<p>If your web gui isn't loading, buildbot probably failed to start the master, or you put the wrong IP in the master section of your yaml file.</p>
+<p>You probably just forgot to change the path to one of your worker's working directories, though.</p>
+<p>To see the log for the master, run <code>tail -f master/twistd.log</code>.</p>
+<p>If you see an exception, then the master ran into an error. This error will most likely be self explanatory and easy to debug, but in the case that it isn't, go to the <a href="https://buildbot.net">buildbot website</a>.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../usage/setup.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../usage/build.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="../usage/start.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../usage/yaml.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -186,13 +175,13 @@ ARGS:
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="../usage/setup.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="../usage/build.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="../usage/start.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="../usage/yaml.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

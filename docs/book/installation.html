@@ -75,7 +75,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/yaml.html"><strong aria-hidden="true">3.5.</strong> Input YAML</a></li></ol></li><li><a href="tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -141,6 +141,14 @@
                 <div id="content" class="content">
                     <main>
                         <a class="header" href="#installation" id="installation"><h1>Installation</h1></a>
+<a class="header" href="#install-python3" id="install-python3"><h3>Install Python3</h3></a>
+<p>You're gonna need <a href="https://www.python.org/">python3</a> to use Rusty-CI.</p>
+<p>To install on a *nix system, run the following commands.</p>
+<pre><code class="language-bash">apt install python3-dev
+apt install python3-pip
+apt install python3-venv
+</code></pre>
+<p>You will need to be able to use <code>python3 -m pip</code> and <code>python3 -m venv</code>.</p>
 <a class="header" href="#install-rust" id="install-rust"><h3>Install Rust</h3></a>
 <p>To install Rusty-CI, you must install Rust.
 You if you're on a Unix like platform, can do so by running this shell command.</p>

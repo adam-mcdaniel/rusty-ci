@@ -75,7 +75,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html" class="active"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.5.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html" class="active"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -141,25 +141,25 @@
                 <div id="content" class="content">
                     <main>
                         <a class="header" href="#install-subcommand" id="install-subcommand"><h1>Install Subcommand</h1></a>
-<p>The <code>install</code> subcommand is responsible for installing Rusty-CI's dependencies. When you run the install subcommand, it will run several shell commands in the background to install <a href="https://www.python.org/">python3</a>, and <a href="https://buildbot.net/">buildbot</a>.</p>
-<p>That is, if you use the default buildsystem. If you do not want Rusty-CI running anything on your machine without supervision, you can choose from the other buildsystems. Right now, <code>Rusty-CI</code> supports writing a Makefile, or writing a shell script to install dependencies. More buildsystems should be added in the future.</p>
+<p>The <code>install</code> subcommand is responsible for installing Rusty-CI's dependencies. When you run the install subcommand, it will output a bash script that uses your existing <a href="https://www.python.org/">python3</a> installation to install <a href="https://buildbot.net/">buildbot</a> and its dependencies.</p>
+<p>You can also choose to output a makefile instead of a bash script, but it's not really necessary.</p>
 <a class="header" href="#usage" id="usage"><h2>Usage</h2></a>
 <p>To output a Makefile for installation, run one of the following commands.</p>
 <pre><code class="language-bash"># Output an install makefile
-rusty-ci --make install
+rusty-ci install --make
 
 # Identical
-rusty-ci -m install
+rusty-ci install -m
 
 # Run the makefile to install
 make
 </code></pre>
 <p>To output a bash script for installation, run one of the following commands.</p>
-<pre><code class="language-bash"># Output an install makefile
-rusty-ci --bash install
+<pre><code class="language-bash"># Output an install shell script
+rusty-ci install
 
 # Identical
-rusty-ci -b install
+rusty-ci install --bash
 
 # Make the shell script executable
 chmod +x ./install.sh
@@ -167,15 +167,6 @@ chmod +x ./install.sh
 ./install.sh
 </code></pre>
 <p>If you do decide to either the bash or make buildsystems, be sure to read <code>rusty-ci</code>'s output and follow any instructions given.</p>
-<a class="header" href="#after-installing" id="after-installing"><h4>After installing</h4></a>
-<p>For some reason, when <code>pip</code> and <code>apt</code> fail to install an application, they don't seem to return a non-zero exit code. This makes it difficult to capture errors and debug your installation problems.</p>
-<p>Even if Rusty-CI tells you it has succeeded installing its dependencies, be sure to verify this using the following commands.</p>
-<pre><code class="language-bash"># Each of these should output a help message
-python3 -m venv
-buildbot
-buildbot-worker
-</code></pre>
-<p>If any of these do not display a help message, rerun the <code>install</code> subcommand and <em><strong>read every line of output from rusty-ci</strong></em>. There might be an instruction or a warning that you missed!</p>
 
                     </main>
 
