@@ -252,6 +252,14 @@ builders:
     repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 </code></pre>
 <a class="header" href="#installation" id="installation"><h1>Installation</h1></a>
+<a class="header" href="#install-python3" id="install-python3"><h3>Install Python3</h3></a>
+<p>You're gonna need <a href="https://www.python.org/">python3</a> to use Rusty-CI.</p>
+<p>To install on a *nix system, run the following commands.</p>
+<pre><code class="language-bash">apt install python3-dev
+apt install python3-pip
+apt install python3-venv
+</code></pre>
+<p>You will need to be able to use <code>python3 -m pip</code> and <code>python3 -m venv</code>.</p>
 <a class="header" href="#install-rust" id="install-rust"><h3>Install Rust</h3></a>
 <p>To install Rusty-CI, you must install Rust.
 You if you're on a Unix like platform, can do so by running this shell command.</p>
@@ -578,21 +586,6 @@ rusty-ci build template.yaml
 
         </div>
 
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3001");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload(true); // force reload from server (not from cache)
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         

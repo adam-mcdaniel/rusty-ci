@@ -1,5 +1,19 @@
 # Installation
 
+### Install Python3
+
+You're gonna need [python3](https://www.python.org/) to use Rusty-CI.
+
+To install on a \*nix system, run the following commands.
+
+```bash
+apt install python3-dev
+apt install python3-pip
+apt install python3-venv
+```
+
+You will need to be able to use `python3 -m pip` and `python3 -m venv`.
+
 ### Install Rust
 
 To install Rusty-CI, you must install Rust.
