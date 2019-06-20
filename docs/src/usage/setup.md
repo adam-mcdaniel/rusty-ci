@@ -11,29 +11,26 @@ Are you sure? (y/n) y
 ```
 
 ```
-$ more out.yaml 
+$ more out.yaml
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
-  title:
-    - "Rusty-CI"
-  title-url:
-    - "https://github.com/adam-mcdaniel/rusty-ci"
+  title: "Rusty-CI"
+  title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
   # The port is 8010
-  webserver-ip:
-    - localhost
+  webserver-ip: localhost
 
   # The address of your repository
-  repo:
-    - "https://github.com/adam-mcdaniel/rusty-ci"
+  repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # The number of seconds to wait before checking for updates on your repository
-  poll-interval:
-    - 10
+  # Two minutes is a good poll interval
+  poll-interval: 120
 
-# This section holds data specific to the handler that will look for 
+# This section holds data specific to the handler that will look for
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control

@@ -2,10 +2,25 @@
 
 The `build` subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.
 
-The build subcommand can also be used with different buildsystems. However, every system for building currently uses the same underlying code for building, so there's really no benefit to using a particular build system for now.
+```
+rusty-ci-build 0.1.0
+Adam McDaniel <adam.mcdaniel17@gmail.com>
+Build rusty-ci from an input yaml file
 
+USAGE:
+    rusty-ci build <YAML>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <YAML>    The path to the YAML file
+```
 
 ## Usage
+
+Before you build your yaml file, you need to get an API or authentication token from your respective Version Control System, and write it to `auth.token`. This is so the output buildbot project has access to push commit statuses to your repository, and other things like that.
 
 To build from a yaml file, simply run this command.
 
@@ -13,14 +28,4 @@ To build from a yaml file, simply run this command.
 rusty-ci build my_ci.yaml
 ```
 
-Now, to view your web gui, go to [http://localhost:8010](http://localhost:8010).
-
-## Not working?
-
-If your web gui isn't loading, buildbot probably failed to start the master, or you put the wrong IP in the master section of your yaml file.
-
-You probably just forgot to change the path to one of your worker's working directories, though.
-
-To see the log for the master, run `tail master/twistd.log`.
-
-If you see an exception, then the master ran into an error. This error will most likely be self explanatory and easy to debug, but in the case that it isn't, go to the [buildbot website](https://buildbot.net).
+Now, run the start subcommand.
