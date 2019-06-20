@@ -8,6 +8,7 @@ Where do you want the output template yaml to be? out.yaml
 Are you sure? (y/n) y
 ==[INFO]===> Writing template yaml file to out.yaml...
 ==[INFO]===> All done!
+==[INFO]===> Next, run the `install` subcommand command using either the `bash` or `make` flag
 ```
 
 ```

@@ -16,6 +16,6 @@ If your web gui isn't loading, buildbot probably failed to start the master, or 
 
 You probably just forgot to change the path to one of your worker's working directories, though.
 
-To see the log for the master, run `tail master/twistd.log`.
+To see the log for the master, run `tail -f master/twistd.log`.
 
 If you see an exception, then the master ran into an error. This error will most likely be self explanatory and easy to debug, but in the case that it isn't, go to the [buildbot website](https://buildbot.net).
