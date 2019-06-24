@@ -99,38 +99,7 @@ impl Display for MergeRequestHandler {
             VersionControlSystem::GitHub => write!(
                 f,
                 "whitelist_authors = {:?}
-whitelist_pull_request_numbers = []
 
-
-def whitelist_pull_request(props, password):
-    author = props['user']['login']
-    pr_number = props['number']
-    comments_url = props['comments_url']
-
-    resp = req.get(comments_url)
-    try:
-        # Try to convert to a JSON object so we can read the data
-        json_acceptable_string = resp.text.replace(\"'\", \"\\\"\")
-        comments_json = json.loads(json_acceptable_string)
-
-
-        # Check each comment
-        for comment in comments_json:
-            # If the comment was made by an admin and matches the password
-            if comment['user']['login'] in whitelist_authors and re.match(password, comment['body']):
-                # If the pull request was not already in the whitelisted PRs, add it
-                if not pr_number in whitelist_pull_request_numbers:
-                    print(\"ADMIN: \" + str(comment['user']['login']) + \" PASSWORD: \" + str(comment['body']))
-                    whitelist_pull_request_numbers.append(pr_number)
-                    print(f\"ADDED PR NUMBER {{pr_number}}\")
-                print(f\"PR NUMBER {{pr_number}} IS ALREADY GOOD TO TEST\")
-    except Exception as e:
-        # There was a problem converting to JSON, github returned bad data
-        print(f\"There was an error: {{str(e)}}. If this error has anything to do with JSON, its likely that you've queried GitHub too many times.\")
-        # Write the returned webpage to BAD
-        open('BAD', 'w').write(resp.text)
-
-    return True
 
 
 try:
@@ -141,7 +110,6 @@ try:
             # this will need to change in the future, but this is just for testing.
             pollInterval=20,
             repository_type=\"{repository_type}\",
-            # pullrequest_filter=whitelist_pull_request,
             github_property_whitelist=[\"*\"],
             token=\"{token}\"))
 except Exception as e:
@@ -173,24 +141,29 @@ def is_whitelisted(props, password):
     # The author of the PR
     author = props['github.user.login']
 
+    resp = req.get(comments_url)
+    try:
+        # Try to convert to a JSON object so we can read the data
+        json_acceptable_string = resp.text.replace(\"'\", \"\\\"\")
+        comments_json = json.loads(json_acceptable_string)
 
-    whitelist_pull_request({{
-        'number': pr_number,
-        'comments_url': comments_url,
-        'user': {{
-            'login': author
-        }}
-    }}, password)
 
-    # Print the list of valid pull requests
-    print(f'GOOD PR NUMBERS: {{str(whitelist_pull_request_numbers)}}')
+        # Check each comment
+        for comment in comments_json:
+            # If the comment was made by an admin and matches the password
+            if comment['user']['login'] in whitelist_authors and re.fullmatch(password, comment['body']):
+                # If the pull request was not already in the whitelisted PRs, add it
+                print(\"ADMIN: \" + str(comment['user']['login']) + \" PASSWORD: \" + str(comment['body']))
+                print(f\"PR NUMBER {{pr_number}} IS GOOD TO TEST\")
+                return True
+    except Exception as e:
+        # There was a problem converting to JSON, github returned bad data
+        print(f\"There was an error: {{str(e)}}. If this error has anything to do with JSON, its likely that you've queried GitHub too many times.\")
+        # Write the returned webpage to BAD
+        open('BAD', 'w').write(resp.text)
 
-    # The author of the pull request
-    if pr_number in whitelist_pull_request_numbers:
-        print(\"WHITELISTED PR NUMBER\")
-        return True
-        
-    elif author in whitelist_authors:
+    
+    if author in whitelist_authors:
         print(\"WHITELISTED AUTHOR\")
         return True
 

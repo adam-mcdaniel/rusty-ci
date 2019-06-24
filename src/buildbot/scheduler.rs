@@ -87,7 +87,7 @@ def {name}_triggers(props):
 
     for f in props.files:
         for regex in triggers:
-            if re.match(regex, str(f)):
+            if re.fullmatch(regex, str(f)):
                 return builders
 
     return []
