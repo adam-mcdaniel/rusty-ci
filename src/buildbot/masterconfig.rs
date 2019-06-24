@@ -1,4 +1,4 @@
-use crate::{unwrap, Builder, MergeRequestHandler, Scheduler, Worker};
+use crate::{unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker};
 
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
@@ -13,11 +13,12 @@ use std::process::exit;
 /// For more information on how the master configuration file works,
 /// see the documentation for buildbot on their website: https://buildbot.net/
 pub struct MasterConfig {
-    title: String, //
+    title: String,
     title_url: String,
     git_repo: String,
     webserver_ip: String,
     poll_interval: String,
+    mail_notifier: Option<MailNotifier>,
     merge_request_handler: MergeRequestHandler,
     builders: Vec<Builder>,
     schedulers: Vec<Scheduler>,
@@ -33,6 +34,7 @@ impl MasterConfig {
         git_repo: String,
         webserver_ip: String,
         poll_interval: String,
+        mail_notifier: Option<MailNotifier>,
         merge_request_handler: MergeRequestHandler,
         builders: Vec<Builder>,
         schedulers: Vec<Scheduler>,
@@ -44,11 +46,16 @@ impl MasterConfig {
             git_repo,
             webserver_ip,
             poll_interval,
+            mail_notifier,
             merge_request_handler,
             builders,
             schedulers,
             workers,
         }
+    }
+
+    pub fn set_mail_notifier(&mut self, mail_notifier: MailNotifier) {
+        self.mail_notifier = Some(mail_notifier);
     }
 }
 
@@ -133,6 +140,7 @@ impl From<Yaml> for MasterConfig {
             git_repo,
             webserver_ip,
             poll_interval,
+            None,
             merge_request_handler,
             builders,
             schedulers,
@@ -178,6 +186,8 @@ c['www'] = dict(port=8010,
 c['change_source'] = []
 c['services'] = []
 
+{mail_notifier}
+
 {merge_request_handler}
 
 c['change_source'].append(changes.GitPoller(
@@ -208,6 +218,10 @@ c['db'] = {{
             webserver_ip = self.webserver_ip,
             git_repo = self.git_repo,
             merge_request_handler = self.merge_request_handler,
+            mail_notifier = match &self.mail_notifier {
+                Some(mn) => mn.to_string(),
+                None => "".to_string(),
+            },
             worker_info = self
                 .workers
                 .iter()
