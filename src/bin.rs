@@ -51,9 +51,7 @@ fn main() {
   // Figure out the proper backend buildsystem to use
   let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
     Some(subcommand) => {
-      let sub_matches = matches
-        .subcommand_matches(subcommand)
-        .unwrap();
+      let sub_matches = matches.subcommand_matches(subcommand).unwrap();
       if sub_matches.is_present("bash") {
         Box::new(Bash::new())
       } else if sub_matches.is_present("make") {
@@ -62,9 +60,9 @@ fn main() {
         // Default is bash
         Box::new(Bash::new())
       }
-    },
+    }
     // Default is bash
-    None => Box::new(Bash::new())
+    None => Box::new(Bash::new()),
   };
 
 
@@ -118,7 +116,7 @@ fn main() {
     }
     Some("setup") => {
       match setup() {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(e) => {
           error!("There was a problem writing the template yaml file: {}", e);
           exit(1);
@@ -175,11 +173,6 @@ merge-request-handler:
   whitelist:
     - adam-mcdaniel
 
-  # The password a whitelisted user can comment on a merge / pull request
-  # to mark it for testing; that is if the pull request was made by a non-whitelisted
-  # user. If the pull request was made by a whitelisted user, it is automatically run.
-  password: "ok to test"
-
 
 # This section holds each worker
 # You can have as many workers as youd like, just be sure to fill out
@@ -223,6 +216,14 @@ schedulers:
     # You can put as many builders as youd like here, and the scheduler will start them all.
     builders:
       - rusty-ci-test
+
+    # The password a whitelisted user can comment on a merge / pull request
+    # to mark it for testing; that is if the pull request was made by a non-whitelisted
+    # user. If the pull request was made by a whitelisted user, it is automatically run.
+    #
+    # This password will only whitelist that PR for this scheduler, meaning you can make
+    # different passwords for different schedulers
+    password: "ok to test"
 
 # These are the builders that are executed by the schedulers
 # Each has its own specific task that is delegated to one or more workers
