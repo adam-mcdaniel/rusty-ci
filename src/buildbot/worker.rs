@@ -46,6 +46,7 @@ impl Worker {
     }
 }
 
+
 /// Convert a Yaml section to a Worker
 ///
 /// The worker requires that the yaml section has the following subsections:
