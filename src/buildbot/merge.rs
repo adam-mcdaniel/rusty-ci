@@ -101,7 +101,6 @@ impl Display for MergeRequestHandler {
                 "whitelist_authors = {:?}
 
 
-
 try:
     c['change_source'].append(changes.GitHubPullrequestPoller(
             owner=\"{owner}\",
