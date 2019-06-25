@@ -26,7 +26,7 @@ fn main() {
 									(about: "Build rusty-ci from an input yaml file")
 									(version: "0.1.0")
 									(author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
-									(@arg YAML: +required "The path to the YAML file")
+									(@arg MASTER_YAML: +required "The path to the YAML file")
 									(@arg MAIL_YAML: "The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
 									// We can add support for different build systems for building in the future
 									// (@group BUILDSYSTEM =>
@@ -38,7 +38,7 @@ fn main() {
 									(about: "Launch rusty-ci from an input yaml file")
 									(version: "0.1.0")
 									(author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
-									(@arg YAML: +required "The path to the YAML file")
+									(@arg MASTER_YAML: +required "The path to the YAML file")
 							)
 							(@subcommand setup =>
 									(about: "Output a template YAML file for you to change to customize")
@@ -75,7 +75,7 @@ fn main() {
             let yaml_path = matches
                 .subcommand_matches("build")
                 .unwrap()
-                .value_of("YAML")
+                .value_of("MASTER_YAML")
                 .unwrap();
             info!("Building rusty-ci from {}...", &yaml_path);
             let content = match File::read(yaml_path) {
@@ -119,7 +119,7 @@ fn main() {
             let yaml_path = matches
                 .subcommand_matches("start")
                 .unwrap()
-                .value_of("YAML")
+                .value_of("MASTER_YAML")
                 .unwrap();
             info!("Starting workers and master from {}...", &yaml_path);
             let content = match File::read(yaml_path) {
@@ -154,11 +154,11 @@ fn main() {
 
 /// This function writes a template YAML file for the user to edit as needed.
 fn setup() -> Result<(), String> {
-    let filename = input("Where do you want the output template yaml to be? ");
+    let master_filename = input("Where do you want the template master yaml file to be? ");
     if yes_or_no("Are you sure? (y/n) ") {
-        info!("Writing template yaml file to {}...", filename);
+        info!("Writing template yaml file to {}...", master_filename);
         File::write(
-            filename,
+            master_filename,
             r#"
 # This section holds data specific to the master of the workers
 master:
@@ -266,6 +266,32 @@ builders:
 		# The repo to refresh from before running
 		repo: "https://github.com/adam-mcdaniel/rusty-ci"
 "#,
+        )?;
+    } else {
+        error!("You weren't sure!");
+    }
+
+
+    let mail_filename = input("Where do you want the template mail yaml file to be? ");
+    if yes_or_no("Are you sure? (y/n) ") {
+        info!("Writing template yaml file to {}...", mail_filename);
+        File::write(
+            mail_filename,
+            r#"# These recipients will be emailed every success / failure
+extra-recipients:
+  - your-admins-here@gmail.com
+
+# The from email address used to email updates
+from-address: your-email-here@gmail.com
+
+# The smtp relay hostname (self explanatory)
+smtp-relay-host: smtp.gmail.com
+
+# The smtp relay port (self explanatory)
+smtp-port: 587
+
+# The password used to send emails using the from-address
+smtp-password: "p@$$w0rd""#,
         )?;
         info!("All done!");
     } else {
