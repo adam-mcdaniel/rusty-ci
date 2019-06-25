@@ -3,6 +3,8 @@ use crate::unwrap;
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
+
+
 /// This object is responsible for building the `MailNotifier` object
 /// in the buildbot master config. It contains the information for
 /// authenticating an SMTP request to send email. This information is
@@ -49,7 +51,7 @@ mail_notifier_service = reporters.MailNotifier(fromaddr="{from_address}",
                             sendToInterestedUsers=True,
                             extraRecipients={recipients},
                             relayhost="{relay_host}", smtpPort={port},
-                            smtpUser="{user}",
+                            smtpUser="{user}", buildSetSummary=True, addLogs=True,
                             smtpPassword="{password}")
 c['services'].append(mail_notifier_service)
 
