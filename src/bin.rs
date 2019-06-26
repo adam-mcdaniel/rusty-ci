@@ -9,7 +9,7 @@ use std::process::exit;
 
 
 fn main() {
-    let matches = clap_app!(rusty_ci =>
+  let matches = clap_app!(rusty_ci =>
 	(version: crate_version!())
 							(author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
 							(about: "A continuous integration tool written in Rust")
@@ -49,117 +49,112 @@ fn main() {
 	.setting(AppSettings::ArgRequiredElseHelp)
 	.get_matches();
 
-    // Figure out the proper backend buildsystem to use
-    let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
-        Some(subcommand) => {
-            let sub_matches = matches.subcommand_matches(subcommand).unwrap();
-            if sub_matches.is_present("bash") {
-                Box::new(Bash::new())
-            } else if sub_matches.is_present("make") {
-                Box::new(Makefile::new())
-            } else {
-                // Default is bash
-                Box::new(Bash::new())
-            }
-        }
+  // Figure out the proper backend buildsystem to use
+  let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
+    Some(subcommand) => {
+      let sub_matches = matches.subcommand_matches(subcommand).unwrap();
+      if sub_matches.is_present("bash") {
+        Box::new(Bash::new())
+      } else if sub_matches.is_present("make") {
+        Box::new(Makefile::new())
+      } else {
         // Default is bash
-        None => Box::new(Bash::new()),
-    };
-
-    match matches.subcommand_name() {
-        Some("install") => {
-            info!("Installing dependencies for rusty-ci...");
-            install(buildsystem);
-        }
-        Some("build") => {
-            let yaml_path = matches
-                .subcommand_matches("build")
-                .unwrap()
-                .value_of("MASTER_YAML")
-                .unwrap();
-            info!("Building rusty-ci from {}...", &yaml_path);
-            let content = match File::read(yaml_path) {
-                Ok(s) => s,
-                Err(e) => {
-                    error!(
-                        "There was a problem reading {}: {}",
-                        yaml_path,
-                        e.to_string()
-                    );
-                    exit(1);
-                }
-            };
-            let master_yaml = Yaml::from(content);
-
-
-            // If the MAIL_YAML argument is passed, open the file with that path
-            // and return a yaml object from its contents
-            let mail_yaml = match matches
-                .subcommand_matches("build")
-                .unwrap()
-                .value_of("MAIL_YAML")
-            {
-                Some(mail_yaml) => match File::read(mail_yaml) {
-                    Ok(s) => Some(Yaml::from(s)),
-                    Err(e) => {
-                        error!(
-                            "There was a problem reading {}: {}",
-                            mail_yaml,
-                            e.to_string()
-                        );
-                        exit(1);
-                    }
-                },
-                None => None,
-            };
-
-            build(buildsystem, master_yaml, mail_yaml)
-        }
-        Some("start") => {
-            let yaml_path = matches
-                .subcommand_matches("start")
-                .unwrap()
-                .value_of("MASTER_YAML")
-                .unwrap();
-            info!("Starting workers and master from {}...", &yaml_path);
-            let content = match File::read(yaml_path) {
-                Ok(s) => s,
-                Err(e) => {
-                    error!(
-                        "There was a problem reading {}: {}",
-                        yaml_path,
-                        e.to_string()
-                    );
-                    exit(1);
-                }
-            };
-            let yaml = Yaml::from(content);
-            start(buildsystem, yaml)
-        }
-        Some("setup") => {
-            match setup() {
-                Ok(_) => {}
-                Err(e) => {
-                    error!("There was a problem writing the template yaml file: {}", e);
-                    exit(1);
-                }
-            };
-            info!(
-                "Next, run the `install` subcommand command using either the `bash` or `make` flag"
-            );
-        }
-        _ => {}
+        Box::new(Bash::new())
+      }
     }
-}
+    // Default is bash
+    None => Box::new(Bash::new()),
+  };
+
+  match matches.subcommand_name() {
+    Some("install") => {
+      info!("Installing dependencies for rusty-ci...");
+      install(buildsystem);
+    }
+    Some("build") => {
+      let yaml_path = matches
+        .subcommand_matches("build")
+        .unwrap()
+        .value_of("MASTER_YAML")
+        .unwrap();
+      info!("Building rusty-ci from {}...", &yaml_path);
+      let content = match File::read(yaml_path) {
+        Ok(s) => s,
+        Err(e) => {
+          error!(
+            "There was a problem reading {}: {}",
+            yaml_path,
+            e.to_string()
+          );
+          exit(1);
+        }
+      };
+      let master_yaml = Yaml::from(content);
+
+      // If the MAIL_YAML argument is passed, open the file with that path
+      // and return a yaml object from its contents
+      let mail_yaml = match matches
+        .subcommand_matches("build")
+        .unwrap()
+        .value_of("MAIL_YAML")
+      {
+        Some(mail_yaml) => match File::read(mail_yaml) {
+          Ok(s) => Some(Yaml::from(s)),
+          Err(e) => {
+            error!(
+              "There was a problem reading {}: {}",
+              mail_yaml,
+              e.to_string()
+            );
+            exit(1);
+          }
+        },
+        None => None,
+      };
+      build(buildsystem, master_yaml, mail_yaml)
+    }
+    Some("start") => {
+      let yaml_path = matches
+        .subcommand_matches("start")
+        .unwrap()
+        .value_of("MASTER_YAML")
+        .unwrap();
+      info!("Starting workers and master from {}...", &yaml_path);
+      let content = match File::read(yaml_path) {
+        Ok(s) => s,
+        Err(e) => {
+          error!(
+            "There was a problem reading {}: {}",
+            yaml_path,
+            e.to_string()
+          );
+          exit(1);
+        }
+      };
+      let yaml = Yaml::from(content);
+      start(buildsystem, yaml)
+    }
+    Some("setup") => {
+      match setup() {
+        Ok(_) => {}
+        Err(e) => {
+          error!("There was a problem writing the template yaml file: {}", e);
+          exit(1);
+        }
+      };
+      info!("Next, run the `install` subcommand command using either the `bash` or `make` flag");
+    }
+    _ => {}
+  }
 
 /// This function writes a template YAML file for the user to edit as needed.
 fn setup() -> Result<(), String> {
-    let master_filename = input("Where do you want the template master yaml file to be? ");
-    if yes_or_no("Are you sure? (y/n) ") {
-        info!("Writing template yaml file to {}...", master_filename);
-        File::write(
-            master_filename,
-            r#"
+  let master_filename = input("Where do you want the template master yaml file to be? ");
+  if yes_or_no("Are you sure? (y/n) ") {
+    info!("Writing template yaml file to {}...", master_filename);
+    File::write(
+      master_filename,
+      r#"
 # This section holds data specific to the master of the workers
 master:
 	# The title subsection of the master holds the title of your web gui
@@ -269,18 +264,17 @@ builders:
 		# The repo to refresh from before running
 		repo: "https://github.com/adam-mcdaniel/rusty-ci"
 "#,
-        )?;
-    } else {
-        error!("You weren't sure!");
-    }
+    )?;
+  } else {
+    error!("You weren't sure!");
+  }
 
-
-    let mail_filename = input("Where do you want the template mail yaml file to be? ");
-    if yes_or_no("Are you sure? (y/n) ") {
-        info!("Writing template yaml file to {}...", mail_filename);
-        File::write(
-            mail_filename,
-            r#"# These recipients will be emailed every success / failure
+  let mail_filename = input("Where do you want the template mail yaml file to be? ");
+  if yes_or_no("Are you sure? (y/n) ") {
+    info!("Writing template yaml file to {}...", mail_filename);
+    File::write(
+      mail_filename,
+      r#"# These recipients will be emailed every success / failure
 extra-recipients:
   - your-admins-here@gmail.com
 
@@ -299,51 +293,50 @@ smtp-port: 587
 
 # The password used to send emails using the from-address
 smtp-password: "p@$$w0rd""#,
-        )?;
-        info!("All done!");
-    } else {
-        error!("You weren't sure!");
-    }
+    )?;
+    info!("All done!");
+  } else {
+    error!("You weren't sure!");
+  }
 
-    Ok(())
+  Ok(())
 }
 
 
 /// This method takes a boxed BuildSystem trait object and runs its install routine
 fn start(mut b: Box<dyn BuildSystem>, yaml: Yaml) {
-    let mut workers = vec![];
-    let workers_section = match yaml.get_section("workers") {
-        Ok(w) => w,
-        Err(e) => {
-            error!("There was a problem reading the yaml file: {}", e);
-            exit(1);
-        }
-    };
-    for worker in workers_section {
-        workers.push(Worker::from(worker));
+  let mut workers = vec![];
+  let workers_section = match yaml.get_section("workers") {
+    Ok(w) => w,
+    Err(e) => {
+      error!("There was a problem reading the yaml file: {}", e);
+      exit(1);
     }
-
-    match b.start(&workers) {
-        Ok(_) => {
-            println!("Successfully started workers and master");
-        }
-        Err(e) => {
-            println!("There was a problem while starting: {}", e);
-        }
-    };
+  };
+  for worker in workers_section {
+    workers.push(Worker::from(worker));
+  }
+  match b.start(&workers) {
+    Ok(_) => {
+      println!("Successfully started workers and master");
+    }
+    Err(e) => {
+      println!("There was a problem while starting: {}", e);
+    }
+  };
 }
 
 
 /// This method takes a boxed BuildSystem trait object and runs its install routine
 fn install(mut b: Box<dyn BuildSystem>) {
-    match b.install() {
-        Ok(_) => {
-            println!("Successfully finished install");
-        }
-        Err(e) => {
-            println!("There was a problem while installing: {}", e);
-        }
-    };
+  match b.install() {
+    Ok(_) => {
+      println!("Successfully finished install");
+    }
+    Err(e) => {
+      println!("There was a problem while installing: {}", e);
+    }
+  };
 }
 
 /// This function takes a boxed BuildSystem trait object and uses it
@@ -351,29 +344,29 @@ fn install(mut b: Box<dyn BuildSystem>) {
 /// It constructs the workers and the master config file from an input yaml,
 /// and feeds it to the buildsystem.
 fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>) {
-    let mut workers = vec![];
-    let workers_section = match master_yaml.get_section("workers") {
-        Ok(w) => w,
-        Err(e) => {
-            error!("There was a problem reading the yaml file: {}", e);
-            exit(1);
-        }
-    };
-    for worker in workers_section {
-        workers.push(Worker::from(worker));
+  let mut workers = vec![];
+  let workers_section = match master_yaml.get_section("workers") {
+    Ok(w) => w,
+    Err(e) => {
+      error!("There was a problem reading the yaml file: {}", e);
+      exit(1);
     }
-    let mut master = MasterConfig::from(master_yaml);
+  };
+  for worker in workers_section {
+    workers.push(Worker::from(worker));
+  }
+  let mut master = MasterConfig::from(master_yaml);
 
-    match mail_yaml {
-        Some(mn) => master.set_mail_notifier(MailNotifier::from(mn)),
-        None => {}
+  match mail_yaml {
+    Some(mn) => master.set_mail_notifier(MailNotifier::from(mn)),
+    None => {}
+  }
+
+  match b.build(master, workers) {
+    Ok(_) => {}
+    Err(e) => {
+      error!("There was a problem while building: {}", e);
     }
-
-    match b.build(master, workers) {
-        Ok(_) => {}
-        Err(e) => {
-            error!("There was a problem while building: {}", e);
-        }
-    };
-    println!("Successfully finished build");
+  };
+  println!("Successfully finished build");
 }
