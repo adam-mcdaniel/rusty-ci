@@ -1,6 +1,7 @@
-use crate::{Cmd, File, MasterConfig, Worker, AUTH_TOKEN_PATH};
-use std::path::PathBuf;
+use crate::{yes_or_no, Cmd, File, MasterConfig, Worker, AUTH_TOKEN_PATH};
 
+use std::path::PathBuf;
+use std::process::exit;
 
 /// This trait describes how to build rusty-ci using a particular backend.
 /// For example, if you dont want to directly install the rusty-ci dependencies
@@ -24,7 +25,10 @@ pub trait BuildSystem {
         self.install_python()?;
         info!("Installing Buildbot...");
         self.install_buildbot()?;
-        info!("Next, write your VCS's api token to '{}', and then run the `build` subcommand", AUTH_TOKEN_PATH);
+        info!(
+            "Next, write your VCS's api token to '{}', and then run the `build` subcommand",
+            AUTH_TOKEN_PATH
+        );
         Ok(())
     }
 
@@ -52,6 +56,11 @@ pub trait BuildSystem {
 
     /// This starts the master and the workers
     fn start(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
+        if !yes_or_no("Have you already run the install and build subcommands? (y/n) ") {
+            error!("You must run the install and build subcommands before the start subcommand!");
+            exit(0);
+        }
+
         info!("Starting workers and masters...");
         self.start_master()?;
         self.start_workers(workers)?;
