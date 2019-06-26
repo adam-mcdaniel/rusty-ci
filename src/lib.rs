@@ -9,6 +9,7 @@ pub use buildbot::{
     Worker,
     MasterConfig,
     MergeRequestHandler,
+    MailNotifier,
     Scheduler,
     Builder,
     Step,

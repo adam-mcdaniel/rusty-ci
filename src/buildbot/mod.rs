@@ -15,3 +15,6 @@ pub use merge::{MergeRequestHandler, AUTH_TOKEN_PATH};
 
 mod masterconfig;
 pub use masterconfig::MasterConfig;
+
+mod mail;
+pub use mail::MailNotifier;
