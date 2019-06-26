@@ -197,11 +197,6 @@ merge-request-handler:
 	whitelist:
 		- adam-mcdaniel
 
-	# The password a whitelisted user can comment on a merge / pull request
-	# to mark it for testing; that is if the pull request was made by a non-whitelisted
-	# user. If the pull request was made by a whitelisted user, it is automatically run.
-	password: "ok to test"
-
 
 # This section holds each worker
 # You can have as many workers as youd like, just be sure to fill out
@@ -245,6 +240,14 @@ schedulers:
 		# You can put as many builders as youd like here, and the scheduler will start them all.
 		builders:
 			- rusty-ci-test
+
+    # The password a whitelisted user can comment on a merge / pull request
+    # to mark it for testing; that is if the pull request was made by a non-whitelisted
+    # user. If the pull request was made by a whitelisted user, it is automatically run.
+    #
+    # This password will only whitelist that PR for this scheduler, meaning you can make
+    # different passwords for different schedulers
+    password: "ok to test"
 
 # These are the builders that are executed by the schedulers
 # Each has its own specific task that is delegated to one or more workers

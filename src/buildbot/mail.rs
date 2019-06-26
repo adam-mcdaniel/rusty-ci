@@ -10,14 +10,25 @@ use std::process::exit;
 /// authenticating an SMTP request to send email. This information is
 /// sensitive and should be kept separate from the master yaml file
 pub struct MailNotifier {
+    /// These are the recipients that will be messages with every test
     extra_recipients: Vec<String>,
+    /// The address that the emails will be sent from
     from_address: String,
+    /// The smtp host that will be used to access the email
     smtp_relay_host: String,
+    /// The port of the smtp_relay_host to use
     smtp_port: String,
 
     /// Identical to from_address
     smtp_user: String,
 
+    /// Basically this is the suffix to the email address
+    /// to tack on to the end of the usernames of the interested users.
+    /// So, the user `dn-lang` will be emailed at `dn-lang@example.org`
+    /// if lookup is `example.org`
+    lookup: String,
+
+    /// The password to access the from email address
     smtp_password: String,
 }
 
@@ -27,6 +38,7 @@ impl MailNotifier {
         from_address: String,
         smtp_relay_host: String,
         smtp_port: String,
+        lookup: String,
         smtp_password: String,
     ) -> Self {
         Self {
@@ -35,6 +47,7 @@ impl MailNotifier {
             smtp_relay_host,
             smtp_port,
             smtp_user: from_address,
+            lookup,
             smtp_password,
         }
     }
@@ -50,8 +63,10 @@ impl Display for MailNotifier {
 mail_notifier_service = reporters.MailNotifier(fromaddr="{from_address}",
                             sendToInterestedUsers=True,
                             extraRecipients={recipients},
+                            lookup="{lookup}",
                             relayhost="{relay_host}", smtpPort={port},
-                            smtpUser="{user}", buildSetSummary=True, addLogs=True,
+                            smtpUser="{user}", buildSetSummary=True,
+                            # addLogs=True,
                             smtpPassword="{password}")
 c['services'].append(mail_notifier_service)
 
@@ -62,6 +77,7 @@ c['services'].append(mail_notifier_service)
             password = self.smtp_password,
             user = self.smtp_user,
             port = self.smtp_port,
+            lookup = self.lookup,
         )
     }
 }
@@ -75,6 +91,7 @@ impl From<Yaml> for MailNotifier {
             "from-address",
             "smtp-relay-host",
             "smtp-port",
+            "lookup",
             "smtp-password",
         ]
         .iter()
@@ -94,12 +111,14 @@ impl From<Yaml> for MailNotifier {
         let smtp_relay_host = unwrap(&yaml, "smtp-relay-host");
         let smtp_port = unwrap(&yaml, "smtp-port");
         let smtp_password = unwrap(&yaml, "smtp-password");
+        let lookup = unwrap(&yaml, "lookup");
 
         Self::new(
             recipients,
             from_address,
             smtp_relay_host,
             smtp_port,
+            lookup,
             smtp_password,
         )
     }
