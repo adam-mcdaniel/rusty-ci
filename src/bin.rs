@@ -27,7 +27,7 @@ fn main() {
 									(version: "0.1.0")
 									(author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
 									(@arg MASTER_YAML: +required "The path to the YAML file")
-									(@arg MAIL_YAML: "The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
+									(@arg MAIL_YAML: -m --mail +takes_value "The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
 									// We can add support for different build systems for building in the future
 									// (@group BUILDSYSTEM =>
 									//     (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
