@@ -146,6 +146,7 @@ fn main() {
     }
     _ => {}
   }
+}
 
 /// This function writes a template YAML file for the user to edit as needed.
 fn setup() -> Result<(), String> {
