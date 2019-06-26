@@ -287,6 +287,10 @@ extra-recipients:
 # The from email address used to email updates
 from-address: your-email-here@gmail.com
 
+# The suffix to add to the interested users' usernames
+# to get an email we can send updates to.
+lookup: example.org
+
 # The smtp relay hostname (self explanatory)
 smtp-relay-host: smtp.gmail.com
 
