@@ -1,8 +1,8 @@
-use rusty_yaml::Yaml;
-use crate::unwrap;
-use std::process::exit;
-use std::fmt::{Display, Error, Formatter};
 
+use crate::unwrap;
+use rusty_yaml::Yaml;
+use std::fmt::{Display, Error, Formatter};
+use std::process::exit;
 /// This struct holds the information that is used to build the worker `buildbot.tac` file
 /// Each worker has:
 /// - a name that is used by the builders to assign work,

@@ -275,9 +275,21 @@ builders:
     info!("Writing template yaml file to {}...", mail_filename);
     File::write(
       mail_filename,
-      r#"# These recipients will be emailed every success / failure
+      r#"# The extra recipients to email
 extra-recipients:
-  - your-admins-here@gmail.com
+  # Emails under the failure section will be emailed
+  # info about every failed build
+  failure:
+    - failure@gmail.com
+  # Emails under the success section will be emailed
+  # info about every successful build
+  success:
+    - success@gmail.com
+  # Emails under the all section will be emailed
+  # info about every build
+  all:
+    - all_tests@gmail.com
+
 
 # The from email address used to email updates
 from-address: your-email-here@gmail.com

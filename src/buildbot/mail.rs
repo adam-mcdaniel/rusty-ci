@@ -11,7 +11,12 @@ use std::process::exit;
 /// sensitive and should be kept separate from the master yaml file
 pub struct MailNotifier {
     /// These are the recipients that will be messages with every test
-    extra_recipients: Vec<String>,
+    all_recipients: Vec<String>,
+    /// These are the recipients that will be messages with every successful test
+    success_recipients: Vec<String>,
+    /// These are the recipients that will be messages with every failed test
+    failure_recipients: Vec<String>,
+
     /// The address that the emails will be sent from
     from_address: String,
     /// The smtp host that will be used to access the email
@@ -34,7 +39,9 @@ pub struct MailNotifier {
 
 impl MailNotifier {
     pub fn new(
-        extra_recipients: Vec<String>,
+        all_recipients: Vec<String>,
+        success_recipients: Vec<String>,
+        failure_recipients: Vec<String>,
         from_address: String,
         smtp_relay_host: String,
         smtp_port: String,
@@ -42,7 +49,9 @@ impl MailNotifier {
         smtp_password: String,
     ) -> Self {
         Self {
-            extra_recipients,
+            all_recipients,
+            success_recipients,
+            failure_recipients,
             from_address: from_address.clone(),
             smtp_relay_host,
             smtp_port,
@@ -60,18 +69,50 @@ impl Display for MailNotifier {
             f,
             r#"
 
-mail_notifier_service = reporters.MailNotifier(fromaddr="{from_address}",
+# The mail notifier responsible for all info
+all = reporters.MailNotifier(fromaddr="{from_address}",
                             sendToInterestedUsers=True,
-                            extraRecipients={recipients},
+                            extraRecipients={all_recipients},
                             lookup="{lookup}",
                             relayhost="{relay_host}", smtpPort={port},
                             smtpUser="{user}", buildSetSummary=True,
                             # addLogs=True,
+                            mode="all",
                             smtpPassword="{password}")
-c['services'].append(mail_notifier_service)
+c['services'].append(all)
+
+
+# The mail notifier responsible for failures
+failures = reporters.MailNotifier(fromaddr="{from_address}",
+                            sendToInterestedUsers=True,
+                            extraRecipients={failure_recipients},
+                            lookup="{lookup}",
+                            relayhost="{relay_host}", smtpPort={port},
+                            smtpUser="{user}", buildSetSummary=True,
+                            # addLogs=True,
+                            mode="failing",
+                            smtpPassword="{password}")
+c['services'].append(failures)
+
+
+
+# The mail notifier responsible for successes
+successes = reporters.MailNotifier(fromaddr="{from_address}",
+                            sendToInterestedUsers=True,
+                            extraRecipients={success_recipients},
+                            lookup="{lookup}",
+                            relayhost="{relay_host}", smtpPort={port},
+                            smtpUser="{user}", buildSetSummary=True,
+                            # addLogs=True,
+                            mode="passing",
+                            smtpPassword="{password}")
+c['services'].append(successes)
+
 
 "#,
-            recipients = format!("{:?}", self.extra_recipients),
+            all_recipients = format!("{:?}", self.all_recipients),
+            success_recipients = format!("{:?}", self.success_recipients),
+            failure_recipients = format!("{:?}", self.failure_recipients),
             from_address = self.from_address,
             relay_host = self.smtp_relay_host,
             password = self.smtp_password,
@@ -97,15 +138,38 @@ impl From<Yaml> for MailNotifier {
         .iter()
         {
             if !yaml.has_section(section) {
-                error!("There was a problem creating the mail notifier: '{}' section not specified. The build will continue with no mail notifier.", section);
+                error!(
+                    "There was a problem creating the mail notifier: '{}' section not specified.",
+                    section
+                );
                 exit(1);
             }
         }
 
-        let mut recipients = vec![];
-        for recipient in yaml.get_section("extra-recipients").unwrap() {
-            recipients.push(recipient.to_string());
+
+        let extra_recipients = yaml.get_section("extra-recipients").unwrap();
+
+        for section in ["all", "failure", "success"].iter() {
+            if !extra_recipients.has_section(section) {
+                error!("There was a problem creating the mail notifier: '{}' section not specified in the 'extra-recipients' subsection.", section);
+                exit(1);
+            }
         }
+        let mut all_recipients = vec![];
+        for recipient in extra_recipients.get_section("all").unwrap() {
+            all_recipients.push(recipient.to_string());
+        }
+
+        let mut success_recipients = vec![];
+        for recipient in extra_recipients.get_section("success").unwrap() {
+            success_recipients.push(recipient.to_string());
+        }
+
+        let mut failure_recipients = vec![];
+        for recipient in extra_recipients.get_section("failure").unwrap() {
+            failure_recipients.push(recipient.to_string());
+        }
+
 
         let from_address = unwrap(&yaml, "from-address");
         let smtp_relay_host = unwrap(&yaml, "smtp-relay-host");
@@ -114,7 +178,9 @@ impl From<Yaml> for MailNotifier {
         let lookup = unwrap(&yaml, "lookup");
 
         Self::new(
-            recipients,
+            all_recipients,
+            success_recipients,
+            failure_recipients,
             from_address,
             smtp_relay_host,
             smtp_port,
