@@ -103,7 +103,7 @@ c['schedulers'].append({name})
 
     ",
                 name = self.name.replace("-", "_"),
-                depends = depends,
+                depends = depends.replace("-", "_"),
                 buildernames = format!("{:?}", self.buildernames)
             ),
             None => write!(
