@@ -20,6 +20,17 @@ pub struct Scheduler {
     /// a job, not what job is assigned.
     password: String,
 
+    /// This field is used to determine whether or not this scheduler is dependent on another.
+    /// If this field is anything other than None, then the `branch` and `file_triggers` fields
+    /// will be ignored / initialized to "".
+    ///
+    /// When a scheduler depends on another, it will be triggered only if the scheduler it
+    /// depends on was triggered and its builds were successful
+    ///
+    /// A scheduler in the YAML file should have the `depends` section OR the `branch`+`triggers`
+    /// sections, not both.
+    depends: Option<String>,
+
     /// A regex expr that accepts a branch name.
     /// This scheduler will only operate on the
     /// branches with names that match this regex.
@@ -37,12 +48,20 @@ pub struct Scheduler {
 
 impl Scheduler {
     /// Create new scheduler
-    fn new<S>(name: S, password: S, branch: S, file_triggers: Vec<S>, buildernames: Vec<S>) -> Self
+    fn new<S>(
+        name: S,
+        depends: Option<String>,
+        password: S,
+        branch: S,
+        file_triggers: Vec<S>,
+        buildernames: Vec<S>,
+    ) -> Self
     where
         S: Display,
     {
         Self {
             name: name.to_string(),
+            depends,
             password: password.to_string(),
             branch: branch.to_string(),
             file_triggers: file_triggers
@@ -72,9 +91,23 @@ impl Scheduler {
 
 impl Display for Scheduler {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(
-            f,
-            "
+        match &self.depends {
+            Some(depends) => write!(
+                f,
+                "   
+{name} = schedulers.Dependent(name=\"{name}\",
+                               upstream={depends},
+                               builderNames={buildernames})
+c['schedulers'].append({name})
+
+    ",
+                name = self.name.replace("-", "_"),
+                depends = depends.replace("-", "_"),
+                buildernames = format!("{:?}", self.buildernames)
+            ),
+            None => write!(
+                f,
+                "
 @util.renderer
 def {name}_triggers(props):
     builders = {buildernames}
@@ -92,21 +125,24 @@ def {name}_triggers(props):
 
     return []
 
-c['schedulers'].append(schedulers.AnyBranchScheduler(name=\"{name}\",
+{name} = schedulers.AnyBranchScheduler(name=\"{name}\",
     change_filter=util.ChangeFilter(branch_re=\"{branch}\"),
-    builderNames={name}_triggers))
+    builderNames={name}_triggers)
+
+c['schedulers'].append({name})
 
 c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
     builderNames={buildernames}))
 ",
-            name = self.name.replace("-", "_"),
-            password = self.password.trim_matches('"'),
-            branch = self.branch.trim_start_matches("\"").trim_end_matches("\""),
-            triggers = format!("{:?}", self.file_triggers)
-                .replace("\\\"", "")
-                .replace("\\\\\\\\", "\\\\"),
-            buildernames = format!("{:?}", self.buildernames)
-        )
+                name = self.name.replace("-", "_"),
+                password = self.password.trim_matches('"'),
+                branch = self.branch.trim_start_matches("\"").trim_end_matches("\""),
+                triggers = format!("{:?}", self.file_triggers)
+                    .replace("\\\"", "")
+                    .replace("\\\\\\\\", "\\\\"),
+                buildernames = format!("{:?}", self.buildernames)
+            ),
+        }
     }
 }
 
@@ -114,29 +150,43 @@ c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
 impl From<Yaml> for Scheduler {
     fn from(yaml: Yaml) -> Self {
         let name = yaml.get_name();
+        let depends: Option<String>;
+        let branch: String;
+        let password: String;
+        let mut triggers = vec![];
+        let mut builders = vec![];
 
-        for section in ["branch", "password", "triggers", "builders"].iter() {
-            if !yaml.has_section(section) {
-                error!("There was an error creating a scheduler: The '{}' section is not specified for '{}'", section, name);
-                exit(1);
+        if !yaml.has_section("builders") {
+            error!("There was an error creating a scheduler: The 'builders' section is not specified for '{}'", name);
+            exit(1);
+        }
+
+        if yaml.has_section("depends") {
+            depends = Some(unwrap(&yaml, "depends"));
+            branch = String::from("");
+            password = String::from("");
+
+        } else {
+            for section in ["branch", "password", "triggers"].iter() {
+                if !yaml.has_section(section) {
+                    error!("There was an error creating a scheduler: The '{}' section is not specified for '{}'", section, name);
+                    exit(1);
+                }
+            }
+
+            depends = None;
+            branch = unwrap(&yaml, "branch");
+            password = unwrap(&yaml, "password");
+
+            for trigger in yaml.get_section("triggers").unwrap() {
+                triggers.push(trigger.to_string());
             }
         }
 
-
-        let branch: String = unwrap(&yaml, "branch");
-        let password: String = unwrap(&yaml, "password");
-
-        let mut triggers = vec![];
-        for trigger in yaml.get_section("triggers").unwrap() {
-            triggers.push(trigger.to_string());
-        }
-
-
-        let mut builders = vec![];
         for builder in yaml.get_section("builders").unwrap() {
             builders.push(builder.to_string());
         }
 
-        Scheduler::new(name, password, branch, triggers, builders)
+        Scheduler::new(name, depends, password, branch, triggers, builders)
     }
 }
