@@ -42,6 +42,11 @@ pub trait BuildSystem {
     fn build(&mut self, master: MasterConfig, workers: Vec<Worker>) -> Result<(), String> {
         self.prebuild()?; // Call the prebuild method
 
+        if !yes_or_no("Have you already run the install subcommand? (y/n) ") {
+            error!("You must run the install subcommand before the build subcommand!");
+            exit(0);
+        }
+
         info!("Creating master...");
         self.create_master()?;
         info!("Creating workers...");
