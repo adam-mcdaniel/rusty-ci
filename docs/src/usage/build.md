@@ -8,14 +8,18 @@ Adam McDaniel <adam.mcdaniel17@gmail.com>
 Build rusty-ci from an input yaml file
 
 USAGE:
-    rusty-ci build <YAML>
+    rusty-ci build [OPTIONS] <MASTER_YAML>
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
+OPTIONS:
+    -m, --mail <MAIL_YAML>    The path to the YAML file dedicated to SMTP authentication info for sending email
+                              notifications
+
 ARGS:
-    <YAML>    The path to the YAML file
+    <MASTER_YAML>    The path to the YAML file
 ```
 
 ## Usage
@@ -26,6 +30,14 @@ To build from a yaml file, simply run this command.
 
 ```bash
 rusty-ci build my_ci.yaml
+```
+
+If you want to build your CI with support for email notifications, run it like so.
+
+```bash
+rusty-ci build my_ci.yaml --mail my_mail.yaml
+# identical to the following
+rusty-ci build my_ci.yaml -m my_mail.yaml
 ```
 
 Now, run the start subcommand.
