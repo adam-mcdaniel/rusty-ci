@@ -94,8 +94,7 @@ impl Display for Scheduler {
         match &self.depends {
             Some(depends) => write!(
                 f,
-                "
-                
+                "   
 {name} = schedulers.Dependent(name=\"{name}\",
                                upstream={depends},
                                builderNames={buildernames})
