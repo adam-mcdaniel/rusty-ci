@@ -302,7 +302,7 @@ sudo apt install build-essential
 <p>Rusty-CI has four subcommands, the first of which is the <code>help</code> subcommand.
 To run the help subcommand, run <code>rusty-ci help</code> or alternatively <code>rusty-ci</code>.
 If you dont provide any arguments to <code>rusty-ci</code>, it will print the help message by default.</p>
-<pre><code>rusty_ci 0.5.2
+<pre><code>rusty_ci 0.5.7
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
 A continuous integration tool written in Rust
 
@@ -350,11 +350,14 @@ chmod +x ./install.sh
 </code></pre>
 <p>If you do decide to either the bash or make buildsystems, be sure to read <code>rusty-ci</code>'s output and follow any instructions given.</p>
 <a class="header" href="#setup-subcommand" id="setup-subcommand"><h1>Setup Subcommand</h1></a>
-<p>The setup command is very simple. All it does is write a template YAML file to any path you'd like.</p>
+<p>The setup command is very simple. All it does is write template YAML files for building your CI and controlling email notifications to any paths you'd like.</p>
 <pre><code>$ ./rusty-ci setup
-Where do you want the output template yaml to be? out.yaml
+Where do you want the template master yaml file to be? out.yaml
 Are you sure? (y/n) y
 ==[INFO]===&gt; Writing template yaml file to out.yaml...
+Where do you want the template mail yaml file to be? mail.yaml
+Are you sure? (y/n) y
+==[INFO]===&gt; Writing template yaml file to mail.yaml...
 ==[INFO]===&gt; All done!
 ==[INFO]===&gt; Next, run the `install` subcommand command using either the `bash` or `make` flag
 </code></pre>
@@ -373,7 +376,8 @@ master:
   # The address of your repository
   repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
-  # The number of seconds to wait before checking for updates on your repository
+  # The number of seconds to wait before checking for updates on your
+repository
   # Two minutes is a good poll interval
   poll-interval: 120
 
@@ -384,6 +388,40 @@ merge-request-handler:
   # Right now, github is the only supported site
 ...
 </code></pre>
+<pre><code>$ more mail.yaml
+
+# The extra recipients to email
+extra-recipients:
+  # Emails under the failure section will be emailed
+  # info about every failed build
+  failure:
+    - failure@gmail.com
+  # Emails under the success section will be emailed
+  # info about every successful build
+  success:
+    - success@gmail.com
+  # Emails under the all section will be emailed
+  # info about every build
+  all:
+    - all_tests@gmail.com
+
+
+# The from email address used to email updates
+from-address: your-email-here@gmail.com
+
+# The suffix to add to the interested users' usernames
+# to get an email we can send updates to.
+lookup: example.org
+
+# The smtp relay hostname (self explanatory)
+smtp-relay-host: smtp.gmail.com
+
+# The smtp relay port (self explanatory)
+smtp-port: 587
+
+# The password used to send emails using the from-address
+smtp-password: &quot;p@$$w0rd&quot;
+</code></pre>
 <a class="header" href="#build-subcommand" id="build-subcommand"><h1>Build Subcommand</h1></a>
 <p>The <code>build</code> subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.</p>
 <pre><code>rusty-ci-build 0.1.0
@@ -391,19 +429,28 @@ Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
 Build rusty-ci from an input yaml file
 
 USAGE:
-    rusty-ci build &lt;YAML&gt;
+    rusty-ci build [OPTIONS] &lt;MASTER_YAML&gt;
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
+OPTIONS:
+    -m, --mail &lt;MAIL_YAML&gt;    The path to the YAML file dedicated to SMTP authentication info for sending email
+                              notifications
+
 ARGS:
-    &lt;YAML&gt;    The path to the YAML file
+    &lt;MASTER_YAML&gt;    The path to the YAML file
 </code></pre>
 <a class="header" href="#usage-3" id="usage-3"><h2>Usage</h2></a>
 <p>Before you build your yaml file, you need to get an API or authentication token from your respective Version Control System, and write it to <code>auth.token</code>. This is so the output buildbot project has access to push commit statuses to your repository, and other things like that.</p>
 <p>To build from a yaml file, simply run this command.</p>
 <pre><code class="language-bash">rusty-ci build my_ci.yaml
+</code></pre>
+<p>If you want to build your CI with support for email notifications, run it like so.</p>
+<pre><code class="language-bash">rusty-ci build my_ci.yaml --mail my_mail.yaml
+# identical to the following
+rusty-ci build my_ci.yaml -m my_mail.yaml
 </code></pre>
 <p>Now, run the start subcommand.</p>
 <a class="header" href="#start-subcommand" id="start-subcommand"><h1>Start Subcommand</h1></a>
@@ -460,11 +507,6 @@ merge-request-handler:
   # if their username is not in this list.
   whitelist:
     - adam-mcdaniel
-
-  # The password a whitelisted user can comment on a merge / pull request
-  # to mark it for testing; that is if the pull request was made by a non-whitelisted
-  # user. If the pull request was made by a whitelisted user, it is automatically run.
-  password: &quot;ok to test&quot;
 </code></pre>
 <a class="header" href="#the-workers-section" id="the-workers-section"><h2>The workers section</h2></a>
 <p>The workers section lists each worker and the information required to construct them and connect them to the master bot.</p>
@@ -513,6 +555,11 @@ schedulers:
     # You can put as many builders as youd like here, and the scheduler will start them all.
     builders:
       - rusty-ci-test
+
+    # The password a whitelisted user can comment on a merge / pull request
+    # to mark it for testing; that is if the pull request was made by a non-whitelisted
+    # user. If the pull request was made by a whitelisted user, it is automatically run.
+    password: &quot;ok to test&quot;
 </code></pre>
 <a class="header" href="#the-builders-section" id="the-builders-section"><h2>The builders section</h2></a>
 <p>The builders describe the tasks given to workers.</p>

@@ -51,11 +51,6 @@ merge-request-handler:
   # if their username is not in this list.
   whitelist:
     - adam-mcdaniel
-
-  # The password a whitelisted user can comment on a merge / pull request
-  # to mark it for testing; that is if the pull request was made by a non-whitelisted
-  # user. If the pull request was made by a whitelisted user, it is automatically run.
-  password: "ok to test"
 ```
 
 ## The workers section
@@ -113,6 +108,11 @@ schedulers:
     # You can put as many builders as youd like here, and the scheduler will start them all.
     builders:
       - rusty-ci-test
+
+    # The password a whitelisted user can comment on a merge / pull request
+    # to mark it for testing; that is if the pull request was made by a non-whitelisted
+    # user. If the pull request was made by a whitelisted user, it is automatically run.
+    password: "ok to test"
 ```
 
 ## The builders section
