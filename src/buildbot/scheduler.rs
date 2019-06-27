@@ -95,6 +95,7 @@ impl Display for Scheduler {
             Some(depends) => write!(
                 f,
                 "
+                
 {name} = schedulers.Dependent(name=\"{name}\",
                                upstream={depends},
                                builderNames={buildernames})
