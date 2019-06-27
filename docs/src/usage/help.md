@@ -5,7 +5,7 @@ To run the help subcommand, run `rusty-ci help` or alternatively `rusty-ci`.
 If you dont provide any arguments to `rusty-ci`, it will print the help message by default.
 
 ```
-rusty_ci 0.5.2
+rusty_ci 0.5.7
 Adam McDaniel <adam.mcdaniel17@gmail.com>
 A continuous integration tool written in Rust
 
