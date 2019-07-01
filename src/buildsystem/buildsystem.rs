@@ -43,7 +43,7 @@ pub trait BuildSystem {
         self.prebuild()?; // Call the prebuild method
 
         if !yes_or_no("Have you already run the install subcommand and activated your virtual env in this shell? (y/n) ") {
-            error!("You must run the install subcommand before the build subcommand!");
+            error!("You must run the install subcommand and activate your venv before the running the build subcommand!");
             exit(0);
         }
 
@@ -62,7 +62,7 @@ pub trait BuildSystem {
     /// This starts the master and the workers
     fn start(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         if !yes_or_no("Have you already run the build subcommand and activated your virtual env in this shell? (y/n) ") {
-            error!("You must run the build subcommand before the start subcommand!");
+            error!("You must run the build subcommand and activate your venv before the running the start subcommand!");
             exit(0);
         }
 
