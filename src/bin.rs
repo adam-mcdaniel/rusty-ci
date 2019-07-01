@@ -132,7 +132,7 @@ fn main() {
         }
       };
       let yaml = Yaml::from(content);
-      start(buildsystem, yaml)
+      start(buildsystem, yaml);
     }
     Some("setup") => {
       match setup() {
@@ -332,6 +332,7 @@ fn start(mut b: Box<dyn BuildSystem>, yaml: Yaml) {
   match b.start(&workers) {
     Ok(_) => {
       println!("Successfully started workers and master");
+      println!("Run `tail -f master/twisted.log` to see the log output for your CI!");
     }
     Err(e) => {
       println!("There was a problem while starting: {}", e);
@@ -376,10 +377,11 @@ fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>
   }
 
   match b.build(master, workers) {
-    Ok(_) => {}
+    Ok(_) => {
+      println!("Successfully finished build");
+    }
     Err(e) => {
       error!("There was a problem while building: {}", e);
     }
   };
-  println!("Successfully finished build");
 }
