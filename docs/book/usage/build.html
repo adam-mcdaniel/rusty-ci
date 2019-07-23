@@ -4,6 +4,8 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Build Subcommand - Rusty-CI</title>
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +58,7 @@
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
             var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             document.body.className = theme;
             document.querySelector('html').className = theme + ' js';
@@ -75,7 +77,10 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html" class="active"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html" class="active"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -105,7 +110,7 @@
                             
                         </div>
 
-                        <h1 class="menu-title">Rusty-CI</h1> 
+                        <h1 class="menu-title">Rusty-CI</h1>
 
                         <div class="right-buttons">
                             <a href="../print.html" title="Print this book" aria-label="Print this book">
@@ -140,7 +145,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="#build-subcommand" id="build-subcommand"><h1>Build Subcommand</h1></a>
+                        <h1><a class="header" href="#build-subcommand" id="build-subcommand">Build Subcommand</a></h1>
 <p>The <code>build</code> subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.</p>
 <pre><code>rusty-ci-build 0.1.0
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
@@ -160,7 +165,7 @@ OPTIONS:
 ARGS:
     &lt;MASTER_YAML&gt;    The path to the YAML file
 </code></pre>
-<a class="header" href="#usage" id="usage"><h2>Usage</h2></a>
+<h2><a class="header" href="#usage" id="usage">Usage</a></h2>
 <p>Before you build your yaml file, you need to get an API or authentication token from your respective Version Control System, and write it to <code>auth.token</code>. This is so the output buildbot project has access to push commit statuses to your repository, and other things like that.</p>
 <p>To build from a yaml file, simply run this command.</p>
 <pre><code class="language-bash">rusty-ci build my_ci.yaml
@@ -209,6 +214,21 @@ rusty-ci build my_ci.yaml -m my_mail.yaml
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3001");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload(true); // force reload from server (not from cache)
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         

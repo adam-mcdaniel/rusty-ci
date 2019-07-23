@@ -4,6 +4,8 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Installation - Rusty-CI</title>
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +58,7 @@
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
             var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             document.body.className = theme;
             document.querySelector('html').className = theme + ' js';
@@ -75,7 +77,10 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -105,7 +110,7 @@
                             
                         </div>
 
-                        <h1 class="menu-title">Rusty-CI</h1> 
+                        <h1 class="menu-title">Rusty-CI</h1>
 
                         <div class="right-buttons">
                             <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -140,8 +145,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="#installation" id="installation"><h1>Installation</h1></a>
-<a class="header" href="#install-python3" id="install-python3"><h3>Install Python3</h3></a>
+                        <h1><a class="header" href="#installation" id="installation">Installation</a></h1>
+<h3><a class="header" href="#install-python3" id="install-python3">Install Python3</a></h3>
 <p>You're gonna need <a href="https://www.python.org/">python3</a> to use Rusty-CI.</p>
 <p>To install on a *nix system, run the following commands.</p>
 <pre><code class="language-bash">apt install python3-dev
@@ -149,18 +154,18 @@ apt install python3-pip
 apt install python3-venv
 </code></pre>
 <p>You will need to be able to use <code>python3 -m pip</code> and <code>python3 -m venv</code>.</p>
-<a class="header" href="#install-rust" id="install-rust"><h3>Install Rust</h3></a>
+<h3><a class="header" href="#install-rust" id="install-rust">Install Rust</a></h3>
 <p>To install Rusty-CI, you must install Rust.
 You if you're on a Unix like platform, can do so by running this shell command.</p>
 <pre><code class="language-bash">curl https://sh.rustup.rs -sSf | sh
 </code></pre>
 <p>If you're on Windows, go to the <a href="https://rust-lang.org">rust website</a>. You'll need to download <code>rust-init.exe</code> and follow its instructions.</p>
-<a class="header" href="#install-rusty-ci-with-cargo-recommended" id="install-rusty-ci-with-cargo-recommended"><h3>Install Rusty-CI with Cargo (recommended)</h3></a>
+<h3><a class="header" href="#install-rusty-ci-with-cargo-recommended" id="install-rusty-ci-with-cargo-recommended">Install Rusty-CI with Cargo (recommended)</a></h3>
 <p>Now that you have Rust, you should be able to install Rusty-CI by running the following command.</p>
 <pre><code class="language-bash">cargo install rusty-ci -f
 </code></pre>
 <p>This will automatically add Rusty-CI to your path, so we should be all done!</p>
-<a class="header" href="#build-from-source-more-tedious" id="build-from-source-more-tedious"><h3>Build from source (more tedious)</h3></a>
+<h3><a class="header" href="#build-from-source-more-tedious" id="build-from-source-more-tedious">Build from source (more tedious)</a></h3>
 <p>If you don't want to install with <code>cargo</code>, you can always build Rusty-CI from source. Here's how you would do so.</p>
 <pre><code class="language-bash">git clone https://github.com/adam-mcdaniel/rusty-ci
 
@@ -171,7 +176,7 @@ cargo build --release
 mv ./target/release/rusty-ci .
 </code></pre>
 <p>After running these commands, <code>rusty-ci</code> should be in your current working directory. To finish the installation, move the binary to any folder you'd like, and add that folder to your path.</p>
-<a class="header" href="#problems-installing" id="problems-installing"><h3>Problems Installing?</h3></a>
+<h3><a class="header" href="#problems-installing" id="problems-installing">Problems Installing?</a></h3>
 <p>If you run into some problems installing Rusty-CI, or if Rust can't find <code>cc</code>, you need to upgrade some of the packages on your system.</p>
 <p>Here's the commands I run to solve these errors.</p>
 <pre><code class="language-bash">sudo apt update
@@ -179,7 +184,7 @@ sudo apt upgrade
 sudo apt install build-essential
 </code></pre>
 <p>After running these commands, try running <code>cargo install rusty-ci</code> again.</p>
-<a class="header" href="#still-having-problems" id="still-having-problems"><h3>Still having problems?</h3></a>
+<h3><a class="header" href="#still-having-problems" id="still-having-problems">Still having problems?</a></h3>
 <p>If you're still having some serious problems, <a href="https://github.com/adam-mcdaniel/rusty-ci/issues">post an issue</a> on the repository.</p>
 
                     </main>
@@ -219,6 +224,21 @@ sudo apt install build-essential
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3001");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload(true); // force reload from server (not from cache)
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         
