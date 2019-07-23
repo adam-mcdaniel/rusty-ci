@@ -1,0 +1,31 @@
+# The extra recipients to email
+extra-recipients:
+  # Emails under the failure section will be emailed
+  # info about every failed build
+  failure:
+    - failure@gmail.com
+  # Emails under the success section will be emailed
+  # info about every successful build
+  success:
+    - success@gmail.com
+  # Emails under the all section will be emailed
+  # info about every build
+  all:
+    - all_tests@gmail.com
+
+
+# The from email address used to email updates
+from-address: your-email-here@gmail.com
+
+# The suffix to add to the interested users' usernames
+# to get an email we can send updates to.
+lookup: example.org
+
+# The smtp relay hostname (self explanatory)
+smtp-relay-host: smtp.gmail.com
+
+# The smtp relay port (self explanatory)
+smtp-port: 587
+
+# The password used to send emails using the from-address
+smtp-password: "p@$$w0rd"

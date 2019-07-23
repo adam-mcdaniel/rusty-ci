@@ -1,0 +1,53 @@
+
+master:
+  title: "XASM Continuous Integration"
+  title-url: "https://github.com/adam-mcdaniel/xasm"
+  webserver-ip: localhost
+  repo: "https://github.com/adam-mcdaniel/xasm"
+  poll-interval: 120
+
+merge-request-handler:
+  version-control-system: github
+  owner: adam-mcdaniel
+  repo-name: xasm
+  whitelist:
+    - adam-mcdaniel
+
+
+workers:
+  xasm-worker:
+    masterhost: localhost
+    masterport: 9989
+    basedir: '/home/adam/Desktop/rusty-ci/testing/xasm-worker'
+    password: pass
+
+schedulers:
+  xasm-change:
+    builders:
+      - xasm-build
+      - xasm-test
+
+    branch: ".*"
+    triggers:
+      - '.*\.py'
+      - '.*\.cpp'
+      - '.*Makefile'
+      - '.*CMakeLists.txt'
+    password: "ok to test"
+
+builders:
+  xasm-build:
+    workers:
+      - xasm-worker
+    script:
+      - python main.py
+      - echo XASM build done!
+    repo: "https://github.com/adam-mcdaniel/xasm"
+
+  xasm-test:
+    workers:
+      - xasm-worker
+    script:
+      - python main.py
+      - echo XASM test done!
+    repo: "https://github.com/adam-mcdaniel/xasm"
