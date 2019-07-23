@@ -4,6 +4,8 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Setup Subcommand - Rusty-CI</title>
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +58,7 @@
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
             var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             document.body.className = theme;
             document.querySelector('html').className = theme + ' js';
@@ -75,7 +77,10 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html" class="active"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/yaml.html"><strong aria-hidden="true">3.6.</strong> Input YAML</a></li></ol></li><li><a href="../tldr.html"><strong aria-hidden="true">4.</strong> Too Long, Didn't Read</a></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html" class="active"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -105,7 +110,7 @@
                             
                         </div>
 
-                        <h1 class="menu-title">Rusty-CI</h1> 
+                        <h1 class="menu-title">Rusty-CI</h1>
 
                         <div class="right-buttons">
                             <a href="../print.html" title="Print this book" aria-label="Print this book">
@@ -140,7 +145,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="#setup-subcommand" id="setup-subcommand"><h1>Setup Subcommand</h1></a>
+                        <h1><a class="header" href="#setup-subcommand" id="setup-subcommand">Setup Subcommand</a></h1>
 <p>The setup command is very simple. All it does is write template YAML files for building your CI and controlling email notifications to any paths you'd like.</p>
 <pre><code>$ ./rusty-ci setup
 Where do you want the template master yaml file to be? out.yaml
@@ -251,6 +256,21 @@ smtp-password: &quot;p@$$w0rd&quot;
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3001");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload(true); // force reload from server (not from cache)
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         

@@ -75,10 +75,10 @@ workers:
     # This is used by the master to give the worker a job
     password: pass
 ```
-
 # The schedulers section
 
-This section lists each scheduler. Each scheduler has a regular expression that matches a branch to track, and a list of regular expressions that match file changes.
+
+This section lists each scheduler. Each scheduler has a regular expression that matches a branch to track, and a list of regular expressions that match file changes. A scheduler can also depend on another scheduler using the `depends` section INSTEAD of the `triggers`, `branch`, and `password` sections.
 
 Read the comments in the template YAML for more information.
 
@@ -90,6 +90,17 @@ schedulers:
   # This scheduler will trigger the `rusty-ci-test` builder whenever it
   # detects a change in a yaml file for any branch.
   ci-change:
+    # This scheduler triggers the `rusty-ci-test` builder.
+    # You can put as many builders as youd like here, and the scheduler will start them all.
+    builders:
+      - rusty-ci-test
+
+    # This will make the current scheduler run if the "your-scheduler-name-here"
+    # has run successfully. You can only put one scheduler name in this section.
+    # depends: "your-scheduler-name-here"
+    # IF YOU USE THE `depends` SECTION, YOU SHOULD REMOVE OR COMMENT THE FOLLOWING SECTIONS
+    # Using the depends section will ignore the `branch`, `triggers`, and `password` sections
+
     # This is a regular expression that matches a branch.
     # If there is a change in a branch whos name matches this regex,
     # it will be checked by the following triggers section.
@@ -104,11 +115,6 @@ schedulers:
       - '.*\.yaml'
       - '.*\.sh'
       - ".*Makefile"
-    # This scheduler triggers the `rusty-ci-test` builder.
-    # You can put as many builders as youd like here, and the scheduler will start them all.
-    builders:
-      - rusty-ci-test
-
     # The password a whitelisted user can comment on a merge / pull request
     # to mark it for testing; that is if the pull request was made by a non-whitelisted
     # user. If the pull request was made by a whitelisted user, it is automatically run.
