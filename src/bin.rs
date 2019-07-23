@@ -54,7 +54,8 @@ fn main() {
         .setting(AppSettings::ArgRequiredElseHelp)
   )
   .setting(AppSettings::ArgRequiredElseHelp)
-  .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!").get_matches();
+  .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!")
+  .get_matches();
 
 
   // Figure out the proper backend buildsystem to use
