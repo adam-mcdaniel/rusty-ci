@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rusty_ci;
 
-use clap::{clap_app, crate_version, AppSettings};
+use clap::{clap_app, crate_version, AppSettings, Arg, SubCommand};
 use rusty_ci::{input, yes_or_no, File};
 use rusty_ci::{Bash, BuildSystem, MailNotifier, Makefile, MasterConfig, Worker};
 use rusty_yaml::Yaml;
@@ -10,7 +10,7 @@ use std::process::exit;
 
 fn main() {
   let matches = clap_app!(rusty_ci =>
-  (version: crate_version!())
+              (version: crate_version!())
               (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
               (about: "A continuous integration tool written in Rust")
               (@subcommand install =>
@@ -22,18 +22,13 @@ fn main() {
                       (@arg make: -m --make "Uses make to install and build rusty-ci's output")
                   )
               )
-              (@subcommand build =>
-                  (about: "Build rusty-ci from an input yaml file")
-                  (version: "0.1.0")
-                  (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
-                  (@arg MASTER_YAML: +required "The path to the YAML file")
-                  (@arg MAIL_YAML: -m --mail +takes_value "The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
-                  // We can add support for different build systems for building in the future
-                  // (@group BUILDSYSTEM =>
-                  //     (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
-                  //     (@arg make: -m --make "Uses make to install and build rusty-ci's output")
-                  // )
-              )
+              // (@subcommand build =>
+              //     (about: "Build rusty-ci from an input yaml file")
+              //     (version: "0.1.0")
+              //     (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
+              //     (@arg MASTER_YAML: +required "The path to the YAML file")
+              //     (@arg MAIL_YAML: -m --mail +takes_value "The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
+              // )
               (@subcommand start =>
                   (about: "Launch rusty-ci from an input yaml file")
                   (version: "0.1.0")
@@ -46,8 +41,27 @@ fn main() {
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
               )
   )
+  .subcommand(
+    SubCommand::with_name("build")
+        .about("Build rusty-ci from an input yaml file")
+        .version("0.1.0")
+        .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
+        .arg(
+          Arg::with_name("MAIL_YAML")
+            .short("m")
+            .long("mail")
+            .takes_value(true)
+            .help("The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
+        )
+        .arg(
+          Arg::with_name("MASTER_YAML")
+            .required(true)
+            .help("The path to the YAML file")
+        )
+        .setting(AppSettings::ArgRequiredElseHelp)
+  )
   .setting(AppSettings::ArgRequiredElseHelp)
-  .get_matches();
+  .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!").get_matches();
 
   // Figure out the proper backend buildsystem to use
   let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
