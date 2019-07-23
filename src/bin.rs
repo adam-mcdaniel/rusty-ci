@@ -22,13 +22,6 @@ fn main() {
                       (@arg make: -m --make "Uses make to install and build rusty-ci's output")
                   )
               )
-              // (@subcommand build =>
-              //     (about: "Build rusty-ci from an input yaml file")
-              //     (version: "0.1.0")
-              //     (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
-              //     (@arg MASTER_YAML: +required "The path to the YAML file")
-              //     (@arg MAIL_YAML: -m --mail +takes_value "The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
-              // )
               (@subcommand start =>
                   (about: "Launch rusty-ci from an input yaml file")
                   (version: "0.1.0")
@@ -62,6 +55,7 @@ fn main() {
   )
   .setting(AppSettings::ArgRequiredElseHelp)
   .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!").get_matches();
+
 
   // Figure out the proper backend buildsystem to use
   let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
