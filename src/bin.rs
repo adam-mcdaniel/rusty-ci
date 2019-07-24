@@ -215,6 +215,7 @@ workers:
     # This is not the same as the web gui port!
     masterport: 9989
     # The absolute path to the working directory of this worker
+    # The worker files will be installed in this directory
     basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
     # The password for this worker
     # This is used by the master to give the worker a job
