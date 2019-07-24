@@ -121,6 +121,7 @@ pub trait BuildSystem {
         Ok(())
     }
 
+
     /// Writes the configuration `buildbot.tac` file for each worker
     fn write_worker_configs(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         for worker in workers {
@@ -128,11 +129,17 @@ pub trait BuildSystem {
             path.push(worker.get_dir());
             path.push("buildbot.tac");
 
-            File::write(path, worker.to_string())?;
+            match File::write(path, worker.to_string()) {
+                Err(e) => {
+                    Err(e + &format!("\nDid you enter a valid basedir for the \"{}\" worker?", worker.get_name()))
+                }
+                Ok(()) => Ok(())
+            }?;
         }
 
         Ok(())
     }
+
 
     /// Creates the master in the `master` directory
     fn create_master(&mut self) -> Result<(), String> {
@@ -143,10 +150,16 @@ pub trait BuildSystem {
         Ok(())
     }
 
+
+
     /// Writes the master configuration file
     fn write_master_config(&mut self, master: &MasterConfig) -> Result<(), String> {
-        File::write("master/master.cfg", master.to_string())?;
-        Ok(())
+        match File::write("master/master.cfg", master.to_string()) {
+            Err(e) => {
+                Err(e + "\nDid you enter your venv by running `. venv/bin/activate`?")
+            }
+            Ok(()) => Ok(())
+        }
     }
 
 

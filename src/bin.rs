@@ -344,7 +344,7 @@ fn start(mut b: Box<dyn BuildSystem>, yaml: Yaml) {
   match b.start(&workers) {
     Ok(_) => {
       println!("Successfully started workers and master");
-      println!("Run `tail -f master/twisted.log` to see the log output for your CI!");
+      println!("Run `tail -f master/twistd.log` to see the log output for your CI!");
     }
     Err(e) => {
       println!("There was a problem while starting: {}", e);
