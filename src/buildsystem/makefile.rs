@@ -17,11 +17,12 @@ impl BuildSystem for Makefile {
             exit(0);
         }
         info!("Writing install file to `./Makefile`");
-        File::write("Makefile", "
+        File::write("Makefile", ".SILENT: install
+
 install:
 \tpython3 -m venv venv
-\t. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequests treq 'buildbot[bundle]';
-\t. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial
+\t. venv/bin/activate; python3 -m pip install -U pip >/dev/null; python3 -m pip install txrequests treq 'buildbot[bundle]' >/dev/null;
+\t. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial >/dev/null
 ")?;
         info!("Successfully wrote Makefile");
         warn!("To install dependencies run `make install`");

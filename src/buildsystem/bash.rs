@@ -27,9 +27,12 @@ impl BuildSystem for Bash {
         info!("Writing install file to `./install.sh`");
         File::write("install.sh", "#!/bin/sh
 
-python3 -m venv venv
-. venv/bin/activate; python3 -m pip install -U pip; python3 -m pip install txrequests treq 'buildbot[bundle]';
-. venv/bin/activate; python3 -m pip install buildbot-worker setuptools-trial
+python3 -m venv venv 2>&1
+. venv/bin/activate
+
+python3 -m pip install -U pip >/dev/null
+python3 -m pip install txrequests treq 'buildbot[bundle]' >/dev/null
+python3 -m pip install buildbot-worker setuptools-trial >/dev/null
 ")?;
         info!("Successfully wrote install file");
         warn!("To install dependencies run `install.sh`");
