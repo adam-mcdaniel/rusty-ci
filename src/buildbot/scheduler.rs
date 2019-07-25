@@ -4,6 +4,10 @@ use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
+
+/// The scheduler struct controls when a builder is run. This is done when certain requirements specified
+/// by the scheduler are fulfilled. For example, you could define a scheduler that would trigger one or
+/// more builders when a file ending in ".py" is changed in a branch beginning with "fix/".
 pub struct Scheduler {
     /// Name of scheduler
     name: String,
