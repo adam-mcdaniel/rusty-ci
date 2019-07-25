@@ -30,6 +30,10 @@ nano template.yaml
 # Edit your file as needed
 nano mail.yaml
 
+
+# Add an authentication token from your VCS (github)
+nano auth.token
+
 rusty-ci build template.yaml --mail mail.yaml
 # All done!
 ```
