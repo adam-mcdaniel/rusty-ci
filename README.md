@@ -54,15 +54,8 @@ curl https://sh.rustup.rs -sSf | sh
 source $HOME/.cargo/env
 cargo install -f rusty-ci
 
-# Install rusty-ci dependencies
-rusty-ci install
-chmod +x ./install.sh
-./install.sh
 
-# Enter venv
-. venv/bin/activate
-
-# Build template yaml files
+# Write template yaml files
 rusty-ci setup
 
 # Assuming that you told rusty-ci to output to template.yaml
@@ -72,6 +65,15 @@ nano template.yaml
 # Assuming that you told rusty-ci to output to mail.yaml
 # Edit your file as needed
 nano mail.yaml
+
+
+# Install rusty-ci dependencies
+rusty-ci install
+chmod +x ./install.sh
+./install.sh
+
+# Enter venv
+. venv/bin/activate
 
 # Add an authentication token from your VCS (github)
 nano auth.token
