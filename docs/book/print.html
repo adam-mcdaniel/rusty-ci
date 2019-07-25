@@ -425,22 +425,23 @@ extra-recipients:
     - all_tests@gmail.com
 
 
-# The from email address used to email updates
+# The &quot;from&quot; email address used to send email updates to recipients
 from-address: your-email-here@gmail.com
 
 # The suffix to add to the interested users' usernames
 # to get an email we can send updates to.
-lookup: example.org
+lookup: gmail.com
 
 # The smtp relay hostname (self explanatory)
+# gmail's smtp relay hostname is `smtp.gmail.com`
 smtp-relay-host: smtp.gmail.com
 
 # The smtp relay port (self explanatory)
+# 587 is the smtp port that `smtp.gmail.com` uses
 smtp-port: 587
 
-# The password used to send emails using the from-address
+# The password used to login to the &quot;from&quot; email address account
 smtp-password: &quot;p@$$w0rd&quot;
-
 </code></pre>
 <h1><a class="header" href="#build-subcommand" id="build-subcommand">Build Subcommand</a></h1>
 <p>The <code>build</code> subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.</p>
