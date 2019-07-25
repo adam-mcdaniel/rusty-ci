@@ -7,7 +7,7 @@ If you were too bored to read the whole thing, just paste this stuff into your t
 # Update && Upgrade
 sudo apt update
 sudo apt upgrade
-sudo apt install build-essential
+sudo apt install build-essential python3-dev python3-pip python3-venv
 
 # Install rust
 curl https://sh.rustup.rs -sSf | sh

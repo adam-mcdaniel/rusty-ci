@@ -190,10 +190,6 @@ merge-request-handler:
   whitelist:
     - adam-mcdaniel
 
-  # The password a whitelisted user can comment on a merge / pull request
-  # to mark it for testing; that is if the pull request was made by a non-whitelisted
-  # user. If the pull request was made by a whitelisted user, it is automatically run.
-  password: &quot;ok to test&quot;
 
 # This section holds each worker
 # You can have as many workers as youd like, just be sure to fill out
@@ -207,7 +203,8 @@ workers:
     # This is not the same as the web gui port!
     masterport: 9989
     # The absolute path to the working directory of this worker
-    basedir: &quot;/home/adam/Desktop/rusty-ci/testing/test-worker&quot;
+    # The worker files will be installed in this directory
+    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
     # The password for this worker
     # This is used by the master to give the worker a job
     password: pass
@@ -219,6 +216,17 @@ schedulers:
   # This scheduler will trigger the `rusty-ci-test` builder whenever it
   # detects a change in a yaml file for any branch.
   ci-change:
+    # This scheduler triggers the `rusty-ci-test` builder.
+    # You can put as many builders as youd like here, and the scheduler will start them all.
+    builders:
+      - rusty-ci-test
+
+    # This will make the current scheduler run if the &quot;your-scheduler-name-here&quot;
+    # has run successfully. You can only put one scheduler name in this section.
+    # depends: &quot;your-scheduler-name-here&quot;
+    # IF YOU USE THE `depends` SECTION, YOU SHOULD REMOVE OR COMMENT THE FOLLOWING SECTIONS
+    # Using the depends section will ignore the `branch`, `triggers`, and `password` sections
+
     # This is a regular expression that matches a branch.
     # If there is a change in a branch whos name matches this regex,
     # it will be checked by the following triggers section.
@@ -233,10 +241,10 @@ schedulers:
       - '.*\.yaml'
       - '.*\.sh'
       - &quot;.*Makefile&quot;
-    # This scheduler triggers the `rusty-ci-test` builder.
-    # You can put as many builders as youd like here, and the scheduler will start them all.
-    builders:
-      - rusty-ci-test
+    # The password a whitelisted user can comment on a merge / pull request
+    # to mark it for testing; that is if the pull request was made by a non-whitelisted
+    # user. If the pull request was made by a whitelisted user, it is automatically run.
+    password: &quot;ok to test&quot;
 
 # These are the builders that are executed by the schedulers
 # Each has its own specific task that is delegated to one or more workers
@@ -309,7 +317,7 @@ sudo apt install build-essential
 <p>Rusty-CI has four subcommands, the first of which is the <code>help</code> subcommand.
 To run the help subcommand, run <code>rusty-ci help</code> or alternatively <code>rusty-ci</code>.
 If you dont provide any arguments to <code>rusty-ci</code>, it will print the help message by default.</p>
-<pre><code>rusty_ci 0.5.7
+<pre><code>rusty_ci 0.6.3  
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
 A continuous integration tool written in Rust
 
@@ -397,6 +405,10 @@ merge-request-handler:
 </code></pre>
 <pre><code>$ more mail.yaml
 
+# Rusty-CI will automatically email &quot;interested users&quot; about
+# all tests that run. The list of &quot;interested users&quot; is the
+# list of people who have a commit in the branch or pull request.
+
 # The extra recipients to email
 extra-recipients:
   # Emails under the failure section will be emailed
@@ -428,6 +440,7 @@ smtp-port: 587
 
 # The password used to send emails using the from-address
 smtp-password: &quot;p@$$w0rd&quot;
+
 </code></pre>
 <h1><a class="header" href="#build-subcommand" id="build-subcommand">Build Subcommand</a></h1>
 <p>The <code>build</code> subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.</p>
@@ -529,7 +542,8 @@ workers:
     # This is not the same as the web gui port!
     masterport: 9989
     # The absolute path to the working directory of this worker
-    basedir: &quot;/home/adam/Desktop/rusty-ci/testing/test-worker&quot;
+    # The worker files will be installed in this directory
+    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
     # The password for this worker
     # This is used by the master to give the worker a job
     password: pass
@@ -601,7 +615,7 @@ builders:
 <pre><code class="language-bash"># Update &amp;&amp; Upgrade
 sudo apt update
 sudo apt upgrade
-sudo apt install build-essential
+sudo apt install build-essential python3-dev python3-pip python3-venv
 
 # Install rust
 curl https://sh.rustup.rs -sSf | sh

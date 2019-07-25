@@ -46,6 +46,10 @@ merge-request-handler:
 ```
 $ more mail.yaml
 
+# Rusty-CI will automatically email "interested users" about
+# all tests that run. The list of "interested users" is the
+# list of people who have a commit in the branch or pull request.
+
 # The extra recipients to email
 extra-recipients:
   # Emails under the failure section will be emailed
@@ -77,4 +81,5 @@ smtp-port: 587
 
 # The password used to send emails using the from-address
 smtp-password: "p@$$w0rd"
+
 ```
