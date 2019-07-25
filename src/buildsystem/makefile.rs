@@ -11,6 +11,7 @@ impl Makefile {
 }
 
 impl BuildSystem for Makefile {
+    /// Write the makefile
     fn install(&mut self) -> Result<(), String> {
         if !yes_or_no("Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) ") {
             error!("You must install those packages before continuing!");
@@ -43,6 +44,7 @@ install:
     fn install_python(&mut self) -> Result<(), String> {
         Ok(())
     }
+
     fn install_buildbot(&mut self) -> Result<(), String> {
         Ok(())
     }

@@ -190,10 +190,6 @@ merge-request-handler:
   whitelist:
     - adam-mcdaniel
 
-  # The password a whitelisted user can comment on a merge / pull request
-  # to mark it for testing; that is if the pull request was made by a non-whitelisted
-  # user. If the pull request was made by a whitelisted user, it is automatically run.
-  password: &quot;ok to test&quot;
 
 # This section holds each worker
 # You can have as many workers as youd like, just be sure to fill out
@@ -207,7 +203,8 @@ workers:
     # This is not the same as the web gui port!
     masterport: 9989
     # The absolute path to the working directory of this worker
-    basedir: &quot;/home/adam/Desktop/rusty-ci/testing/test-worker&quot;
+    # The worker files will be installed in this directory
+    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
     # The password for this worker
     # This is used by the master to give the worker a job
     password: pass
@@ -219,6 +216,17 @@ schedulers:
   # This scheduler will trigger the `rusty-ci-test` builder whenever it
   # detects a change in a yaml file for any branch.
   ci-change:
+    # This scheduler triggers the `rusty-ci-test` builder.
+    # You can put as many builders as youd like here, and the scheduler will start them all.
+    builders:
+      - rusty-ci-test
+
+    # This will make the current scheduler run if the &quot;your-scheduler-name-here&quot;
+    # has run successfully. You can only put one scheduler name in this section.
+    # depends: &quot;your-scheduler-name-here&quot;
+    # IF YOU USE THE `depends` SECTION, YOU SHOULD REMOVE OR COMMENT THE FOLLOWING SECTIONS
+    # Using the depends section will ignore the `branch`, `triggers`, and `password` sections
+
     # This is a regular expression that matches a branch.
     # If there is a change in a branch whos name matches this regex,
     # it will be checked by the following triggers section.
@@ -233,10 +241,10 @@ schedulers:
       - '.*\.yaml'
       - '.*\.sh'
       - &quot;.*Makefile&quot;
-    # This scheduler triggers the `rusty-ci-test` builder.
-    # You can put as many builders as youd like here, and the scheduler will start them all.
-    builders:
-      - rusty-ci-test
+    # The password a whitelisted user can comment on a merge / pull request
+    # to mark it for testing; that is if the pull request was made by a non-whitelisted
+    # user. If the pull request was made by a whitelisted user, it is automatically run.
+    password: &quot;ok to test&quot;
 
 # These are the builders that are executed by the schedulers
 # Each has its own specific task that is delegated to one or more workers
@@ -309,7 +317,7 @@ sudo apt install build-essential
 <p>Rusty-CI has four subcommands, the first of which is the <code>help</code> subcommand.
 To run the help subcommand, run <code>rusty-ci help</code> or alternatively <code>rusty-ci</code>.
 If you dont provide any arguments to <code>rusty-ci</code>, it will print the help message by default.</p>
-<pre><code>rusty_ci 0.5.7
+<pre><code>rusty_ci 0.6.3  
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
 A continuous integration tool written in Rust
 
@@ -397,6 +405,10 @@ merge-request-handler:
 </code></pre>
 <pre><code>$ more mail.yaml
 
+# Rusty-CI will automatically email &quot;interested users&quot; about
+# all tests that run. The list of &quot;interested users&quot; is the
+# list of people who have a commit in the branch or pull request.
+
 # The extra recipients to email
 extra-recipients:
   # Emails under the failure section will be emailed
@@ -413,20 +425,22 @@ extra-recipients:
     - all_tests@gmail.com
 
 
-# The from email address used to email updates
+# The &quot;from&quot; email address used to send email updates to recipients
 from-address: your-email-here@gmail.com
 
 # The suffix to add to the interested users' usernames
 # to get an email we can send updates to.
-lookup: example.org
+lookup: gmail.com
 
 # The smtp relay hostname (self explanatory)
+# gmail's smtp relay hostname is `smtp.gmail.com`
 smtp-relay-host: smtp.gmail.com
 
 # The smtp relay port (self explanatory)
+# 587 is the smtp port that `smtp.gmail.com` uses
 smtp-port: 587
 
-# The password used to send emails using the from-address
+# The password used to login to the &quot;from&quot; email address account
 smtp-password: &quot;p@$$w0rd&quot;
 </code></pre>
 <h1><a class="header" href="#build-subcommand" id="build-subcommand">Build Subcommand</a></h1>
@@ -529,7 +543,8 @@ workers:
     # This is not the same as the web gui port!
     masterport: 9989
     # The absolute path to the working directory of this worker
-    basedir: &quot;/home/adam/Desktop/rusty-ci/testing/test-worker&quot;
+    # The worker files will be installed in this directory
+    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
     # The password for this worker
     # This is used by the master to give the worker a job
     password: pass
@@ -596,32 +611,39 @@ builders:
     # The repo to refresh from before running
     repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 </code></pre>
-<h1><a class="header" href="#tldr" id="tldr">TLDR</a></h1>
+<h1><a class="header" href="#tldr" id="tldr">TL;DR</a></h1>
 <p>If you were too bored to read the whole thing, just paste this stuff into your terminal (I'm assuming you're using a Debian based OS).</p>
 <pre><code class="language-bash"># Update &amp;&amp; Upgrade
-sudo apt update
-sudo apt upgrade
-sudo apt install build-essential
+apt update &amp;&amp; apt upgrade
+apt install build-essential python3-dev python3-pip python3-venv
 
 # Install rust
 curl https://sh.rustup.rs -sSf | sh
 source $HOME/.cargo/env
-cargo install rusty-ci -f
+cargo install -f rusty-ci
 
 # Install rusty-ci dependencies
-rusty-ci -b install
+rusty-ci install
 chmod +x ./install.sh
-sudo ./install.sh
+./install.sh
 
 # Enter venv
 . venv/bin/activate
 
 rusty-ci setup
+
 # Assuming that you told rusty-ci to output to template.yaml
 # Edit your file as needed
 nano template.yaml
 
-rusty-ci build template.yaml
+# Assuming that you told rusty-ci to output to mail.yaml
+# Edit your file as needed
+nano mail.yaml
+
+# Add an authentication token from your VCS (github)
+nano auth.token
+
+rusty-ci build template.yaml --mail mail.yaml
 # All done!
 </code></pre>
 

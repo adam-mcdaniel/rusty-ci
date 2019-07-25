@@ -2,7 +2,7 @@
 extern crate rusty_ci;
 
 use clap::{clap_app, crate_version, AppSettings, Arg, SubCommand};
-use rusty_ci::{input, yes_or_no, File};
+use rusty_ci::{input, yes_or_no, File, unwrap};
 use rusty_ci::{Bash, BuildSystem, MailNotifier, Makefile, MasterConfig, Worker};
 use rusty_yaml::Yaml;
 use std::process::exit;
@@ -288,7 +288,11 @@ builders:
     info!("Writing template yaml file to {}...", mail_filename);
     File::write(
       mail_filename,
-      r#"# The extra recipients to email
+      r#"# Rusty-CI will automatically email "interested users" about
+# all tests that run. The list of "interested users" is the
+# list of people who have a commit in the branch or pull request.
+
+# The extra recipients to email
 extra-recipients:
   # Emails under the failure section will be emailed
   # info about every failed build
@@ -304,20 +308,22 @@ extra-recipients:
     - all_tests@gmail.com
 
 
-# The from email address used to email updates
+# The "from" email address used to send email updates to recipients
 from-address: your-email-here@gmail.com
 
 # The suffix to add to the interested users' usernames
 # to get an email we can send updates to.
-lookup: example.org
+lookup: gmail.com
 
 # The smtp relay hostname (self explanatory)
+# gmail's smtp relay hostname is `smtp.gmail.com`
 smtp-relay-host: smtp.gmail.com
 
 # The smtp relay port (self explanatory)
+# 587 is the smtp port that `smtp.gmail.com` uses
 smtp-port: 587
 
-# The password used to send emails using the from-address
+# The password used to login to the "from" email address account
 smtp-password: "p@$$w0rd""#,
     )?;
     info!("All done!");
@@ -346,6 +352,7 @@ fn start(mut b: Box<dyn BuildSystem>, yaml: Yaml) {
     Ok(_) => {
       println!("Successfully started workers and master");
       println!("Run `tail -f master/twistd.log` to see the log output for your CI!");
+      println!("Go to http://{}:8010 to view your webgui", unwrap(&yaml.get_section("master").unwrap(), "webserver-ip"))
     }
     Err(e) => {
       println!("There was a problem while starting: {}", e);
