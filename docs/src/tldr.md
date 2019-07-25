@@ -12,12 +12,12 @@ sudo apt install build-essential python3-dev python3-pip python3-venv
 # Install rust
 curl https://sh.rustup.rs -sSf | sh
 source $HOME/.cargo/env
-cargo install rusty-ci -f
+cargo install -f rusty-ci
 
 # Install rusty-ci dependencies
-rusty-ci -b install
+rusty-ci install
 chmod +x ./install.sh
-sudo ./install.sh
+./install.sh
 
 # Enter venv
 . venv/bin/activate
@@ -27,6 +27,10 @@ rusty-ci setup
 # Edit your file as needed
 nano template.yaml
 
-rusty-ci build template.yaml
+# Assuming that you told rusty-ci to output to mail.yaml
+# Edit your file as needed
+nano mail.yaml
+
+rusty-ci build template.yaml --mail mail.yaml
 # All done!
 ```
