@@ -1,4 +1,4 @@
-# TLDR
+# TL;DR
 
 If you were too bored to read the whole thing, just paste this stuff into your terminal (I'm assuming you're using a Debian based OS).
 
@@ -22,6 +22,7 @@ chmod +x ./install.sh
 . venv/bin/activate
 
 rusty-ci setup
+
 # Assuming that you told rusty-ci to output to template.yaml
 # Edit your file as needed
 nano template.yaml
@@ -29,7 +30,6 @@ nano template.yaml
 # Assuming that you told rusty-ci to output to mail.yaml
 # Edit your file as needed
 nano mail.yaml
-
 
 # Add an authentication token from your VCS (github)
 nano auth.token
