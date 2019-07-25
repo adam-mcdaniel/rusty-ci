@@ -5,7 +5,7 @@ A tool to generate buildbot projects from a YAML file
 
 ## Documentation
 
-You can find the documentation [here](https://adam-mcdaniel.github.io/rusty-ci/).
+You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/), and the code documentation [here](https://docs.rs/rusty-ci).
 
 ## Installation
 
