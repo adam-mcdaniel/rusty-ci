@@ -124,16 +124,29 @@ def {name}_triggers(props):
 
     for f in props.files:
         for regex in triggers:
+            print(\"FILE:   \", f)
+            print(\"TRIGGER:\", regex)
             if re.fullmatch(regex, str(f)):
                 return builders
 
     return []
 
+
 {name} = schedulers.AnyBranchScheduler(name=\"{name}\",
     change_filter=util.ChangeFilter(branch_re=\"{branch}\"),
     builderNames={name}_triggers)
 
+{name}_gitlab_merge = schedulers.AnyBranchScheduler(name=\"{name}_gitlab_merge\",
+    change_filter=util.ChangeFilter(branch_re=\"{branch}\", category=\"merge_request\"),
+    builderNames={name}_triggers)
+
+{name}_gitlab_push = schedulers.AnyBranchScheduler(name=\"{name}_gitlab_push\",
+    change_filter=util.ChangeFilter(branch_re=\"{branch}\", category=\"push\"),
+    builderNames={name}_triggers)
+
 c['schedulers'].append({name})
+c['schedulers'].append({name}_gitlab_merge)
+c['schedulers'].append({name}_gitlab_push)
 
 c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
     builderNames={buildernames}))

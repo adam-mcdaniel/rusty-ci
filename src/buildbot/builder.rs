@@ -112,7 +112,8 @@ impl From<Yaml> for Builder {
         let url = unwrap(&yaml, "repo");
 
         // Refresh your copy of the repository
-        steps.push(Step::git_clone(url));
+        steps.push(Step::git_clone(&url));
+        steps.push(Step::gitlab_clone(url));
 
         // Run each instruction in the script section
         for instruction in yaml.get_section("script").unwrap() {
