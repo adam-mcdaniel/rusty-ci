@@ -178,7 +178,19 @@ def is_whitelisted(props, password):
             ),
             VersionControlSystem::GitLab => write!(
                 f,
-                "def is_whitelisted(props, password): return True"
+                "def is_whitelisted(props, password): return True
+                
+
+context = util.Interpolate(\"%(prop:buildername)s\")
+gitlab_status_service = reporters.GitLabStatusPush(token='{token}',
+                                context=context,
+                                startDescription='Build started.',
+                                endDescription='Build done.')
+
+c['services'].append(gitlab_status_service)
+               
+",
+                token = self.auth_token.trim_matches('"'),
             ),
             VersionControlSystem::Unsupported => write!(
                 f,

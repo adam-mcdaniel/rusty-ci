@@ -136,17 +136,7 @@ def {name}_triggers(props):
     change_filter=util.ChangeFilter(branch_re=\"{branch}\"),
     builderNames={name}_triggers)
 
-{name}_gitlab_merge = schedulers.AnyBranchScheduler(name=\"{name}_gitlab_merge\",
-    change_filter=util.ChangeFilter(branch_re=\"{branch}\", category=\"merge_request\"),
-    builderNames={name}_triggers)
-
-{name}_gitlab_push = schedulers.AnyBranchScheduler(name=\"{name}_gitlab_push\",
-    change_filter=util.ChangeFilter(branch_re=\"{branch}\", category=\"push\"),
-    builderNames={name}_triggers)
-
 c['schedulers'].append({name})
-c['schedulers'].append({name}_gitlab_merge)
-c['schedulers'].append({name}_gitlab_push)
 
 c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
     builderNames={buildernames}))
