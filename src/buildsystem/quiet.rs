@@ -1,6 +1,6 @@
 
 use crate::buildsystem::BuildSystem;
-use crate::{File, MasterConfig, Worker, AUTH_TOKEN_PATH};
+use crate::{Cmd, File, MasterConfig, Worker, AUTH_TOKEN_PATH};
 
 /// This struct is identical to the Bash buildsystem,
 /// except that it does not confirm anything with the user at all.
@@ -48,6 +48,17 @@ python3 -m pip install buildbot-worker setuptools-trial >/dev/null
         info!("Writing to worker configs...");
         self.write_worker_configs(&workers)?;
         info!("Next, run the `start` subcommand to execute the master and the workers");
+        Ok(())
+    }
+
+    /// This kills the buildbot workers and all instances of python and python3
+    fn stop(&mut self) -> Result<(), String> {
+        info!("Killing python...");
+        Cmd::new("killall").arg("python").run();
+        info!("Killing python3...");
+        Cmd::new("killall").arg("python3").run();
+        info!("Killing workers...");
+        Cmd::new("killall").arg("buildbot-worker").run();
         Ok(())
     }
 

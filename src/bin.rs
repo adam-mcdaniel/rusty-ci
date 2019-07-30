@@ -33,6 +33,12 @@ fn main() {
                   (@arg MASTER_YAML: +takes_value default_value("template.yaml") "The path to write the master YAML file")
                   (@arg MAIL_YAML: +takes_value default_value("mail.yaml") "The path to write the mail list YAML file")
               )
+              (@subcommand kill =>
+                  (about: "Stop rusty-ci")
+                  (version: "0.1.0")
+                  (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
+                  (@arg quiet: -q --quiet "Don't ask user anything")
+              )
   )
   .subcommand(
     SubCommand::with_name("build")
@@ -66,7 +72,7 @@ fn main() {
 
 
   // Figure out the proper backend buildsystem to use
-  let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
+  let mut buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
     Some(subcommand) => {
       let sub_matches = matches.subcommand_matches(subcommand).unwrap();
       if sub_matches.is_present("bash") {
@@ -85,6 +91,16 @@ fn main() {
   };
 
   match matches.subcommand_name() {
+    Some("stop") => {
+      info!("Stopping Rusty-CI...");
+      match buildsystem.stop() {
+        Err(e) => {
+          error!("There was a problem stopping Rusty-CI: {}", e);
+          exit(1);
+        }
+        Ok(()) => {},
+      };
+    }
     Some("install") => {
       info!("Installing dependencies for rusty-ci...");
       install(buildsystem);
