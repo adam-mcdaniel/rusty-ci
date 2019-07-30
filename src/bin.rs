@@ -33,7 +33,7 @@ fn main() {
                   (@arg MASTER_YAML: +takes_value default_value("template.yaml") "The path to write the master YAML file")
                   (@arg MAIL_YAML: +takes_value default_value("mail.yaml") "The path to write the mail list YAML file")
               )
-              (@subcommand kill =>
+              (@subcommand stop =>
                   (about: "Stop rusty-ci")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
