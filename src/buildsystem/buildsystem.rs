@@ -72,6 +72,22 @@ pub trait BuildSystem {
         Ok(())
     }
 
+    /// This kills the buildbot workers and all instances of python and python3
+    fn stop(&mut self) -> Result<(), String> {
+        if !yes_or_no("Are you sure you want to kill rusty-ci? This will also kill all python processes! (y/n) ") {
+            error!("You weren't sure!");
+            exit(0);
+        }
+
+        info!("Killing python...");
+        Cmd::new("killall").arg("python").run();
+        info!("Killing python3...");
+        Cmd::new("killall").arg("python3").run();
+        info!("Killing workers...");
+        Cmd::new("killall").arg("buildbot-worker").run();
+        Ok(())
+    }
+
     /// This method is used by the `start` method to spin up the master
     fn start_master(&mut self) -> Result<(), String> {
         let buildbot = |sub_command| -> Result<(), String> {

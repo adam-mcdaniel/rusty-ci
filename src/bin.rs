@@ -2,8 +2,8 @@
 extern crate rusty_ci;
 
 use clap::{clap_app, crate_version, AppSettings, Arg, SubCommand};
-use rusty_ci::{input, yes_or_no, File, unwrap};
-use rusty_ci::{Bash, BuildSystem, MailNotifier, Makefile, MasterConfig, Worker};
+use rusty_ci::{File, unwrap};
+use rusty_ci::{Bash, Quiet, BuildSystem, MailNotifier, Makefile, MasterConfig, Worker};
 use rusty_yaml::Yaml;
 use std::process::exit;
 
@@ -17,21 +17,27 @@ fn main() {
                   (about: "Install buildbot")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
-                  (@group BUILDSYSTEM =>
-                      (@arg bash: -b --bash "Uses bash to install and build rusty-ci's output")
-                      (@arg make: -m --make "Uses make to install and build rusty-ci's output")
-                  )
+                  (@arg quiet: -q --quiet "Don't ask user anything")
               )
               (@subcommand start =>
                   (about: "Launch rusty-ci from an input yaml file")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
+                  (@arg quiet: -q --quiet "Don't ask user anything")
                   (@arg MASTER_YAML: +required "The path to the YAML file")
               )
               (@subcommand setup =>
                   (about: "Output a template YAML file for you to change to customize")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
+                  (@arg MASTER_YAML: +takes_value default_value("template.yaml") "The path to write the master YAML file")
+                  (@arg MAIL_YAML: +takes_value default_value("mail.yaml") "The path to write the mail list YAML file")
+              )
+              (@subcommand stop =>
+                  (about: "Stop rusty-ci")
+                  (version: "0.1.0")
+                  (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
+                  (@arg quiet: -q --quiet "Don't ask user anything")
               )
   )
   .subcommand(
@@ -39,6 +45,13 @@ fn main() {
         .about("Build rusty-ci from an input yaml file")
         .version("0.1.0")
         .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
+        .arg(
+          Arg::with_name("quiet")
+            .short("q")
+            .long("quiet")
+            .takes_value(false)
+            .help("Don't ask user anything")
+        )
         .arg(
           Arg::with_name("MAIL_YAML")
             .short("m")
@@ -59,13 +72,15 @@ fn main() {
 
 
   // Figure out the proper backend buildsystem to use
-  let buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
+  let mut buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
     Some(subcommand) => {
       let sub_matches = matches.subcommand_matches(subcommand).unwrap();
       if sub_matches.is_present("bash") {
         Box::new(Bash::new())
       } else if sub_matches.is_present("make") {
         Box::new(Makefile::new())
+      } else if sub_matches.is_present("quiet") {
+        Box::new(Quiet::new())
       } else {
         // Default is bash
         Box::new(Bash::new())
@@ -76,6 +91,16 @@ fn main() {
   };
 
   match matches.subcommand_name() {
+    Some("stop") => {
+      info!("Stopping Rusty-CI...");
+      match buildsystem.stop() {
+        Err(e) => {
+          error!("There was a problem stopping Rusty-CI: {}", e);
+          exit(1);
+        }
+        Ok(()) => {},
+      };
+    }
     Some("install") => {
       info!("Installing dependencies for rusty-ci...");
       install(buildsystem);
@@ -144,7 +169,9 @@ fn main() {
       start(buildsystem, yaml);
     }
     Some("setup") => {
-      match setup() {
+      let master_path = matches.subcommand_matches("setup").unwrap().value_of("MASTER_YAML").unwrap();
+      let mail_path = matches.subcommand_matches("setup").unwrap().value_of("MAIL_YAML").unwrap();
+      match setup(master_path, mail_path) {
         Ok(_) => {}
         Err(e) => {
           error!("There was a problem writing the template yaml file: {}", e);
@@ -158,10 +185,8 @@ fn main() {
 }
 
 /// This function writes a template YAML file for the user to edit as needed.
-fn setup() -> Result<(), String> {
-  let master_filename = input("Where do you want the template master yaml file to be? ");
-  if yes_or_no("Are you sure? (y/n) ") {
-    info!("Writing template yaml file to {}...", master_filename);
+fn setup(master_filename: &str, mail_filename: &str) -> Result<(), String> {
+    info!("Writing template master yaml file to {}...", master_filename);
     File::write(
       master_filename,
       r#"
@@ -278,17 +303,12 @@ builders:
     # The repo to refresh from before running
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 "#,
-    )?;
-  } else {
-    error!("You weren't sure!");
-  }
+  )?;
 
-  let mail_filename = input("Where do you want the template mail yaml file to be? ");
-  if yes_or_no("Are you sure? (y/n) ") {
-    info!("Writing template yaml file to {}...", mail_filename);
-    File::write(
-      mail_filename,
-      r#"# Rusty-CI will automatically email "interested users" about
+  info!("Writing template mail yaml file to {}...", mail_filename);
+  File::write(
+    mail_filename,
+    r#"# Rusty-CI will automatically email "interested users" about
 # all tests that run. The list of "interested users" is the
 # list of people who have a commit in the branch or pull request.
 
@@ -325,11 +345,8 @@ smtp-port: 587
 
 # The password used to login to the "from" email address account
 smtp-password: "p@$$w0rd""#,
-    )?;
-    info!("All done!");
-  } else {
-    error!("You weren't sure!");
-  }
+  )?;
+  info!("All done!");
 
   Ok(())
 }
