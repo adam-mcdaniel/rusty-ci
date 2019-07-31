@@ -124,10 +124,13 @@ def {name}_triggers(props):
 
     for f in props.files:
         for regex in triggers:
+            print(\"FILE:   \", f)
+            print(\"TRIGGER:\", regex)
             if re.fullmatch(regex, str(f)):
                 return builders
 
     return []
+
 
 {name} = schedulers.AnyBranchScheduler(name=\"{name}\",
     change_filter=util.ChangeFilter(branch_re=\"{branch}\"),

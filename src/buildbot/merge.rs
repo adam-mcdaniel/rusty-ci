@@ -10,6 +10,7 @@ use std::process::exit;
 /// `GitHub`, `GitLab`, `Mercurial`.
 pub enum VersionControlSystem {
     GitHub,
+    GitLab,
     Unsupported,
 }
 
@@ -175,6 +176,22 @@ def is_whitelisted(props, password):
                 repository_type = self.repository_type.trim_matches('"'),
 
             ),
+            VersionControlSystem::GitLab => write!(
+                f,
+                "def is_whitelisted(props, password): return True
+                
+
+context = util.Interpolate(\"%(prop:buildername)s\")
+gitlab_status_service = reporters.GitLabStatusPush(token='{token}',
+                                context=context,
+                                startDescription='Build started.',
+                                endDescription='Build done.')
+
+c['services'].append(gitlab_status_service)
+               
+",
+                token = self.auth_token.trim_matches('"'),
+            ),
             VersionControlSystem::Unsupported => write!(
                 f,
                 "print('We currently dont support building merge requests on your VCS.')"
@@ -197,6 +214,7 @@ impl From<Yaml> for MergeRequestHandler {
 
         let vcs: VersionControlSystem = match unwrap(&yaml, "version-control-system").as_str() {
             "github" => VersionControlSystem::GitHub,
+            "gitlab" => VersionControlSystem::GitLab,
             _ => {
                 warn!(
                     "We do not support building merge requests on your version control system yet!"
