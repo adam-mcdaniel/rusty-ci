@@ -46,38 +46,39 @@ Just paste this stuff into your terminal to install and setup (I'm assuming you'
 
 ```bash
 # Update && Upgrade
-apt update && apt upgrade
-apt install build-essential python3-dev python3-pip python3-venv
+apt update -y && apt upgrade -y
+apt install -y build-essential python3-dev python3-pip python3-venv
 
 # Install rust
-curl https://sh.rustup.rs -sSf | sh
-source $HOME/.cargo/env
-cargo install -f rusty-ci
+curl https://sh.rustup.rs -sSf | sh # Run the rust installer
+source $HOME/.cargo/env             # Add `cargo` to your path
+cargo install -f rusty-ci           # Install the latest rusty-ci release
 
 
 # Write template yaml files
-rusty-ci setup
+rusty-ci setup template.yaml mail.yaml
 
-# Assuming that you told rusty-ci to output to template.yaml
-# Edit your file as needed
-nano template.yaml
-
-# Assuming that you told rusty-ci to output to mail.yaml
-# Edit your file as needed
-nano mail.yaml
-
+# Uncomment to modify your CI's settings to fit your project
+# nano template.yaml # Controls how your CI tests your code
+# nano mail.yaml     # Defines email update / notification settings
 
 # Install rusty-ci dependencies
-rusty-ci install
-chmod +x ./install.sh
-./install.sh
+rusty-ci install -q   # Build install.sh
+chmod +x ./install.sh # Make install.sh executable
+./install.sh          # Install!
 
 # Enter venv
-. venv/bin/activate
+. venv/bin/activate   # Enter the venv created by rusty-ci
+                      # to avoid poisoning your environment
 
 # Add an authentication token from your VCS (github)
-nano auth.token
+echo "YOUR AUTH TOKEN HERE" > auth.token
 
-rusty-ci build template.yaml --mail mail.yaml
+# Construct your ci bot
+rusty-ci build -q template.yaml --mail mail.yaml
+
+# Spin up the workers!
+rusty-ci start template.yaml -q
+
 # All done!
 ```
