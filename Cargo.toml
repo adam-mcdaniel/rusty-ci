@@ -21,6 +21,16 @@ path = "src/bin.rs"
 name = "step"
 path = "tests/step.rs"
 
+# Builder tests
+[[test]]
+name = "builder"
+path = "tests/builder.rs"
+
+# Worker tests
+[[test]]
+name = "worker"
+path = "tests/worker.rs"
+
 
 [dependencies]
 rusty-yaml = "0.4.3"
