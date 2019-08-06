@@ -26,3 +26,14 @@ pub fn unwrap<S: ToString>(yaml: &Yaml, section: S) -> String {
 		result.to_string()
 	}
 }
+
+/// This function takes a Yaml object and confirms that there are no unmatched quotes!
+/// If there are unmatched quotes, it returns the line with unmatched quotes
+pub fn unmatched_quotes(yaml: &Yaml) -> Option<String> {
+	for line in yaml.to_string().lines() {
+		if !(line.matches('"').count() % 2 == 0) {
+			return Some(line.to_string())
+		}
+	}
+	None
+}
