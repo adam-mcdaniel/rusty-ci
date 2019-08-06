@@ -1,7 +1,22 @@
 # rusty-ci
 
-A tool to generate buildbot projects from a YAML file
+A tool to generate [buildbot](https://buildbot.net/) projects from a YAML file
 
+
+## Description
+
+Rusty-CI is meant to be a simple continuous integration tool that takes very little time to set up. Within 10 minutes of reading this README, you could have Rusty-CI testing your repository!
+
+It works by constructing a webserver and several workers from one or two YAML files that describe how you want your project to be tested. When Rusty-CI detects a change in your repository, it will use the data from your YAML files to determine how you want that branch to be tested. Then, it will push a status report to your VCS.
+
+## Features
+
+- Webgui for detailed test output and CI configuration
+- Detecting merge / pull requests on GitHub and GitLab
+- Use regular expressions to trigger tests for specific file changes on specific branches
+- Tests that can depend on one another
+- Custom testing scripts
+- Customizable email bot settings
 
 ## Documentation
 
@@ -82,3 +97,9 @@ rusty-ci start template.yaml -q
 
 # All done!
 ```
+
+
+## License
+Rusty-CI is distributed under the terms of the Apache License (Version 2.0).
+
+See LICENSE for details.

@@ -102,7 +102,6 @@ impl Display for MergeRequestHandler {
                 f,
                 "whitelist_authors = {:?}
 
-
 try:
     c['change_source'].append(changes.GitHubPullrequestPoller(
             owner=\"{owner}\",
@@ -124,7 +123,6 @@ github_status_service = reporters.GitHubStatusPush(token='{token}',
                                 endDescription='Build done.')
 
 c['services'].append(github_status_service)
-
 
 
 def is_whitelisted(props, password):
@@ -178,8 +176,8 @@ def is_whitelisted(props, password):
             ),
             VersionControlSystem::GitLab => write!(
                 f,
-                "def is_whitelisted(props, password): return True
-                
+                "
+def is_whitelisted(props, password): return True
 
 context = util.Interpolate(\"%(prop:buildername)s\")
 gitlab_status_service = reporters.GitLabStatusPush(token='{token}',
