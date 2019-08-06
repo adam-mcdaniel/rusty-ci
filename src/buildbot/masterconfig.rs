@@ -57,6 +57,10 @@ impl MasterConfig {
     pub fn set_mail_notifier(&mut self, mail_notifier: MailNotifier) {
         self.mail_notifier = Some(mail_notifier);
     }
+
+    pub fn get_workers(&self) -> Vec<Worker> {
+        self.workers.clone()
+    }
 }
 
 /// This impl converts a Yaml file into a MasterConfig object.

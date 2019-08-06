@@ -36,11 +36,13 @@ python3 -m pip install buildbot-worker setuptools-trial >/dev/null
         Ok(())
     }
 
-    fn build(&mut self, master: MasterConfig, workers: Vec<Worker>) -> Result<(), String> {
+    fn build(&mut self, master: MasterConfig) -> Result<(), String> {
         self.prebuild()?; // Call the prebuild method
 
         info!("Creating master...");
         self.create_master()?;
+        
+        let workers = master.get_workers();
         info!("Creating workers...");
         self.create_workers(&workers)?;
         info!("Writing to master/master.cfg...");

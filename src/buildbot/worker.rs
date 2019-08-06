@@ -1,8 +1,11 @@
-
 use crate::unwrap;
+use rand::{thread_rng, Rng};
+use rand::distributions::Alphanumeric;
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
+
+
 /// This struct holds the information that is used to build the worker `buildbot.tac` file
 /// Each worker has:
 /// - a name that is used by the builders to assign work,
@@ -10,6 +13,7 @@ use std::process::exit;
 /// - a working directory name that the bot will be created in
 /// - the host address of the master bot, the ip
 /// - the port of the master bot
+#[derive(Clone)]
 pub struct Worker {
     name: String,
     dir: String,
@@ -58,15 +62,19 @@ impl From<Yaml> for Worker {
     fn from(yaml: Yaml) -> Self {
         let name = yaml.get_name();
 
-        for section in ["masterhost", "masterport", "basedir", "password"].iter() {
+        for section in ["masterhost", "masterport", "basedir"].iter() {
             if !yaml.has_section(section) {
                 error!("There was an error creating a worker: The '{}' section is not specified for '{}'", section, name);
                 exit(1);
             }
         }
 
+        // let password = unwrap(&yaml, "password");
+        let password: String = thread_rng()
+            .sample_iter(&Alphanumeric)
+            .take(30)
+            .collect();
         let basedir = unwrap(&yaml, "basedir");
-        let password = unwrap(&yaml, "password");
         let masterhost = unwrap(&yaml, "masterhost");
         let masterport = unwrap(&yaml, "masterport");
 

@@ -413,7 +413,7 @@ fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>
     None => {}
   }
 
-  match b.build(master, workers) {
+  match b.build(master) {
     Ok(_) => {
       println!("Successfully finished build");
     }
