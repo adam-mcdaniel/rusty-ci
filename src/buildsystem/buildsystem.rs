@@ -39,7 +39,7 @@ pub trait BuildSystem {
         Ok(())
     }
 
-    fn build(&mut self, master: MasterConfig, workers: Vec<Worker>) -> Result<(), String> {
+    fn build(&mut self, master: MasterConfig) -> Result<(), String> {
         self.prebuild()?; // Call the prebuild method
 
         if !yes_or_no("Have you already run the install subcommand and activated your virtual env in this shell? (y/n) ") {
@@ -49,6 +49,8 @@ pub trait BuildSystem {
 
         info!("Creating master...");
         self.create_master()?;
+        
+        let workers = master.get_workers();
         info!("Creating workers...");
         self.create_workers(&workers)?;
         info!("Writing to master/master.cfg...");

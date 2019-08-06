@@ -242,9 +242,7 @@ workers:
     # The absolute path to the working directory of this worker
     # The worker files will be installed in this directory
     basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+
 
 # This section holds each scheduler.
 # Like the workers section, you may have as many schedulers as youd like.
@@ -344,7 +342,7 @@ smtp-relay-host: smtp.gmail.com
 smtp-port: 587
 
 # The password used to login to the "from" email address account
-smtp-password: "p@$$w0rd""#,
+smtp-password: "p@$$w0rd""#
   )?;
   info!("All done!");
 
@@ -413,7 +411,7 @@ fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>
     None => {}
   }
 
-  match b.build(master, workers) {
+  match b.build(master) {
     Ok(_) => {
       println!("Successfully finished build");
     }
