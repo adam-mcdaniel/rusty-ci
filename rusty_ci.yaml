@@ -1,0 +1,72 @@
+# Continuous integration for managing Rusty-CI repo
+
+
+master:
+  title: "RustyCI Continuous Integration"
+  title-url: "https://github.com/adam-mcdaniel/rusty-ci"
+  # Local IP for linux container
+  webserver-ip: 10.35.66.130
+  repo: "https://github.com/adam-mcdaniel/rusty-ci"
+  poll-interval: 120
+
+
+merge-request-handler:
+  version-control-system: github
+  owner: adam-mcdaniel
+  repo-name: rusty-ci
+  whitelist:
+    - adam-mcdaniel
+
+
+workers:
+  rusty-ci-worker:
+    masterhost: localhost
+    masterport: 9989
+    basedir: 'rusty-ci-worker'
+
+
+schedulers:
+  source-change:
+    builders:
+      - merge-test
+      - cargo-test
+      - cargo-build
+      # - cargo-clippy
+    branch: ".*"
+    triggers:
+      - "Cargo.toml"
+      - "src/.*\\.rs"
+      - "test/.*\\.rs"
+    password: "ok to test"
+
+
+builders:
+  merge-test:
+    script:
+      - git pull origin master
+      - cargo test
+      - cargo build --release
+    workers:
+      - rusty-ci-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  cargo-test:
+    script:
+      - cargo test
+    workers:
+      - rusty-ci-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  cargo-build:
+    script:
+      - cargo build --release
+    workers:
+      - rusty-ci-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  cargo-clippy:
+    script:
+      - cargo clippy -- -Dwarnings
+    workers:
+      - rusty-ci-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
