@@ -4,7 +4,6 @@ version = "0.7.2"
 authors = ["adam-mcdaniel <adam.mcdaniel17@gmail.com>"]
 edition = "2018"
 license = "Apache-2.0"
-license-file = "LICENSE"
 readme = "README.md"
 description = "A tool to generate buildbot projects from a YAML file"
 documentation = "https://docs.rs/rusty-ci"
@@ -21,6 +20,26 @@ path = "src/bin.rs"
 [[test]]
 name = "step"
 path = "tests/step.rs"
+
+# Builder tests
+[[test]]
+name = "builder"
+path = "tests/builder.rs"
+
+# Worker tests
+[[test]]
+name = "worker"
+path = "tests/worker.rs"
+
+# Worker tests
+[[test]]
+name = "scheduler"
+path = "tests/scheduler.rs"
+
+# Mail configuration tests
+[[test]]
+name = "mail"
+path = "tests/mail.rs"
 
 
 [dependencies]
