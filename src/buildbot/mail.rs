@@ -1,5 +1,5 @@
 
-use crate::unwrap;
+use crate::{unmatched_quotes, unwrap};
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
@@ -126,6 +126,16 @@ c['services'].append(successes)
 
 impl From<Yaml> for MailNotifier {
     fn from(yaml: Yaml) -> Self {
+        
+        // Verify that the yaml file doesnt have unmatched quotes!
+        match unmatched_quotes(&yaml) {
+            Some(line) => {
+                error!("There was a problem creating the mail notifier: unmatched quotes in the line '{}'", line.trim());
+                exit(1);
+            },
+            _ => {}
+        }
+        
         // Confirm that the merge request handler has the required sections
         for section in [
             "extra-recipients",
