@@ -1,6 +1,6 @@
 #[macro_use]
 pub mod helper;
-pub use helper::{File, Cmd, input, yes_or_no, unwrap};
+pub use helper::{File, Cmd, input, yes_or_no, unwrap, unmatched_quotes};
 
 
 pub mod buildbot;

@@ -1,4 +1,4 @@
-use crate::{unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker};
+use crate::{unmatched_quotes, unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker};
 
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
@@ -63,6 +63,16 @@ impl MasterConfig {
 /// This is intended to take the entire input yaml file.
 impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
+
+        // Verify that the yaml file doesnt have unmatched quotes!
+        match unmatched_quotes(&yaml) {
+            Some(line) => {
+                error!("There was a problem creating the master configuration file: unmatched quotes in the line '{}'", line.trim());
+                exit(1);
+            },
+            _ => {}
+        }
+
         // Verify that the yaml section contains all the necessary subsections
         for section in [
             "master",
