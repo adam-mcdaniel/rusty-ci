@@ -31,6 +31,16 @@ path = "tests/builder.rs"
 name = "worker"
 path = "tests/worker.rs"
 
+# Worker tests
+[[test]]
+name = "scheduler"
+path = "tests/scheduler.rs"
+
+# Mail configuration tests
+[[test]]
+name = "mail"
+path = "tests/mail.rs"
+
 
 [dependencies]
 rusty-yaml = "0.4.3"
