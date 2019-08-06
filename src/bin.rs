@@ -242,9 +242,7 @@ workers:
     # The absolute path to the working directory of this worker
     # The worker files will be installed in this directory
     basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+
 
 # This section holds each scheduler.
 # Like the workers section, you may have as many schedulers as youd like.
