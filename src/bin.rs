@@ -342,7 +342,7 @@ smtp-relay-host: smtp.gmail.com
 smtp-port: 587
 
 # The password used to login to the "from" email address account
-smtp-password: "p@$$w0rd""#,
+smtp-password: "p@$$w0rd""#
   )?;
   info!("All done!");
 

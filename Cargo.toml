@@ -28,11 +28,6 @@ path = "tests/builder.rs"
 
 # Worker tests
 [[test]]
-name = "worker"
-path = "tests/worker.rs"
-
-# Worker tests
-[[test]]
 name = "scheduler"
 path = "tests/scheduler.rs"
 
