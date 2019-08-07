@@ -36,6 +36,7 @@ schedulers:
       - "Cargo.toml"
       - "src/.*\\.rs"
       - "test/.*\\.rs"
+      - ".*\\.sh"
     password: "ok to test"
 
   # Detects a release change in master
@@ -57,7 +58,6 @@ schedulers:
 
 
 builders:
-  # Run update script
   update-self:
     script:
       - chmod +x update.sh

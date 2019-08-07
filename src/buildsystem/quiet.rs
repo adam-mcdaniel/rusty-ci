@@ -14,6 +14,25 @@ impl Quiet {
 
 
 impl BuildSystem for Quiet {
+    /// Rebuild master without killing any running processes
+    fn rebuild(&mut self, master: MasterConfig) -> Result<(), String> {
+        self.prebuild()?; // Call the prebuild method
+
+        info!("Creating master...");
+        self.create_master()?;
+        
+        let workers = master.get_workers();
+        info!("Creating workers...");
+        self.create_workers(&workers)?;
+        info!("Writing to master/master.cfg...");
+        self.write_master_config(&master)?;
+        info!("Writing to worker configs...");
+        self.write_worker_configs(&workers)?;
+        info!("Reconfiguring master...");
+        self.reconfigure_master()?;
+        Ok(())
+    }
+
     /// Writes install script to `install.sh` for user to run
     fn install(&mut self) -> Result<(), String> {
         info!("Writing install file to `./install.sh`");

@@ -66,6 +66,32 @@ fn main() {
         )
         .setting(AppSettings::ArgRequiredElseHelp)
   )
+  .subcommand(
+    SubCommand::with_name("rebuild")
+        .about("Build and launch rusty-ci from an input yaml file")
+        .version("0.1.0")
+        .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
+        .arg(
+          Arg::with_name("quiet")
+            .short("q")
+            .long("quiet")
+            .takes_value(false)
+            .help("Don't ask user anything")
+        )
+        .arg(
+          Arg::with_name("MAIL_YAML")
+            .short("m")
+            .long("mail")
+            .takes_value(true)
+            .help("The path to the YAML file dedicated to SMTP authentication info for sending email notifications")
+        )
+        .arg(
+          Arg::with_name("MASTER_YAML")
+            .required(true)
+            .help("The path to the YAML file")
+        )
+        .setting(AppSettings::ArgRequiredElseHelp)
+  )
   .setting(AppSettings::ArgRequiredElseHelp)
   .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!")
   .get_matches();
@@ -146,6 +172,48 @@ fn main() {
         None => None,
       };
       build(buildsystem, master_yaml, mail_yaml)
+    }
+    Some("rebuild") => {
+      let yaml_path = matches
+        .subcommand_matches("rebuild")
+        .unwrap()
+        .value_of("MASTER_YAML")
+        .unwrap();
+      info!("Rebuilding rusty-ci from {}...", &yaml_path);
+      let content = match File::read(yaml_path) {
+        Ok(s) => s,
+        Err(e) => {
+          error!(
+            "There was a problem reading {}: {}",
+            yaml_path,
+            e.to_string()
+          );
+          exit(1);
+        }
+      };
+      let master_yaml = Yaml::from(content);
+
+      // If the MAIL_YAML argument is passed, open the file with that path
+      // and return a yaml object from its contents
+      let mail_yaml = match matches
+        .subcommand_matches("rebuild")
+        .unwrap()
+        .value_of("MAIL_YAML")
+      {
+        Some(mail_yaml) => match File::read(mail_yaml) {
+          Ok(s) => Some(Yaml::from(s)),
+          Err(e) => {
+            error!(
+              "There was a problem reading {}: {}",
+              mail_yaml,
+              e.to_string()
+            );
+            exit(1);
+          }
+        },
+        None => None,
+      };
+      rebuild(buildsystem, master_yaml, mail_yaml)
     }
     Some("start") => {
       let yaml_path = matches
@@ -414,6 +482,42 @@ fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>
   }
 
   match b.build(master) {
+    Ok(_) => {
+      println!("Successfully finished build");
+    }
+    Err(e) => {
+      error!("There was a problem while building: {}", e);
+    }
+  };
+}
+
+
+/// This function takes a boxed BuildSystem trait object and uses it
+/// to run the `rebuild` method on the object with the proper data.
+/// It constructs the workers and the master config file from an input yaml,
+/// and feeds it to the buildsystem.
+/// 
+/// Rebuilding a rusty-ci project does not kill its running processes.
+fn rebuild(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>) {
+  let mut workers = vec![];
+  let workers_section = match master_yaml.get_section("workers") {
+    Ok(w) => w,
+    Err(e) => {
+      error!("There was a problem reading the yaml file: {}", e);
+      exit(1);
+    }
+  };
+  for worker in workers_section {
+    workers.push(Worker::from(worker));
+  }
+  let mut master = MasterConfig::from(master_yaml);
+
+  match mail_yaml {
+    Some(mn) => master.set_mail_notifier(MailNotifier::from(mn)),
+    None => {}
+  }
+
+  match b.rebuild(master) {
     Ok(_) => {
       println!("Successfully finished build");
     }
