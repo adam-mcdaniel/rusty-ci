@@ -39,6 +39,30 @@ pub trait BuildSystem {
         Ok(())
     }
 
+    /// Rebuild master without killing any running processes
+    fn rebuild(&mut self, master: MasterConfig) -> Result<(), String> {
+        self.prebuild()?; // Call the prebuild method
+
+        if !yes_or_no("Have you already run the install subcommand and activated your virtual env in this shell? (y/n) ") {
+            error!("You must run the install subcommand and activate your venv before the running the build subcommand!");
+            exit(0);
+        }
+
+        info!("Creating master...");
+        self.create_master()?;
+        
+        let workers = master.get_workers();
+        info!("Creating workers...");
+        self.create_workers(&workers)?;
+        info!("Writing to master/master.cfg...");
+        self.write_master_config(&master)?;
+        info!("Writing to worker configs...");
+        self.write_worker_configs(&workers)?;
+        info!("Reconfiguring master...");
+        self.reconfigure_master()?;
+        Ok(())
+    }
+
     fn build(&mut self, master: MasterConfig) -> Result<(), String> {
         self.prebuild()?; // Call the prebuild method
 
@@ -87,6 +111,18 @@ pub trait BuildSystem {
         Cmd::new("killall").arg("python3").run();
         info!("Killing workers...");
         Cmd::new("killall").arg("buildbot-worker").run();
+        Ok(())
+    }
+
+    /// This method is used by the `rebuild` method to update the master without killing it
+    fn reconfigure_master(&mut self) -> Result<(), String> {
+        let buildbot = |sub_command| -> Result<(), String> {
+            Cmd::new("buildbot").arg(sub_command).arg("master").run();
+            Ok(())
+        };
+
+        buildbot("reconfig")?;
+        buildbot("cleanupdb")?;
         Ok(())
     }
 

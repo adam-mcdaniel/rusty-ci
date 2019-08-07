@@ -17,6 +17,5 @@ cargo install -f --path .
 . venv/bin/activate
 
 # Kill rusty-ci before it kills us!
-rusty-ci stop -q
 rusty-ci build -q rusty_ci.yaml
 rusty-ci start -q rusty_ci.yaml
