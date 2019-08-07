@@ -1,6 +1,5 @@
 # Continuous integration for managing Rusty-CI repo
 
-
 master:
   title: "RustyCI Continuous Integration"
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
