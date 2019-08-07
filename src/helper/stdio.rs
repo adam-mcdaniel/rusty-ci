@@ -43,11 +43,11 @@ pub fn yes_or_no<S: ToString>(prompt: S) -> bool {
 /// - Magenta
 /// - Yellow
 /// - White
-/// THIS MUST BE CALLED AGAIN WITH `White` TO RESET THE COLOR AGAIN.
-/// The color can be reset like so: `color_print!(White, "");`
 #[macro_export]
 macro_rules! color_print {
     ($color:ident, $fmt:expr $(,$e:expr)*) => {{
+        // I know this implementation is ugly as hell,
+        // the thing is: this code doesnt really matter fam
         use std::io::Write;
         use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
