@@ -56,6 +56,8 @@ macro_rules! color_print {
         match buffer.set_color(ColorSpec::new().set_fg(Some(Color::$color))) {_=>{}};
         match write!(&mut buffer, $fmt $(,$e)*) {_=>{}};
         match bufwtr.print(&buffer) {_=>{}};
+        match buffer.reset() {_=>{}};
+        match bufwtr.print(&buffer) {_=>{}};
     }};
 }
 
