@@ -7,5 +7,6 @@ git pull origin master
 cargo install -f --path .
 . venv/bin/activate
 
+rusty-ci stop
 rusty-ci build -q rusty_ci.yaml
 rusty-ci start -q rusty_ci.yaml
