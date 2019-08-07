@@ -20,14 +20,14 @@ fn main() {
                   (@arg quiet: -q --quiet "Don't ask user anything")
               )
               (@subcommand start =>
-                  (about: "Launch rusty-ci from an input yaml file")
+                  (about: "Launch rusty-ci from an input YAML file")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                   (@arg quiet: -q --quiet "Don't ask user anything")
                   (@arg MASTER_YAML: +required "The path to the YAML file")
               )
               (@subcommand setup =>
-                  (about: "Output a template YAML file for you to change to customize")
+                  (about: "Output a template YAML files for you to change to customize")
                   (version: "0.1.0")
                   (author: "Adam McDaniel <adam.mcdaniel17@gmail.com>")
                   (@arg MASTER_YAML: +takes_value default_value("template.yaml") "The path to write the master YAML file")
@@ -42,7 +42,7 @@ fn main() {
   )
   .subcommand(
     SubCommand::with_name("build")
-        .about("Build rusty-ci from YAML files")
+        .about("Build rusty-ci from YAML file(s)")
         .version("0.1.0")
         .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
         .arg(
@@ -68,7 +68,7 @@ fn main() {
   )
   .subcommand(
     SubCommand::with_name("rebuild")
-        .about("Build and restart rusty-ci from input YAML files")
+        .about("Build and restart rusty-ci from input YAML file(s)")
         .version("0.1.0")
         .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
         .arg(
@@ -518,7 +518,7 @@ fn rebuild(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yam
 
   match b.rebuild(master) {
     Ok(_) => {
-      println!("Successfully finished build");
+      println!("Successfully finished rebuild");
     }
     Err(e) => {
       error!("There was a problem while building: {}", e);
