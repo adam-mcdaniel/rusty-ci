@@ -56,8 +56,11 @@ macro_rules! color_print {
         match buffer.set_color(ColorSpec::new().set_fg(Some(Color::$color))) {_=>{}};
         match write!(&mut buffer, $fmt $(,$e)*) {_=>{}};
         match bufwtr.print(&buffer) {_=>{}};
-        match buffer.reset() {_=>{}};
-        match bufwtr.print(&buffer) {_=>{}};
+        
+        // Reset color
+        let mut reset_buf = BufferWriter::stderr(ColorChoice::Always).buffer();
+        match reset_buf.reset() {_=>{}};
+        match bufwtr.print(&reset_buf) {_=>{}};
     }};
 }
 
