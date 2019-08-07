@@ -61,7 +61,7 @@ builders:
   update-self:
     script:
       - chmod +x update.sh
-      - ./update.sh
+      - bash --rcfile ./update.sh
     workers:
       - rusty-ci-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
