@@ -43,11 +43,11 @@ pub fn yes_or_no<S: ToString>(prompt: S) -> bool {
 /// - Magenta
 /// - Yellow
 /// - White
-/// THIS MUST BE CALLED AGAIN WITH `White` TO RESET THE COLOR AGAIN.
-/// The color can be reset like so: `color_print!(White, "");`
 #[macro_export]
 macro_rules! color_print {
     ($color:ident, $fmt:expr $(,$e:expr)*) => {{
+        // I know this implementation is ugly as hell,
+        // the thing is: this code doesnt really matter fam
         use std::io::Write;
         use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
@@ -56,6 +56,11 @@ macro_rules! color_print {
         match buffer.set_color(ColorSpec::new().set_fg(Some(Color::$color))) {_=>{}};
         match write!(&mut buffer, $fmt $(,$e)*) {_=>{}};
         match bufwtr.print(&buffer) {_=>{}};
+
+        // Reset color
+        let mut reset_buf = BufferWriter::stderr(ColorChoice::Always).buffer();
+        match reset_buf.reset() {_=>{}};
+        match bufwtr.print(&reset_buf) {_=>{}};
     }};
 }
 
@@ -65,7 +70,6 @@ macro_rules! color_print {
 macro_rules! green {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Green, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 
@@ -74,7 +78,6 @@ macro_rules! green {
 macro_rules! red {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Red, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 
@@ -83,7 +86,6 @@ macro_rules! red {
 macro_rules! blue {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Blue, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 
@@ -92,7 +94,6 @@ macro_rules! blue {
 macro_rules! yellow {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Yellow, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 

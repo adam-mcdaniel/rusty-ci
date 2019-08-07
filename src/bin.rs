@@ -365,9 +365,14 @@ fn start(mut b: Box<dyn BuildSystem>, yaml: Yaml) {
   }
   match b.start(&workers) {
     Ok(_) => {
+      let master = &yaml.get_section("master").unwrap();
       println!("Successfully started workers and master");
       println!("Run `tail -f master/twistd.log` to see the log output for your CI!");
-      println!("Go to http://{}:8010 to view your webgui", unwrap(&yaml.get_section("master").unwrap(), "webserver-ip"))
+      println!(
+        "Go to http://{}:{} to view your webgui",
+        unwrap(master, "webserver-ip"),
+        unwrap(master, "webserver-port")
+      )
     }
     Err(e) => {
       println!("There was a problem while starting: {}", e);

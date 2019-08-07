@@ -6,6 +6,7 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
   # Local IP for linux container
   webserver-ip: 10.35.66.130
+  webserver-port: 9000
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
   poll-interval: 120
 
