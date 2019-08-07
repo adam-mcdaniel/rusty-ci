@@ -5,6 +5,7 @@ source ~/.bashrc
 cd ~
 git clone https://github.com/adam-mcdaniel/rusty-ci
 cd rusty-ci
+git reset --hard
 git pull origin master
 
 
