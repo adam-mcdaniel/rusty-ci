@@ -60,6 +60,8 @@ builders:
   # Run update script
   update-self:
     script:
+      # Update master!
+      # This comment is to test a change
       - git pull origin master
       - ls -as
       - chmod +x update.sh
