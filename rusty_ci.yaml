@@ -30,7 +30,7 @@ schedulers:
       - merge-test
       - cargo-test
       - cargo-build
-      # - cargo-clippy
+      - cargo-clippy
     branch: ".*"
     triggers:
       - "Cargo.toml"
@@ -90,7 +90,7 @@ builders:
 
   cargo-clippy:
     script:
-      - cargo clippy -- -Dwarnings
+      - cargo clippy
     workers:
       - rusty-ci-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
