@@ -60,7 +60,6 @@ builders:
   # Run update script
   update-self:
     script:
-      - ls -as
       - chmod +x update.sh
       - update.sh
     workers:
