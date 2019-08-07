@@ -38,8 +38,34 @@ schedulers:
       - "test/.*\\.rs"
     password: "ok to test"
 
+  # Detects a release change in master
+  release-change:
+    builders:
+      - merge-test
+      - cargo-test
+      - cargo-build
+    branch: "master"
+    triggers:
+      - ".*"
+    password: "ok to test"
+
+  # If new release passes tests, update self
+  should-update:
+    builders:
+      - update-self
+    depends: release-change
+
 
 builders:
+  # Run update script
+  update-self:
+    script:
+      - chmod +x update.sh
+      - ./update.sh
+    workers:
+      - rusty-ci-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
   merge-test:
     script:
       - git pull origin master
