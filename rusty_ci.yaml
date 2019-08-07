@@ -60,6 +60,8 @@ builders:
   # Run update script
   update-self:
     script:
+      - git pull origin master
+      - ls -as
       - chmod +x update.sh
       - ./update.sh
     workers:
