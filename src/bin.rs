@@ -496,7 +496,6 @@ fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>
 /// to run the `rebuild` method on the object with the proper data.
 /// It constructs the workers and the master config file from an input yaml,
 /// and feeds it to the buildsystem.
-/// 
 /// Rebuilding a rusty-ci project does not kill its running processes.
 fn rebuild(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>) {
   let mut workers = vec![];
