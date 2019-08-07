@@ -5,7 +5,7 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
   # Local IP for linux container
   webserver-ip: 10.35.66.130
-  webserver-port: 9000
+  webserver-port: 8010
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
   poll-interval: 120
 
@@ -60,7 +60,7 @@ builders:
   update-self:
     script:
       - chmod +x update.sh
-      - bash --rcfile ./update.sh
+      - ./update.sh
     workers:
       - rusty-ci-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
