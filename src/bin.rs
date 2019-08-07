@@ -235,13 +235,10 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
+    master-ip: localhost
     # The absolute path to the working directory of this worker
     # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
+    working-dir: 'test-worker'
 
 
 # This section holds each scheduler.
