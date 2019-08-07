@@ -7,7 +7,7 @@ use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
 
-use crate::{unwrap, Step};
+use crate::{unwrap, unquote, Step};
 use rusty_yaml::Yaml;
 use std::path::PathBuf;
 
@@ -125,7 +125,7 @@ impl From<Yaml> for Builder {
             {
                 ["cd", path] => workdir.push(path),
                 _ => steps.push(Step::command(
-                    instruction.to_string(),
+                    unquote(&instruction.to_string()),
                     match workdir.to_str() {
                         Some(s) => Some(s.to_string()),
                         None => None,

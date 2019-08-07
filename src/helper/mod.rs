@@ -1,4 +1,7 @@
 
+mod string;
+pub use string::unquote;
+
 mod file;
 pub use file::File;
 
