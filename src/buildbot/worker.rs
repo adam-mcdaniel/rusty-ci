@@ -93,7 +93,7 @@ impl Display for Worker {
 from buildbot_worker.bot import Worker
 from twisted.application import service
 
-basedir = '{basedir}'
+basedir = '.'
 rotateLength = 10000000
 maxRotatedFiles = 10
 
@@ -132,7 +132,6 @@ s.setServiceParent(application)
 
 "#,
             name = self.name,
-            basedir = self.dir,
             password = self.password,
             masterhost = self.masterhost,
             masterport = self.masterport

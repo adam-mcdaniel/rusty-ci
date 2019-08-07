@@ -1,3 +1,4 @@
+/// This crate can also be used as a library for other tools to generate buildbot projects
 #[macro_use]
 pub mod helper;
 pub use helper::{File, Cmd, input, yes_or_no, unwrap, unmatched_quotes};
