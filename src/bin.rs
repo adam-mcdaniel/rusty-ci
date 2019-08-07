@@ -238,7 +238,7 @@ workers:
     master-ip: localhost
     # The absolute path to the working directory of this worker
     # The worker files will be installed in this directory
-    dir: 'test-worker'
+    working-dir: 'test-worker'
 
 
 # This section holds each scheduler.

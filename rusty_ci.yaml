@@ -20,9 +20,8 @@ merge-request-handler:
 
 workers:
   rusty-ci-worker:
-    masterhost: localhost
-    masterport: 9989
-    basedir: 'rusty-ci-worker'
+    master-ip: localhost
+    working-dir: 'rusty-ci-worker'
 
 
 schedulers:
