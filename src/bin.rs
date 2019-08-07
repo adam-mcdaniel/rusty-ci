@@ -42,7 +42,7 @@ fn main() {
   )
   .subcommand(
     SubCommand::with_name("build")
-        .about("Build rusty-ci from an input yaml file")
+        .about("Build rusty-ci from YAML files")
         .version("0.1.0")
         .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
         .arg(
@@ -62,13 +62,13 @@ fn main() {
         .arg(
           Arg::with_name("MASTER_YAML")
             .required(true)
-            .help("The path to the YAML file")
+            .help("The path to the master YAML file")
         )
         .setting(AppSettings::ArgRequiredElseHelp)
   )
   .subcommand(
     SubCommand::with_name("rebuild")
-        .about("Build and launch rusty-ci from an input yaml file")
+        .about("Build and restart rusty-ci from input YAML files")
         .version("0.1.0")
         .author("Adam McDaniel <adam.mcdaniel17@gmail.com>")
         .arg(
@@ -88,7 +88,7 @@ fn main() {
         .arg(
           Arg::with_name("MASTER_YAML")
             .required(true)
-            .help("The path to the YAML file")
+            .help("The path to the master YAML file")
         )
         .setting(AppSettings::ArgRequiredElseHelp)
   )
