@@ -17,6 +17,7 @@ pub struct MasterConfig {
     title_url: String,
     git_repo: String,
     webserver_ip: String,
+    webserver_port: String,
     poll_interval: String,
     mail_notifier: Option<MailNotifier>,
     merge_request_handler: MergeRequestHandler,
@@ -33,6 +34,7 @@ impl MasterConfig {
         title_url: String,
         git_repo: String,
         webserver_ip: String,
+        webserver_port: String,
         poll_interval: String,
         mail_notifier: Option<MailNotifier>,
         merge_request_handler: MergeRequestHandler,
@@ -45,6 +47,7 @@ impl MasterConfig {
             title_url,
             git_repo,
             webserver_ip,
+            webserver_port,
             poll_interval,
             mail_notifier,
             merge_request_handler,
@@ -103,6 +106,7 @@ impl From<Yaml> for MasterConfig {
             "title-url",
             "repo",
             "webserver-ip",
+            "webserver-port",
             "poll-interval",
         ]
         .iter()
@@ -145,6 +149,7 @@ impl From<Yaml> for MasterConfig {
         let title_url = unwrap(&master, "title-url");
         let git_repo = unwrap(&master, "repo");
         let webserver_ip = unwrap(&master, "webserver-ip");
+        let webserver_port = unwrap(&master, "webserver-port");
         let poll_interval = unwrap(&master, "poll-interval");
 
         // Return the whole master configuration file
@@ -153,6 +158,7 @@ impl From<Yaml> for MasterConfig {
             title_url,
             git_repo,
             webserver_ip,
+            webserver_port,
             poll_interval,
             None,
             merge_request_handler,
@@ -194,7 +200,7 @@ c['workers'] = [{worker_info}]
 c['protocols'] = {{'pb': {{'port': 9989}}}}
 
 
-c['www'] = dict(port=8010,
+c['www'] = dict(port={webserver_port},
                 plugins=dict(waterfall_view={{}}, console_view={{}}, grid_view={{}}))
 
 c['change_source'] = []
@@ -219,7 +225,7 @@ c['builders'] = []
 c['title'] = "{title}"
 c['titleURL'] = "{title_url}"
 
-c['buildbotURL'] = "http://{webserver_ip}:8010/"
+c['buildbotURL'] = "http://{webserver_ip}:{webserver_port}/"
 
 c['db'] = {{
     # This specifies what database buildbot uses to store its state.  You can leave
@@ -230,6 +236,7 @@ c['db'] = {{
             title = self.title,
             title_url = self.title_url,
             webserver_ip = self.webserver_ip,
+            webserver_port = self.webserver_port,
             git_repo = self.git_repo,
             merge_request_handler = self.merge_request_handler,
             mail_notifier = match &self.mail_notifier {
