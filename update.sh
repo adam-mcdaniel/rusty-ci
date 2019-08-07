@@ -1,6 +1,7 @@
 #! /bin/bash
 # To be run in linux container running rusty-ci!
-source ~/.bashrc
+. ~/.bashrc
+. ~/.cargo/env
 
 cd ~
 git clone https://github.com/adam-mcdaniel/rusty-ci
