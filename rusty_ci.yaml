@@ -57,6 +57,7 @@ schedulers:
 
 
 builders:
+  # Run update script
   update-self:
     script:
       - chmod +x update.sh
