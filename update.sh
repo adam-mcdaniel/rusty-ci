@@ -1,5 +1,7 @@
 #! /bin/bash
-# To be run in linux container running rusty-ci!
+# Run in linux container running rusty-ci!
+# To use this, run rusty-ci install first.
+
 . ~/.bashrc
 . ~/.cargo/env
 
