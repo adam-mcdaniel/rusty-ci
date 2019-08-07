@@ -53,7 +53,7 @@ schedulers:
   should-update:
     builders:
       - update-self
-    depends: release-change
+    depends: "release-change"
 
 
 builders:
