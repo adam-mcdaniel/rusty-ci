@@ -62,7 +62,7 @@ impl From<Yaml> for Worker {
     fn from(yaml: Yaml) -> Self {
         let name = yaml.get_name();
 
-        for section in ["master-ip", "basedir"].iter() {
+        for section in ["master-ip", "dir"].iter() {
             if !yaml.has_section(section) {
                 error!("There was an error creating a worker: The '{}' section is not specified for '{}'", section, name);
                 exit(1);
@@ -73,7 +73,7 @@ impl From<Yaml> for Worker {
             .sample_iter(&Alphanumeric)
             .take(30)
             .collect();
-        let basedir = unwrap(&yaml, "basedir");
+        let basedir = unwrap(&yaml, "dir");
         let masterhost = unwrap(&yaml, "master-ip");
 
         // Now, instead of getting the master port from the Yaml object, we just use 9989.
