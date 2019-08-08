@@ -81,6 +81,7 @@ impl From<Yaml> for MasterConfig {
         }
 
         // Verify that the yaml section contains all the necessary subsections
+        for section in [
             "master",
             "workers",
             "builders",
