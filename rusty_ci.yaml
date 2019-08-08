@@ -19,9 +19,13 @@ merge-request-handler:
 
 
 workers:
-  rusty-ci-worker:
+  test-worker:
     master-ip: localhost
-    working-dir: 'rusty-ci-worker'
+    working-dir: 'test-worker'
+
+  release-worker:
+    master-ip: localhost
+    working-dir: 'release-worker'
 
 
 schedulers:
@@ -62,7 +66,7 @@ builders:
       - chmod +x update.sh
       - ./update.sh
     workers:
-      - rusty-ci-worker
+      - release-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   merge-test:
@@ -71,26 +75,26 @@ builders:
       - cargo test
       - cargo build --release
     workers:
-      - rusty-ci-worker
+      - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   cargo-test:
     script:
       - cargo test
     workers:
-      - rusty-ci-worker
+      - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   cargo-build:
     script:
       - cargo build --release
     workers:
-      - rusty-ci-worker
+      - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   cargo-clippy:
     script:
       - cargo clippy
     workers:
-      - rusty-ci-worker
+      - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
