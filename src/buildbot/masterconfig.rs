@@ -79,6 +79,7 @@ impl From<Yaml> for MasterConfig {
             },
             _ => {}
         }
+        
 
         // Verify that the yaml section contains all the necessary subsections
         for section in [
