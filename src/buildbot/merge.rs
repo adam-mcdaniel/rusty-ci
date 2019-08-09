@@ -4,7 +4,6 @@ use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
-
 /// A version control system is a system that allows programmers to manage
 /// changes on a product in development. A few examples include, but are not limited to,
 /// `GitHub`, `GitLab`, `Mercurial`.
@@ -53,7 +52,6 @@ pub struct MergeRequestHandler {
     repository_type: String,
 }
 
-
 impl MergeRequestHandler {
     pub fn new(
         vcs: VersionControlSystem,
@@ -61,7 +59,6 @@ impl MergeRequestHandler {
         repo_name: String,
         whitelist: Vec<String>,
     ) -> Self {
-
         let auth_token = match File::read(AUTH_TOKEN_PATH) {
             Ok(s) => s.trim().to_string(),
             Err(e) => {
@@ -198,7 +195,6 @@ c['services'].append(gitlab_status_service)
     }
 }
 
-
 impl From<Yaml> for MergeRequestHandler {
     fn from(yaml: Yaml) -> Self {
         // Confirm that the merge request handler has the required sections
@@ -242,7 +238,6 @@ impl From<Yaml> for MergeRequestHandler {
                     .to_string(),
             );
         }
-
 
         // Return the constructed Self
         Self::new(vcs, owner, repo_name, whitelist)

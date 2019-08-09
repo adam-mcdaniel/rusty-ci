@@ -4,10 +4,10 @@ use rusty_yaml::Yaml;
 extern crate rusty_ci;
 use rusty_ci::Scheduler;
 
-
 #[test]
 fn scheduler_from_yaml() {
-    let yaml = Yaml::from(r#"xasm-change:
+    let yaml = Yaml::from(
+        r#"xasm-change:
   builders:
     - xasm-build
     - xasm-test
@@ -19,7 +19,10 @@ fn scheduler_from_yaml() {
     - '.*Makefile'
     - '.*CMakeLists.txt'
   password: "ok to test"
-"#).get_section("xasm-change").unwrap();
+"#,
+    )
+    .get_section("xasm-change")
+    .unwrap();
 
     let scheduler = Scheduler::from(yaml);
     let output = scheduler.to_string();

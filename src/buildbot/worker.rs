@@ -1,10 +1,9 @@
 use crate::unwrap;
-use rand::{thread_rng, Rng};
 use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
-
 
 /// This struct holds the information that is used to build the worker `buildbot.tac` file
 /// Each worker has:
@@ -21,7 +20,6 @@ pub struct Worker {
     masterhost: String,
     masterport: String,
 }
-
 
 impl Worker {
     fn new<S: ToString>(name: S, dir: S, password: S, masterhost: S, masterport: S) -> Self {
@@ -50,7 +48,6 @@ impl Worker {
     }
 }
 
-
 /// Convert a Yaml section to a Worker
 ///
 /// The worker requires that the yaml section has the following subsections:
@@ -69,10 +66,7 @@ impl From<Yaml> for Worker {
             }
         }
 
-        let password: String = thread_rng()
-            .sample_iter(&Alphanumeric)
-            .take(30)
-            .collect();
+        let password: String = thread_rng().sample_iter(&Alphanumeric).take(30).collect();
         let basedir = unwrap(&yaml, "working-dir");
         let masterhost = unwrap(&yaml, "master-ip");
 

@@ -1,4 +1,3 @@
-
 /// Unquotes `s`.
 pub fn unquote(s: &str) -> String {
     if s.chars().count() < 2 {

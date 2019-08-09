@@ -1,6 +1,5 @@
-
-use crate::{BuildSystem, AUTH_TOKEN_PATH};
 use crate::{yes_or_no, File};
+use crate::{BuildSystem, AUTH_TOKEN_PATH};
 use std::process::exit;
 pub struct Makefile;
 
@@ -13,7 +12,9 @@ impl Makefile {
 impl BuildSystem for Makefile {
     /// Write the makefile
     fn install(&mut self) -> Result<(), String> {
-        if !yes_or_no("Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) ") {
+        if !yes_or_no(
+            "Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) ",
+        ) {
             error!("You must install those packages before continuing!");
             exit(0);
         }
@@ -27,7 +28,10 @@ install:
 ")?;
         info!("Successfully wrote Makefile");
         warn!("To install dependencies run `make install`");
-        info!("Next, write your VCS's api token to '{}', and then run the `build` subcommand", AUTH_TOKEN_PATH);
+        info!(
+            "Next, write your VCS's api token to '{}', and then run the `build` subcommand",
+            AUTH_TOKEN_PATH
+        );
         Ok(())
     }
 

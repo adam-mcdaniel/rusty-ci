@@ -1,4 +1,3 @@
-
 mod string;
 pub use string::unquote;
 
@@ -9,7 +8,7 @@ mod cmd;
 pub use cmd::Cmd;
 
 mod yaml;
-pub use yaml::{unwrap, unmatched_quotes};
+pub use yaml::{unmatched_quotes, unwrap};
 
 pub mod stdio;
 pub use stdio::{input, yes_or_no};

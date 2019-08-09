@@ -1,8 +1,6 @@
 #![macro_use]
 use std::io::{stdin, stdout, Write};
 
-
-
 /// This function prompts the user with a message and returns the user's input.
 /// It also pops off trailing carriage returns.
 pub fn input<S: ToString>(prompt: S) -> String {
@@ -10,7 +8,9 @@ pub fn input<S: ToString>(prompt: S) -> String {
     print!("{}", prompt.to_string());
     let _ = stdout().flush();
 
-    stdin().read_line(&mut buf).expect("Could not get user input");
+    stdin()
+        .read_line(&mut buf)
+        .expect("Could not get user input");
 
     while let Some('\n') = buf.chars().next_back() {
         buf.pop();
@@ -30,8 +30,6 @@ pub fn yes_or_no<S: ToString>(prompt: S) -> bool {
 
     response.to_lowercase().trim() == "y"
 }
-
-
 
 /// This prints a format string with a specific color.
 /// The color must be one of the following.
@@ -63,7 +61,6 @@ macro_rules! color_print {
         match bufwtr.print(&reset_buf) {_=>{}};
     }};
 }
-
 
 /// Write green text to the console, and then reset color
 #[macro_export]
@@ -97,17 +94,17 @@ macro_rules! yellow {
     };
 }
 
-
 /// Flush stdout
 #[macro_export]
 macro_rules! flush {
     () => {{
-        use std::io::Write;
         use std::io::stdout;
-        match stdout().flush() {_=>{}};
-    }}
+        use std::io::Write;
+        match stdout().flush() {
+            _ => {}
+        };
+    }};
 }
-
 
 /// Prints info message colored green
 #[macro_export]
@@ -145,7 +142,6 @@ macro_rules! error {
     };
 }
 
-
 /// Prints warning message colored yellow
 #[macro_export]
 macro_rules! warn {
@@ -157,4 +153,3 @@ macro_rules! warn {
         print!("]===> {}\n", user);
     };
 }
-

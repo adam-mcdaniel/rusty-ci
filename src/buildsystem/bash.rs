@@ -1,4 +1,3 @@
-
 use crate::buildsystem::BuildSystem;
 use crate::{yes_or_no, File, AUTH_TOKEN_PATH};
 use std::process::exit;
@@ -14,7 +13,6 @@ impl Bash {
     }
 }
 
-
 impl BuildSystem for Bash {
     /// Writes install script to `install.sh` for user to run
     fn install(&mut self) -> Result<(), String> {
@@ -25,7 +23,9 @@ impl BuildSystem for Bash {
             exit(0);
         }
         info!("Writing install file to `./install.sh`");
-        File::write("install.sh", "#!/bin/sh
+        File::write(
+            "install.sh",
+            "#!/bin/sh
 
 python3 -m venv venv 2>&1
 . venv/bin/activate
@@ -33,7 +33,8 @@ python3 -m venv venv 2>&1
 python3 -m pip install -U pip >/dev/null
 python3 -m pip install txrequests treq 'buildbot[bundle]' >/dev/null
 python3 -m pip install buildbot-worker setuptools-trial >/dev/null
-")?;
+",
+        )?;
         info!("Successfully wrote install file");
         warn!("To install dependencies run `install.sh`");
         warn!("Before building from a YAML file, be sure to run `. venv/bin/activate`");

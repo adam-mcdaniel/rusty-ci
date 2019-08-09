@@ -4,10 +4,10 @@ use rusty_yaml::Yaml;
 extern crate rusty_ci;
 use rusty_ci::MailNotifier;
 
-
 #[test]
 fn mailer_from_yaml() {
-    let yaml = Yaml::from(r#"
+    let yaml = Yaml::from(
+        r#"
 extra-recipients:
   failure:
     - failure@gmail.com
@@ -21,7 +21,8 @@ lookup: gmail.com
 smtp-relay-host: smtp.gmail.com
 smtp-port: 587
 smtp-password: "p@$$w0rd"
-"#);
+"#,
+    );
 
     let mailer = MailNotifier::from(yaml);
     let output = mailer.to_string();

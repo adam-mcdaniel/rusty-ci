@@ -1,9 +1,10 @@
-use crate::{unmatched_quotes, unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker};
+use crate::{
+    unmatched_quotes, unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker,
+};
 
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
-
 
 /// This struct represents the configuration file for the master.
 /// This file contains the Python code for the builders and the schedulers.
@@ -25,7 +26,6 @@ pub struct MasterConfig {
     schedulers: Vec<Scheduler>,
     workers: Vec<Worker>,
 }
-
 
 /// This is impl the for MasterConfig struct.
 impl MasterConfig {
@@ -70,16 +70,14 @@ impl MasterConfig {
 /// This is intended to take the entire input yaml file.
 impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
-
         // Verify that the yaml file doesnt have unmatched quotes!
         match unmatched_quotes(&yaml) {
             Some(line) => {
                 error!("There was a problem creating the master configuration file: unmatched quotes in the line '{}'", line.trim());
                 exit(1);
-            },
+            }
             _ => {}
         }
-        
 
         // Verify that the yaml section contains all the necessary subsections
         for section in [
@@ -100,7 +98,6 @@ impl From<Yaml> for MasterConfig {
         // Get the master susbsection, the subsection holding the web gui and git information
         let master = yaml.get_section("master").unwrap();
 
-
         // Verify the master subsection contains all the proper data
         for section in [
             "title",
@@ -120,7 +117,6 @@ impl From<Yaml> for MasterConfig {
 
         let merge_request_handler =
             MergeRequestHandler::from(yaml.get_section("merge-request-handler").unwrap());
-
 
         // Get schedulers, builders, and workers from the yaml file.
         // Because we previously verified that each subsection exists,
@@ -143,7 +139,6 @@ impl From<Yaml> for MasterConfig {
         for worker in yaml.get_section("workers").unwrap() {
             workers.push(Worker::from(worker));
         }
-
 
         // Get all the data from the master subsection
         let title = unwrap(&master, "title");

@@ -9,7 +9,6 @@ use std::process::exit;
 /// for your type, and change the install method, similar to the BashBuildSystem
 /// implementation in this module.
 pub trait BuildSystem {
-
     /// Preinstall is called by the install method unless it is overloaded.
     /// This is usefult for printing a warning message or prompting the user before
     /// installing the dependencies for rusty-ci
@@ -32,7 +31,6 @@ pub trait BuildSystem {
         Ok(())
     }
 
-
     /// This method is similar to preinstall, but it is called by the build
     /// method instead of the install method
     fn prebuild(&mut self) -> Result<(), String> {
@@ -50,7 +48,7 @@ pub trait BuildSystem {
 
         info!("Creating master...");
         self.create_master()?;
-        
+
         let workers = master.get_workers();
         info!("Creating workers...");
         self.create_workers(&workers)?;
@@ -73,7 +71,7 @@ pub trait BuildSystem {
 
         info!("Creating master...");
         self.create_master()?;
-        
+
         let workers = master.get_workers();
         info!("Creating workers...");
         self.create_workers(&workers)?;
@@ -175,7 +173,6 @@ pub trait BuildSystem {
         Ok(())
     }
 
-
     /// Writes the configuration `buildbot.tac` file for each worker
     fn write_worker_configs(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
         for worker in workers {
@@ -184,16 +181,16 @@ pub trait BuildSystem {
             path.push("buildbot.tac");
 
             match File::write(path, worker.to_string()) {
-                Err(e) => {
-                    Err(e + &format!("\nDid you enter a valid basedir for the \"{}\" worker?", worker.get_name()))
-                }
-                Ok(()) => Ok(())
+                Err(e) => Err(e + &format!(
+                    "\nDid you enter a valid basedir for the \"{}\" worker?",
+                    worker.get_name()
+                )),
+                Ok(()) => Ok(()),
             }?;
         }
 
         Ok(())
     }
-
 
     /// Creates the master in the `master` directory
     fn create_master(&mut self) -> Result<(), String> {
@@ -204,18 +201,13 @@ pub trait BuildSystem {
         Ok(())
     }
 
-
-
     /// Writes the master configuration file
     fn write_master_config(&mut self, master: &MasterConfig) -> Result<(), String> {
         match File::write("master/master.cfg", master.to_string()) {
-            Err(e) => {
-                Err(e + "\nDid you enter your venv by running `. venv/bin/activate`?")
-            }
-            Ok(()) => Ok(())
+            Err(e) => Err(e + "\nDid you enter your venv by running `. venv/bin/activate`?"),
+            Ok(()) => Ok(()),
         }
     }
-
 
     /// This method installs Python.
     /// You probably do need to overload this, I dont know

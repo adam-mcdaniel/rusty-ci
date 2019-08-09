@@ -1,9 +1,7 @@
-
 use crate::{unmatched_quotes, unwrap};
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
-
 
 /// This object is responsible for building the `MailNotifier` object
 /// in the buildbot master config. It contains the information for
@@ -61,7 +59,6 @@ impl MailNotifier {
         }
     }
 }
-
 
 impl Display for MailNotifier {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
@@ -123,19 +120,17 @@ c['services'].append(successes)
     }
 }
 
-
 impl From<Yaml> for MailNotifier {
     fn from(yaml: Yaml) -> Self {
-        
         // Verify that the yaml file doesnt have unmatched quotes!
         match unmatched_quotes(&yaml) {
             Some(line) => {
                 error!("There was a problem creating the mail notifier: unmatched quotes in the line '{}'", line.trim());
                 exit(1);
-            },
+            }
             _ => {}
         }
-        
+
         // Confirm that the merge request handler has the required sections
         for section in [
             "extra-recipients",
@@ -155,7 +150,6 @@ impl From<Yaml> for MailNotifier {
                 exit(1);
             }
         }
-
 
         let extra_recipients = yaml.get_section("extra-recipients").unwrap();
 
@@ -179,7 +173,6 @@ impl From<Yaml> for MailNotifier {
         for recipient in extra_recipients.get_section("failure").unwrap() {
             failure_recipients.push(recipient.to_string());
         }
-
 
         let from_address = unwrap(&yaml, "from-address");
         let smtp_relay_host = unwrap(&yaml, "smtp-relay-host");
