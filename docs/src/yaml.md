@@ -14,8 +14,10 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
@@ -23,6 +25,7 @@ master:
   # The number of seconds to wait before checking for updates on your repository
   # Two minutes is a good poll interval
   poll-interval: 120
+
 ```
 
 ## The merge-request-handler section
@@ -65,16 +68,10 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
+    master-ip: localhost
     # The absolute path to the working directory of this worker
     # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+    working-dir: 'test-worker'
 ```
 # The schedulers section
 

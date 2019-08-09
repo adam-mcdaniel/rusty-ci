@@ -4,6 +4,11 @@
 
 Rusty-CI is just a user interface for [buildbot](https://buildbot.net). Instead of having to write the Python for your CI project to get the versatility you want, just fill out Rusty-CI's template YAML file and it'll do the rest for you.
 
+## Suggestions
+
+I highly recommend running this in some sort of container.
+All features of Rusty-CI are tested using fresh Ubuntu 18.04 linux containers.
+
 ## Usage
 
 Here is the template YAML file that Rusty-CI will output for you to fill out with your own data.
@@ -11,7 +16,6 @@ Here is the template YAML file that Rusty-CI will output for you to fill out wit
 It explains itself for the most part, but I'll be covering it in more detail in a later chapter.
 
 ```yaml
-
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
@@ -19,8 +23,10 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: "https://github.com/adam-mcdaniel/rusty-ci"

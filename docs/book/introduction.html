@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="introduction.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="introduction.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -148,19 +148,23 @@
                         <h1><a class="header" href="#introduction" id="introduction">Introduction</a></h1>
 <h2><a class="header" href="#what-is-rusty-ci" id="what-is-rusty-ci">What is Rusty-CI?</a></h2>
 <p>Rusty-CI is just a user interface for <a href="https://buildbot.net">buildbot</a>. Instead of having to write the Python for your CI project to get the versatility you want, just fill out Rusty-CI's template YAML file and it'll do the rest for you.</p>
+<h2><a class="header" href="#suggestions" id="suggestions">Suggestions</a></h2>
+<p>I highly recommend running this in some sort of container.
+All features of Rusty-CI are tested using fresh Ubuntu 18.04 linux containers.</p>
 <h2><a class="header" href="#usage" id="usage">Usage</a></h2>
 <p>Here is the template YAML file that Rusty-CI will output for you to fill out with your own data.</p>
 <p>It explains itself for the most part, but I'll be covering it in more detail in a later chapter.</p>
-<pre><code class="language-yaml">
-# This section holds data specific to the master of the workers
+<pre><code class="language-yaml"># This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
   title: &quot;Rusty-CI&quot;
   title-url: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
