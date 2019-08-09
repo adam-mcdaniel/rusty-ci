@@ -4,6 +4,11 @@
 
 Rusty-CI is just a user interface for [buildbot](https://buildbot.net). Instead of having to write the Python for your CI project to get the versatility you want, just fill out Rusty-CI's template YAML file and it'll do the rest for you.
 
+## Suggestions
+
+I highly recommend running this in some sort of container.
+All features of Rusty-CI are tested using fresh Ubuntu 18.04 linux containers.
+
 ## Usage
 
 Here is the template YAML file that Rusty-CI will output for you to fill out with your own data.
@@ -11,7 +16,6 @@ Here is the template YAML file that Rusty-CI will output for you to fill out wit
 It explains itself for the most part, but I'll be covering it in more detail in a later chapter.
 
 ```yaml
-
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
@@ -19,8 +23,10 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
@@ -33,7 +39,7 @@ master:
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
+  # Right now, github and gitlab are the only supported sites
   # If you're using an unsupported version control system, no worries,
   # rusty-ci just wont run on pull requests.
   version-control-system: github
@@ -46,6 +52,9 @@ merge-request-handler:
   # You dont want to run arbitrary code on your machine when anyone
   # makes a pull request. Rusty-CI will not test anyone's pull request
   # if their username is not in this list.
+  # Note that this has no effect on GitLab merge request building!
+  # Rusty-CI will only build merge requests from a branch
+  # thats already inside the repository.
   whitelist:
     - adam-mcdaniel
 
@@ -58,8 +67,8 @@ workers:
   test-worker:
     # The ip of the master
     master-ip: localhost
-    # The absolute path to the working directory of this worker
-    # The worker files will be installed in this directory
+    # The worker's files will be installed in this directory.
+    # This can also be an absolute path
     working-dir: 'test-worker'
 
 
@@ -109,7 +118,7 @@ builders:
   rusty-ci-test:
     # This is the shell script that the workers will run when this builder is executed
     # You can have as many instructions as youd like
-    # Mind you, you cannot use the |, >, <, >>, <<... operators. Sadly, buildbot
+    # Mind you, you cannot use the |, >, <, >>, <<, etc. operators. Sadly, buildbot
     # passes each item separated by whitespace as another parameter to function.
     script:
       - echo Hello world!

@@ -3,19 +3,15 @@
 The setup command is very simple. All it does is write template YAML files for building your CI and controlling email notifications to any paths you'd like.
 
 ```
-$ ./rusty-ci setup
-Where do you want the template master yaml file to be? out.yaml
-Are you sure? (y/n) y
-==[INFO]===> Writing template yaml file to out.yaml...
-Where do you want the template mail yaml file to be? mail.yaml
-Are you sure? (y/n) y
-==[INFO]===> Writing template yaml file to mail.yaml...
+$ ./rusty-ci setup template.yaml mail.yaml
+==[INFO]===> Writing template master yaml file to template.yaml...
+==[INFO]===> Writing template mail yaml file to mail.yaml...
 ==[INFO]===> All done!
 ==[INFO]===> Next, run the `install` subcommand command using either the `bash` or `make` flag
 ```
 
 ```
-$ more out.yaml
+$ more template.yaml
 
 # This section holds data specific to the master of the workers
 master:
@@ -24,14 +20,15 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
-  # The number of seconds to wait before checking for updates on your
-repository
+  # The number of seconds to wait before checking for updates on your repository
   # Two minutes is a good poll interval
   poll-interval: 120
 
@@ -39,7 +36,6 @@ repository
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
 ...
 ```
 
@@ -84,3 +80,5 @@ smtp-port: 587
 # The password used to login to the "from" email address account
 smtp-password: "p@$$w0rd"
 ```
+
+When the setup command is finished, run the `install` subcommand.
