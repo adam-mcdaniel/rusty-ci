@@ -27,6 +27,7 @@ master:
   title: "Rusty-CI"
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
   webserver-ip: localhost
+  webserver-port: 8010
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
   poll-interval: 120
 
