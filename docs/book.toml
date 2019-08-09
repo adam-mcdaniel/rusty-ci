@@ -6,4 +6,4 @@ title = "Rusty-CI"
 
 
 [output.html]
-default-theme = "navy"
+default-theme = "light"

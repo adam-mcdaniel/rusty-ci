@@ -265,8 +265,10 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
