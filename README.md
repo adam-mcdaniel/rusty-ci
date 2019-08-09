@@ -18,6 +18,51 @@ It works by constructing a webserver and several workers from one or two YAML fi
 - Custom testing scripts
 - Customizable email bot settings
 
+## Example
+
+This example Rusty-CI input YAML tests all branches and pull requests that begin with `feature/` and that contain a change in files ending with `.rs`, `.yaml`, or `.sh`. It will only test pull requests from `adam-mcdaniel` or pull requests authorized by `adam-mcdaniel` commenting the phrase `ok to test`. These pass phrases can be used on a per test basis; so different phrases can authorize different tests.
+
+```yaml
+master:
+  title: "Rusty-CI"
+  title-url: "https://github.com/adam-mcdaniel/rusty-ci"
+  webserver-ip: localhost
+  repo: "https://github.com/adam-mcdaniel/rusty-ci"
+  poll-interval: 120
+
+merge-request-handler:
+  version-control-system: github
+  owner: adam-mcdaniel
+  repo-name: rusty-ci
+  whitelist:
+    - adam-mcdaniel
+
+workers:
+  test-worker:
+    master-ip: localhost
+    working-dir: 'test-worker'
+
+schedulers:
+  ci-change:
+    builders:
+      - rusty-ci-test
+    branch: "feature/.*"
+    triggers:
+      - '.*\.rs'
+      - '.*\.yaml'
+      - '.*\.sh'
+    password: "ok to test"
+
+builders:
+  rusty-ci-test:
+    script:
+      - echo Hello world!
+      - echo Im an instruction in a script!
+    workers:
+      - test-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+```
+
 ## Documentation
 
 You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/), and the code documentation [here](https://docs.rs/rusty-ci).
