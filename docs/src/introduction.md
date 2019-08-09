@@ -11,6 +11,7 @@ Here is the template YAML file that Rusty-CI will output for you to fill out wit
 It explains itself for the most part, but I'll be covering it in more detail in a later chapter.
 
 ```yaml
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
@@ -56,16 +57,11 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
+    master-ip: localhost
     # The absolute path to the working directory of this worker
     # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+    working-dir: 'test-worker'
+
 
 # This section holds each scheduler.
 # Like the workers section, you may have as many schedulers as youd like.
