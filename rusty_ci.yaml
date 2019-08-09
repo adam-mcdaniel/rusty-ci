@@ -38,8 +38,7 @@ schedulers:
     branch: ".*"
     triggers:
       - "Cargo.toml"
-      - "src/.*\\.rs"
-      - "test/.*\\.rs"
+      - ".*\\.rs"
     password: "ok to test"
 
   # Detects a release change in master
