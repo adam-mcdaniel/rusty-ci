@@ -20,7 +20,7 @@ It works by constructing a webserver and several workers from one or two YAML fi
 
 ## Example
 
-This example Rusty-CI input YAML tests all branches and pull requests that begin with `feature/` and that contain a change in files ending with `.rs`, `.yaml`, or `.sh`. It will only test pull requests from whitelisted users or pull requests authorized by a whitelisted user commenting the phrase `ok to test`. These pass phrases can be used on a per test basis; so different phrases can authorize different tests.
+This example Rusty-CI input YAML tests all branches and pull requests that begin with `feature/` and that contain a change in files ending with `.rs`, `.yaml`, or `.sh`. It will only test pull requests from `adam-mcdaniel` or pull requests authorized by `adam-mcdaniel` commenting the phrase `ok to test`. These pass phrases can be used on a per test basis; so different phrases can authorize different tests.
 
 ```yaml
 master:
