@@ -48,6 +48,7 @@ schedulers:
       - merge-test
       - cargo-test
       - cargo-build
+      - cargo-clippy
     branch: "master"
     triggers:
       - ".*"
