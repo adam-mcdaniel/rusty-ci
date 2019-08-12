@@ -147,6 +147,10 @@
                     <main>
                         <h1><a class="header" href="#input-yaml" id="input-yaml">Input YAML</a></h1>
 <p>The input YAML file is pretty simple, but here's an explanation of each section individually.</p>
+<h2><a class="header" href="#the-requires-section" id="the-requires-section">The requires section</a></h2>
+<p>The requires section declares the minimum required Rusty-CI version to build this CI.</p>
+<pre><code class="language-yaml">requires: x.x.x
+</code></pre>
 <h2><a class="header" href="#the-master-section" id="the-master-section">The master section</a></h2>
 <p>The master section contains the data that controls the master, the bot that controls the workers.</p>
 <pre><code class="language-yaml"># This section holds data specific to the master of the workers

@@ -156,7 +156,10 @@ All features of Rusty-CI are tested using fresh Ubuntu 18.04 linux containers.</
 <h2><a class="header" href="#usage" id="usage">Usage</a></h2>
 <p>Here is the template YAML file that Rusty-CI will output for you to fill out with your own data.</p>
 <p>It explains itself for the most part, but I'll be covering it in more detail in a later chapter.</p>
-<pre><code class="language-yaml"># This section holds data specific to the master of the workers
+<pre><code class="language-yaml"># The required of Rusty-CI to build this CI
+requires: x.x.x
+
+# This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
   title: &quot;Rusty-CI&quot;
@@ -355,6 +358,9 @@ Let me explain each subcommand individually.</p>
 </code></pre>
 <pre><code>$ more template.yaml
 
+# The required of Rusty-CI to build this CI
+requires: x.x.x
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
@@ -522,6 +528,10 @@ rusty-ci build template.yaml -m mail.yaml
 <p>This will kill Rusty-CI and all other python(3) processes!</p>
 <h1><a class="header" href="#input-yaml" id="input-yaml">Input YAML</a></h1>
 <p>The input YAML file is pretty simple, but here's an explanation of each section individually.</p>
+<h2><a class="header" href="#the-requires-section" id="the-requires-section">The requires section</a></h2>
+<p>The requires section declares the minimum required Rusty-CI version to build this CI.</p>
+<pre><code class="language-yaml">requires: x.x.x
+</code></pre>
 <h2><a class="header" href="#the-master-section" id="the-master-section">The master section</a></h2>
 <p>The master section contains the data that controls the master, the bot that controls the workers.</p>
 <pre><code class="language-yaml"># This section holds data specific to the master of the workers

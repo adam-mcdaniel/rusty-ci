@@ -13,6 +13,9 @@ $ ./rusty-ci setup template.yaml mail.yaml
 ```
 $ more template.yaml
 
+# The required of Rusty-CI to build this CI
+requires: x.x.x
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
