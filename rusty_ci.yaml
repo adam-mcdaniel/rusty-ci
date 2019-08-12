@@ -1,4 +1,5 @@
 # Continuous integration for managing Rusty-CI repo
+requires: 0.9.0
 
 master:
   title: "RustyCI Continuous Integration"
