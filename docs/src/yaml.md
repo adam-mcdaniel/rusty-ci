@@ -2,6 +2,15 @@
 
 The input YAML file is pretty simple, but here's an explanation of each section individually.
 
+
+## The requires section
+
+The requires section declares the minimum required Rusty-CI version to build this CI.
+
+```yaml
+requires: x.x.x
+```
+
 ## The master section
 
 The master section contains the data that controls the master, the bot that controls the workers.

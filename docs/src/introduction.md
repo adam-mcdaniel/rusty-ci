@@ -16,6 +16,9 @@ Here is the template YAML file that Rusty-CI will output for you to fill out wit
 It explains itself for the most part, but I'll be covering it in more detail in a later chapter.
 
 ```yaml
+# The required of Rusty-CI to build this CI
+requires: x.x.x
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
