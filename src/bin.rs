@@ -6,6 +6,8 @@ use rusty_ci::{unwrap, File};
 use rusty_ci::{Bash, BuildSystem, MailNotifier, Makefile, MasterConfig, Quiet, Worker};
 use rusty_yaml::Yaml;
 use std::process::exit;
+use version_compare::{Version};
+
 
 fn main() {
     let matches = clap_app!(rusty_ci =>
@@ -254,6 +256,32 @@ fn main() {
     }
 }
 
+
+/// This function gets the "require" section from te YAML file to verify Rusty-CI version
+fn confirm_version(master_yaml: &Yaml) {
+    info!("Verifying required Rusty-CI version...");
+    if !master_yaml.has_section("requires") {
+        error!("There was a problem checking the required Rusty-CI version: `requires` section was not declared");
+        exit(1);
+    }
+
+    let version_str = unwrap(&master_yaml, "requires");
+
+    let required_version = Version::from(&version_str).unwrap();
+    let crate_version = Version::from(crate_version!()).unwrap();
+    if required_version > crate_version {
+        error!(
+            "This CI requires Rusty-CI version {} or higher, but your Rusty-CI version is {}",
+            required_version,
+            crate_version
+        );
+        exit(1);
+    }
+
+    info!("Version {} is satisfactory!", crate_version);
+}
+
+
 /// This function writes a template YAML file for the user to edit as needed.
 fn setup(master_filename: &str, mail_filename: &str) -> Result<(), String> {
     info!(
@@ -262,12 +290,15 @@ fn setup(master_filename: &str, mail_filename: &str) -> Result<(), String> {
     );
     File::write(
         master_filename,
-        r#"
+        format!("
+# The required of Rusty-CI to build this CI
+requires: {crate_version}
+
 # This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
-  title: "Rusty-CI"
-  title-url: "https://github.com/adam-mcdaniel/rusty-ci"
+  title: \"Rusty-CI\"
+  title-url: \"https://github.com/adam-mcdaniel/rusty-ci\"
 
   # This is the ip of the web-gui
   webserver-ip: localhost
@@ -276,7 +307,7 @@ master:
   webserver-port: 8010
 
   # The address of your repository
-  repo: "https://github.com/adam-mcdaniel/rusty-ci"
+  repo: \"https://github.com/adam-mcdaniel/rusty-ci\"
 
   # The number of seconds to wait before checking for updates on your repository
   # Two minutes is a good poll interval
@@ -331,9 +362,9 @@ schedulers:
     builders:
       - rusty-ci-test
 
-    # This will make the current scheduler run if the "your-scheduler-name-here"
+    # This will make the current scheduler run if the \"your-scheduler-name-here\"
     # has run successfully. You can only put one scheduler name in this section.
-    # depends: "your-scheduler-name-here"
+    # depends: \"your-scheduler-name-here\"
     # IF YOU USE THE `depends` SECTION, YOU SHOULD REMOVE OR COMMENT THE FOLLOWING SECTIONS
     # Using the depends section will ignore the `branch`, `triggers`, and `password` sections
 
@@ -341,20 +372,20 @@ schedulers:
     # If there is a change in a branch whos name matches this regex,
     # it will be checked by the following triggers section.
     # THIS WILL ONLY USE THE FIRST REGULAR EXPRESSION IN THIS SECTION TO MATCH THE BRANCH
-    branch: ".*"
+    branch: \".*\"
     # If a change has occurred in a branch that matches the regex in the branch section,
     # Then the files that were changed are matched against the regular expressions in the
     # triggers section. You can have any number of regular expressions in the triggers section.
     # If any one of them matches the name of a file that was changed in a matched branch,
     # then the builders in this scheduler's `builders` section are executed.
     triggers:
-      - '.*\.yaml'
-      - '.*\.sh'
-      - ".*Makefile"
+      - '.*\\.yaml'
+      - '.*\\.sh'
+      - '.*Makefile'
     # The password a whitelisted user can comment on a merge / pull request
     # to mark it for testing; that is if the pull request was made by a non-whitelisted
     # user. If the pull request was made by a whitelisted user, it is automatically run.
-    password: "ok to test"
+    password: \"ok to test\"
 
 # These are the builders that are executed by the schedulers
 # Each has its own specific task that is delegated to one or more workers
@@ -374,8 +405,8 @@ builders:
     workers:
       - test-worker
     # The repo to refresh from before running
-    repo: "https://github.com/adam-mcdaniel/rusty-ci"
-"#,
+    repo: \"https://github.com/adam-mcdaniel/rusty-ci\"
+", crate_version=crate_version!()),
     )?;
 
     info!("Writing template mail yaml file to {}...", mail_filename);
@@ -426,6 +457,8 @@ smtp-password: "p@$$w0rd""#,
 
 /// This method takes a boxed BuildSystem trait object and runs its install routine
 fn start(mut b: Box<dyn BuildSystem>, yaml: Yaml) {
+    confirm_version(&yaml);
+
     let mut workers = vec![];
     let workers_section = match yaml.get_section("workers") {
         Ok(w) => w,
@@ -471,6 +504,8 @@ fn install(mut b: Box<dyn BuildSystem>) {
 /// It constructs the workers and the master config file from an input yaml,
 /// and feeds it to the buildsystem.
 fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>) {
+    confirm_version(&master_yaml);
+
     let mut workers = vec![];
     let workers_section = match master_yaml.get_section("workers") {
         Ok(w) => w,
@@ -504,6 +539,8 @@ fn build(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>
 /// and feeds it to the buildsystem.
 /// Rebuilding a rusty-ci project does not kill its running processes.
 fn rebuild(mut b: Box<dyn BuildSystem>, master_yaml: Yaml, mail_yaml: Option<Yaml>) {
+    confirm_version(&master_yaml);
+
     let mut workers = vec![];
     let workers_section = match master_yaml.get_section("workers") {
         Ok(w) => w,
