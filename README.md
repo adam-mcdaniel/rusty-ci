@@ -27,6 +27,8 @@ You can find the usage documentation [here](https://adam-mcdaniel.github.io/rust
 This example Rusty-CI input YAML tests all branches and pull requests that begin with `feature/` and that contain a change in files ending with `.rs`, `.yaml`, or `.sh`. It will only test pull requests from `adam-mcdaniel` or pull requests authorized by `adam-mcdaniel` commenting the phrase `ok to test`. These pass phrases can be used on a per test basis; so different phrases can authorize different tests.
 
 ```yaml
+requires: 0.9.0
+
 master:
   title: "Rusty-CI"
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
