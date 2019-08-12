@@ -6,8 +6,7 @@ use rusty_ci::{unwrap, File};
 use rusty_ci::{Bash, BuildSystem, MailNotifier, Makefile, MasterConfig, Quiet, Worker};
 use rusty_yaml::Yaml;
 use std::process::exit;
-use version_compare::{Version};
-
+use version_compare::Version;
 
 fn main() {
     let matches = clap_app!(rusty_ci =>
@@ -256,7 +255,6 @@ fn main() {
     }
 }
 
-
 /// This function gets the "require" section from te YAML file to verify Rusty-CI version
 fn confirm_version(master_yaml: &Yaml) {
     info!("Verifying required Rusty-CI version...");
@@ -272,15 +270,13 @@ fn confirm_version(master_yaml: &Yaml) {
     if required_version > crate_version {
         error!(
             "This CI requires Rusty-CI version {} or higher, but your Rusty-CI version is {}",
-            required_version,
-            crate_version
+            required_version, crate_version
         );
         exit(1);
     }
 
     info!("Version {} is satisfactory!", crate_version);
 }
-
 
 /// This function writes a template YAML file for the user to edit as needed.
 fn setup(master_filename: &str, mail_filename: &str) -> Result<(), String> {
@@ -290,7 +286,8 @@ fn setup(master_filename: &str, mail_filename: &str) -> Result<(), String> {
     );
     File::write(
         master_filename,
-        format!("
+        format!(
+            "
 # The required of Rusty-CI to build this CI
 requires: {crate_version}
 
@@ -406,7 +403,9 @@ builders:
       - test-worker
     # The repo to refresh from before running
     repo: \"https://github.com/adam-mcdaniel/rusty-ci\"
-", crate_version=crate_version!()),
+",
+            crate_version = crate_version!()
+        ),
     )?;
 
     info!("Writing template mail yaml file to {}...", mail_filename);
