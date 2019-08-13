@@ -39,7 +39,7 @@ schedulers:
       - rusty-ci-test
     branch: ".*"
     triggers:
-      - "Cargo.toml"
+      - ".*Cargo.toml"
       - ".*\\.rs"
     password: "ok to test"
 
