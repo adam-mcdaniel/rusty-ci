@@ -36,6 +36,7 @@ schedulers:
       - cargo-test
       - cargo-build
       - cargo-clippy
+      - rusty-ci-test
     branch: ".*"
     triggers:
       - "Cargo.toml"
@@ -49,6 +50,7 @@ schedulers:
       - cargo-test
       - cargo-build
       - cargo-clippy
+      - rusty-ci-test
     branch: "master"
     triggers:
       - ".*"
@@ -75,6 +77,17 @@ builders:
       - git pull origin master
       - cargo test
       - cargo build --release
+      - ./target/release/rusty-ci build -q rusty_ci.yaml # Test building the projects YAML
+      - ./target/release/rusty-ci start -q rusty_ci.yaml # Test starting the projects YAML
+    workers:
+      - test-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  rusty-ci-test:
+    script:
+      - cargo build --release
+      - ./target/release/rusty-ci build -q rusty_ci.yaml # Test building the projects YAML
+      - ./target/release/rusty-ci start -q rusty_ci.yaml # Test starting the projects YAML
     workers:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
