@@ -1,8 +1,10 @@
+requires: 0.9.0
 
 master:
   title: "XASM Continuous Integration"
   title-url: "https://github.com/adam-mcdaniel/xasm"
   webserver-ip: localhost
+  webserver-port: 9001
   repo: "https://github.com/adam-mcdaniel/xasm"
   poll-interval: 120
 
@@ -13,20 +15,16 @@ merge-request-handler:
   whitelist:
     - adam-mcdaniel
 
-
 workers:
   xasm-worker:
-    masterhost: localhost
-    masterport: 9989
-    basedir: '/home/adam/Desktop/rusty-ci/testing/xasm-worker'
-    password: pass
+    master-ip: localhost
+    working-dir: 'xasm-worker'
 
 schedulers:
   xasm-change:
     builders:
       - xasm-build
       - xasm-test
-
     branch: ".*"
     triggers:
       - '.*\.py'
