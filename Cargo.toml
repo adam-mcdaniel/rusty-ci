@@ -9,6 +9,12 @@ description = "A tool to generate buildbot projects from a YAML file"
 documentation = "https://docs.rs/rusty-ci"
 homepage = "https://github.com/adam-mcdaniel/rusty-ci"
 repository = "https://github.com/adam-mcdaniel/rusty-ci"
+categories = [
+    "config", 
+    "development-tools", 
+    "command-line-utilities",
+    "development-tools::testing"
+]
 
 # Added bin target
 [[bin]]
