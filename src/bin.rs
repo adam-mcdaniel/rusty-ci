@@ -96,6 +96,7 @@ fn main() {
     .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!")
     .get_matches();
 
+
     // Figure out the proper backend buildsystem to use
     let mut buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
         Some(subcommand) => {
