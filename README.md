@@ -2,7 +2,6 @@
 
 A tool to generate [buildbot](https://buildbot.net/) projects from a YAML file
 
-
 ## Description
 
 Rusty-CI is meant to be a simple continuous integration tool that takes very little time to set up. Within 10 minutes of reading this README, you could have Rusty-CI testing your repository!
@@ -21,6 +20,34 @@ It works by constructing a webserver and several workers from one or two YAML fi
 ## Documentation
 
 You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/), and the code documentation [here](https://docs.rs/rusty-ci).
+
+
+```
+$ rusty-ci
+
+rusty_ci x.x.x
+Adam McDaniel <adam.mcdaniel17@gmail.com>
+A continuous integration tool written in Rust
+
+USAGE:
+    rusty-ci [SUBCOMMAND]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    build      Build rusty-ci from YAML file(s)
+    help       Prints this message or the help of the given subcommand(s)
+    install    Install buildbot
+    rebuild    Build and restart rusty-ci from input YAML file(s)
+    setup      Output a template YAML files for you to change to customize
+    start      Launch rusty-ci from an input YAML file
+    stop       Stop rusty-ci
+
+To start a project, run the `setup` subcommand.
+Be sure to follow the instructions after each subcommand very carefully!
+```
 
 ## Example
 
