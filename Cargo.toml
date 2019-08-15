@@ -22,7 +22,7 @@ name = "rusty-ci"
 path = "src/bin.rs"
 
 
-# Build step tests
+# Step tests
 [[test]]
 name = "step"
 path = "tests/step.rs"
