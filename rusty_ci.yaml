@@ -73,6 +73,7 @@ builders:
   merge-test:
     script:
       - git pull origin master
+      - cargo clippy -- -Dwarnings
       - cargo test
       - cargo build --release
     workers:
@@ -95,7 +96,7 @@ builders:
 
   cargo-clippy:
     script:
-      - cargo clippy
+      - cargo clippy -- -Dwarnings
     workers:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
