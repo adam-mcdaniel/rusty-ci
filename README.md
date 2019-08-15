@@ -2,8 +2,6 @@
 
 A tool to generate [buildbot](https://buildbot.net/) projects from a YAML file
 
-## Help
-
 ```
 $ rusty-ci
 
