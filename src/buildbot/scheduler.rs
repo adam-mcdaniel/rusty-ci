@@ -70,8 +70,8 @@ impl Scheduler {
                 .map(|s| {
                     s.to_string()
                         .trim()
-                        .trim_start_matches("\"")
-                        .trim_end_matches("\"")
+                        .trim_start_matches('\"')
+                        .trim_end_matches('\"')
                         .to_string()
                 })
                 .collect(),
@@ -80,8 +80,8 @@ impl Scheduler {
                 .map(|s| {
                     s.to_string()
                         .trim()
-                        .trim_start_matches("\"")
-                        .trim_end_matches("\"")
+                        .trim_start_matches('\"')
+                        .trim_end_matches('\"')
                         .to_string()
                 })
                 .collect(),
@@ -105,7 +105,7 @@ c['schedulers'].append({name})
                 depends = depends.replace("-", "_"),
                 buildernames = format!("{:?}", self.buildernames)
             ),
-            None => write!(
+            None => writeln!(
                 f,
                 "
 @util.renderer
@@ -139,7 +139,7 @@ c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
 ",
                 name = self.name.replace("-", "_"),
                 password = self.password.trim_matches('"'),
-                branch = self.branch.trim_start_matches("\"").trim_end_matches("\""),
+                branch = self.branch.trim_start_matches('\"').trim_end_matches('\"'),
                 triggers = format!("{:?}", self.file_triggers)
                     .replace("\\\"", "")
                     .replace("\\\\\\\\", "\\\\"),

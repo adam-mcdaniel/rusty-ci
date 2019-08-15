@@ -84,7 +84,7 @@ pub trait BuildSystem {
     }
 
     /// This starts the master and the workers
-    fn start(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
+    fn start(&mut self, workers: &[Worker]) -> Result<(), String> {
         if !yes_or_no("Have you already run the build subcommand and activated your virtual env in this shell? (y/n) ") {
             error!("You must run the build subcommand and activate your venv before the running the start subcommand!");
             exit(0);
@@ -139,7 +139,7 @@ pub trait BuildSystem {
     }
 
     /// This method is used by the `start` method to spin up the workers
-    fn start_workers(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
+    fn start_workers(&mut self, workers: &[Worker]) -> Result<(), String> {
         let start_worker = |dir| -> Result<(), String> {
             Cmd::new("buildbot-worker").arg("restart").arg(&dir).run();
             Ok(())
@@ -153,7 +153,7 @@ pub trait BuildSystem {
     }
 
     /// Creates each worker in its proper directory
-    fn create_workers(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
+    fn create_workers(&mut self, workers: &[Worker]) -> Result<(), String> {
         let make_worker = |dir| -> Result<(), String> {
             Cmd::new("buildbot-worker")
                 .arg("create-worker")
@@ -174,7 +174,7 @@ pub trait BuildSystem {
     }
 
     /// Writes the configuration `buildbot.tac` file for each worker
-    fn write_worker_configs(&mut self, workers: &Vec<Worker>) -> Result<(), String> {
+    fn write_worker_configs(&mut self, workers: &[Worker]) -> Result<(), String> {
         for worker in workers {
             let mut path = PathBuf::new();
             path.push(worker.get_dir());

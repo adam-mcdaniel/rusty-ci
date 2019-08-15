@@ -1,13 +1,9 @@
 use crate::{yes_or_no, File};
 use crate::{BuildSystem, AUTH_TOKEN_PATH};
 use std::process::exit;
-pub struct Makefile;
 
-impl Makefile {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
+#[derive(Default)]
+pub struct Makefile;
 
 impl BuildSystem for Makefile {
     /// Write the makefile

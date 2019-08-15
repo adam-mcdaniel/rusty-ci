@@ -70,7 +70,7 @@ impl MergeRequestHandler {
             }
         };
 
-        if auth_token.len() == 0 {
+        if auth_token.is_empty() {
             error!(
                 "You didn't write your VCS's authentication token to '{}'!",
                 AUTH_TOKEN_PATH
@@ -94,7 +94,7 @@ impl MergeRequestHandler {
 impl Display for MergeRequestHandler {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         match &self.vcs {
-            VersionControlSystem::GitHub => write!(
+            VersionControlSystem::GitHub => writeln!(
                 f,
                 "whitelist_authors = {:?}
 
@@ -171,7 +171,7 @@ def is_whitelisted(props, password):
                 repository_type = self.repository_type.trim_matches('"'),
 
             ),
-            VersionControlSystem::GitLab => write!(
+            VersionControlSystem::GitLab => writeln!(
                 f,
                 "
 def is_whitelisted(props, password): return True
@@ -187,7 +187,7 @@ c['services'].append(gitlab_status_service)
 ",
                 token = self.auth_token.trim_matches('"'),
             ),
-            VersionControlSystem::Unsupported => write!(
+            VersionControlSystem::Unsupported => writeln!(
                 f,
                 "print('We currently dont support building merge requests on your VCS.')"
             ),

@@ -29,34 +29,6 @@ pub struct MasterConfig {
 
 /// This is impl the for MasterConfig struct.
 impl MasterConfig {
-    fn new(
-        title: String,
-        title_url: String,
-        git_repo: String,
-        webserver_ip: String,
-        webserver_port: String,
-        poll_interval: String,
-        mail_notifier: Option<MailNotifier>,
-        merge_request_handler: MergeRequestHandler,
-        builders: Vec<Builder>,
-        schedulers: Vec<Scheduler>,
-        workers: Vec<Worker>,
-    ) -> Self {
-        Self {
-            title,
-            title_url,
-            git_repo,
-            webserver_ip,
-            webserver_port,
-            poll_interval,
-            mail_notifier,
-            merge_request_handler,
-            builders,
-            schedulers,
-            workers,
-        }
-    }
-
     pub fn set_mail_notifier(&mut self, mail_notifier: MailNotifier) {
         self.mail_notifier = Some(mail_notifier);
     }
@@ -71,12 +43,9 @@ impl MasterConfig {
 impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
         // Verify that the yaml file doesnt have unmatched quotes!
-        match unmatched_quotes(&yaml) {
-            Some(line) => {
-                error!("There was a problem creating the master configuration file: unmatched quotes in the line '{}'", line.trim());
-                exit(1);
-            }
-            _ => {}
+        if let Some(line) = unmatched_quotes(&yaml) {
+            error!("There was a problem creating the master configuration file: unmatched quotes in the line '{}'", line.trim());
+            exit(1);
         }
 
         // Verify that the yaml section contains all the necessary subsections
@@ -149,19 +118,20 @@ impl From<Yaml> for MasterConfig {
         let poll_interval = unwrap(&master, "poll-interval");
 
         // Return the whole master configuration file
-        Self::new(
+
+        Self {
             title,
             title_url,
             git_repo,
             webserver_ip,
             webserver_port,
             poll_interval,
-            None,
+            mail_notifier: None,
             merge_request_handler,
             builders,
             schedulers,
             workers,
-        )
+        }
     }
 }
 

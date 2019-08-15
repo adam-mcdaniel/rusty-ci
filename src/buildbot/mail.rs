@@ -35,34 +35,9 @@ pub struct MailNotifier {
     smtp_password: String,
 }
 
-impl MailNotifier {
-    pub fn new(
-        all_recipients: Vec<String>,
-        success_recipients: Vec<String>,
-        failure_recipients: Vec<String>,
-        from_address: String,
-        smtp_relay_host: String,
-        smtp_port: String,
-        lookup: String,
-        smtp_password: String,
-    ) -> Self {
-        Self {
-            all_recipients,
-            success_recipients,
-            failure_recipients,
-            from_address: from_address.clone(),
-            smtp_relay_host,
-            smtp_port,
-            smtp_user: from_address,
-            lookup,
-            smtp_password,
-        }
-    }
-}
-
 impl Display for MailNotifier {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(
+        writeln!(
             f,
             r#"
 
@@ -123,12 +98,12 @@ c['services'].append(successes)
 impl From<Yaml> for MailNotifier {
     fn from(yaml: Yaml) -> Self {
         // Verify that the yaml file doesnt have unmatched quotes!
-        match unmatched_quotes(&yaml) {
-            Some(line) => {
-                error!("There was a problem creating the mail notifier: unmatched quotes in the line '{}'", line.trim());
-                exit(1);
-            }
-            _ => {}
+        if let Some(line) = unmatched_quotes(&yaml) {
+            error!(
+                "There was a problem creating the mail notifier: unmatched quotes in the line '{}'",
+                line.trim()
+            );
+            exit(1);
         }
 
         // Confirm that the merge request handler has the required sections
@@ -180,15 +155,16 @@ impl From<Yaml> for MailNotifier {
         let smtp_password = unwrap(&yaml, "smtp-password");
         let lookup = unwrap(&yaml, "lookup");
 
-        Self::new(
+        Self {
             all_recipients,
             success_recipients,
             failure_recipients,
-            from_address,
+            from_address: from_address.clone(),
             smtp_relay_host,
             smtp_port,
+            smtp_user: from_address,
             lookup,
             smtp_password,
-        )
+        }
     }
 }
