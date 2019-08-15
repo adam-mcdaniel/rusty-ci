@@ -20,6 +20,10 @@ merge-request-handler:
 
 
 workers:
+  rustup-updater:
+    master-ip: localhost
+    working-dir: 'rustup-updater'
+
   test-worker:
     master-ip: localhost
     working-dir: 'test-worker'
@@ -30,6 +34,15 @@ workers:
 
 
 schedulers:
+  # Things to update when detecting ANY potential change
+  any-change:
+    builders:
+      update-rustup
+    branch: ".*"
+    triggers:
+      - ".*"
+    password: "ok to test"
+
   source-change:
     builders:
       - merge-test
@@ -62,6 +75,14 @@ schedulers:
 
 
 builders:
+  update-rustup:
+    script:
+      - rustup update
+      - rustup default stable
+    workers:
+      - rustup-updater
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
   update-self:
     script:
       - chmod +x update.sh
