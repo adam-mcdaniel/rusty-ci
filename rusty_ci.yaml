@@ -20,14 +20,17 @@ merge-request-handler:
 
 
 workers:
+  # Worker responsible for updating Rust and Cargo
   rustup-updater:
     master-ip: localhost
     working-dir: 'rustup-updater'
 
+  # Worker responsible for testing Rusty-CI
   test-worker:
     master-ip: localhost
     working-dir: 'test-worker'
 
+  # Worker responsible for updating Rusty-CI on this machine
   release-worker:
     master-ip: localhost
     working-dir: 'release-worker'
@@ -38,6 +41,7 @@ schedulers:
   any-change:
     builders:
       update-rustup
+    # Trigger on any branch and any file change
     branch: ".*"
     triggers:
       - ".*"
@@ -75,6 +79,7 @@ schedulers:
 
 
 builders:
+  # This builder updates Rust and sets the default toolchain to stable
   update-rustup:
     script:
       - rustup update
@@ -83,6 +88,7 @@ builders:
       - rustup-updater
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
+  # This builder downloads and installs the updated Rusty-CI release
   update-self:
     script:
       - chmod +x update.sh
@@ -91,6 +97,7 @@ builders:
       - release-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
+  # Pulls master into the branch and tests the hypothetical merge
   merge-test:
     script:
       - git pull origin master
@@ -101,6 +108,7 @@ builders:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
+  # Runs cargo test on Rusty-CI
   cargo-test:
     script:
       - cargo test
@@ -108,6 +116,7 @@ builders:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
+  # Runs cargo build on Rusty-CI
   cargo-build:
     script:
       - cargo build --release
@@ -115,6 +124,7 @@ builders:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
+  # Runs the clippy linter on Rusty-CI
   cargo-clippy:
     script:
       - cargo clippy -- -Dwarnings
