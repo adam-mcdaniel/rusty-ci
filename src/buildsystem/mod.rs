@@ -1,5 +1,5 @@
-mod buildsystem;
-pub use buildsystem::BuildSystem;
+mod system;
+pub use system::BuildSystem;
 
 mod default;
 pub use default::DefaultBuildSystem;

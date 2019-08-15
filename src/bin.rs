@@ -96,24 +96,23 @@ fn main() {
     .after_help("To start a project, run the `setup` subcommand.\nBe sure to follow the instructions after each subcommand very carefully!")
     .get_matches();
 
-
     // Figure out the proper backend buildsystem to use
     let mut buildsystem: Box<dyn BuildSystem> = match matches.subcommand_name() {
         Some(subcommand) => {
             let sub_matches = matches.subcommand_matches(subcommand).unwrap();
             if sub_matches.is_present("bash") {
-                Box::new(Bash::new())
+                Box::new(Bash::default())
             } else if sub_matches.is_present("make") {
-                Box::new(Makefile::new())
+                Box::new(Makefile::default())
             } else if sub_matches.is_present("quiet") {
-                Box::new(Quiet::new())
+                Box::new(Quiet::default())
             } else {
                 // Default is bash
-                Box::new(Bash::new())
+                Box::new(Bash::default())
             }
         }
         // Default is bash
-        None => Box::new(Bash::new()),
+        None => Box::new(Bash::default()),
     };
 
     match matches.subcommand_name() {

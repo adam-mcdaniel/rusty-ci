@@ -36,7 +36,7 @@ impl Builder {
         Self {
             name: name.to_string(),
             workernames: workernames.iter().map(|s| s.to_string()).collect(),
-            steps: steps,
+            steps,
         }
     }
 

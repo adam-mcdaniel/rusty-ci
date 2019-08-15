@@ -20,7 +20,7 @@ pub fn input<S: ToString>(prompt: S) -> String {
         buf.pop();
     }
 
-    return buf;
+    buf
 }
 
 /// Used to prompt the user with a yes or no question.

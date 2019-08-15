@@ -6,12 +6,8 @@ use std::process::exit;
 /// It writes the dependency installation instructions to a shell script file,
 /// And tells you how to use them.
 /// The process for building the master and the workers is set to the default.
+#[derive(Default)]
 pub struct Bash;
-impl Bash {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
 
 impl BuildSystem for Bash {
     /// Writes install script to `install.sh` for user to run

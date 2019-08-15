@@ -39,8 +39,8 @@ impl Step {
             url: url
                 .to_string()
                 .trim()
-                .trim_start_matches("\"")
-                .trim_end_matches("\"")
+                .trim_start_matches('\"')
+                .trim_end_matches('\"')
                 .to_string(),
             // branch: branch.to_string(),
         }
@@ -52,8 +52,8 @@ impl Step {
             url: url
                 .to_string()
                 .trim()
-                .trim_start_matches("\"")
-                .trim_end_matches("\"")
+                .trim_start_matches('\"')
+                .trim_end_matches('\"')
                 .to_string(),
             // branch: branch.to_string(),
         }

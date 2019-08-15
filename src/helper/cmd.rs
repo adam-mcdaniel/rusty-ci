@@ -25,7 +25,7 @@ impl Cmd {
     /// Give another arg to the program we're calling
     pub fn arg<S: Display>(&mut self, s: S) -> &mut Self {
         self.args.push(s.to_string());
-        return self;
+        self
     }
 
     /// Execute the shell command we've defined

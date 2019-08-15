@@ -79,7 +79,7 @@ impl From<Yaml> for Worker {
 /// This returns the Python `buildbot.tac` file for an individual worker.
 impl Display for Worker {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(
+        writeln!(
             f,
             r#"import os
 

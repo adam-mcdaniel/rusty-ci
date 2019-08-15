@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate rusty_ci;
 use rusty_ci::Step;
 
