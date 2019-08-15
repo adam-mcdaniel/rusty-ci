@@ -38,7 +38,7 @@ schedulers:
       - cargo-clippy
     branch: ".*"
     triggers:
-      - ".*Cargo.toml"
+      - "Cargo.toml"
       - ".*\\.rs"
     password: "ok to test"
 
