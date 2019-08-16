@@ -4,12 +4,13 @@ use os_info::{get, Type};
 
 const SUPPORTED: &[Type] = &[
     Type::Debian,
-    Type::Ubuntu
+    Type::Ubuntu,
+    Type::Linux,
 ];
 
 
 const INCOMPATIBLE: &[Type] = &[
-    Type::Windows
+    Type::Windows,
 ];
 
 
