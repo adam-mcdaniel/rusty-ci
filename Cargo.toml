@@ -15,6 +15,7 @@ categories = [
     "command-line-utilities",
     "development-tools::testing"
 ]
+build = "build.rs"
 default-run = "rusty-ci"
 
 
@@ -44,6 +45,8 @@ path = "tests/scheduler.rs"
 name = "mail"
 path = "tests/mail.rs"
 
+[build-dependencies]
+os_info = "1.1.1"
 
 [dependencies]
 rand = "0.7.0"

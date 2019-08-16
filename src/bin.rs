@@ -1,3 +1,9 @@
+// ############################
+// RUSTY-CI
+// ############################
+//
+// A tool to generate buildbot projects from a YAML file
+
 #[macro_use]
 extern crate rusty_ci;
 
