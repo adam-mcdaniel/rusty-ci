@@ -40,6 +40,11 @@ workers:
     master-ip: localhost
     working-dir: 'test-worker-three'
 
+  # Third Worker responsible for testing Rusty-CI
+  test-worker-four:
+    master-ip: localhost
+    working-dir: 'test-worker-four'
+
   # Worker responsible for updating Rusty-CI on this machine
   release-worker:
     master-ip: localhost
@@ -118,6 +123,7 @@ builders:
       - test-worker-one
       - test-worker-two
       - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo test on Rusty-CI
@@ -128,6 +134,7 @@ builders:
       - test-worker-one
       - test-worker-two
       - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo build on Rusty-CI
@@ -138,6 +145,7 @@ builders:
       - test-worker-one
       - test-worker-two
       - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs the clippy linter on Rusty-CI
@@ -148,4 +156,5 @@ builders:
       - test-worker-one
       - test-worker-two
       - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
