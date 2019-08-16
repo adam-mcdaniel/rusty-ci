@@ -44,6 +44,17 @@ path = "tests/scheduler.rs"
 name = "mail"
 path = "tests/mail.rs"
 
+# Test Yaml operations
+[[test]]
+name = "yaml"
+path = "tests/yaml.rs"
+
+# Test String operations
+[[test]]
+name = "string"
+path = "tests/string.rs"
+
+
 [build-dependencies]
 os_info = "1.1.1"
 
