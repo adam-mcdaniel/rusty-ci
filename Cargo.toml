@@ -16,7 +16,6 @@ categories = [
     "development-tools::testing"
 ]
 build = "build.rs"
-default-run = "rusty-ci"
 
 
 # Added bin target
