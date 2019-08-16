@@ -19,7 +19,7 @@ It works by constructing a webserver and several workers from one or two YAML fi
 
 ## Documentation
 
-You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/), and the code documentation [here](https://docs.rs/rusty-ci).
+You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/book/introduction.html), and the code documentation [here](https://docs.rs/rusty-ci).
 
 
 ```
