@@ -58,7 +58,7 @@ pub trait BuildSystem {
         self.write_worker_configs(&workers)?;
         info!("Reconfiguring master...");
         self.reconfigure_master()?;
-        info!("Starting...");
+        info!("Starting workers...");
         self.start_workers(&workers)?;
         Ok(())
     }
@@ -143,7 +143,7 @@ pub trait BuildSystem {
     /// This method is used by the `start` method to spin up the workers
     fn start_workers(&mut self, workers: &[Worker]) -> Result<(), String> {
         let start_worker = |dir| -> Result<(), String> {
-            Cmd::new("buildbot-worker").arg("restart").arg(&dir).run();
+            Cmd::new("buildbot-worker").arg("start").arg(&dir).run();
             Ok(())
         };
 
