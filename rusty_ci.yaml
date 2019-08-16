@@ -36,9 +36,9 @@ workers:
     working-dir: 'test-worker-two'
 
   # Third Worker responsible for testing Rusty-CI
-  test-worker-third:
+  test-worker-three:
     master-ip: localhost
-    working-dir: 'test-worker-third'
+    working-dir: 'test-worker-three'
 
   # Worker responsible for updating Rusty-CI on this machine
   release-worker:
@@ -116,8 +116,8 @@ builders:
       - cargo build
     workers:
       - test-worker-one
-      - test-worker-second
-      - test-worker-third
+      - test-worker-two
+      - test-worker-three
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo test on Rusty-CI
@@ -126,8 +126,8 @@ builders:
       - cargo test
     workers:
       - test-worker-one
-      - test-worker-second
-      - test-worker-third
+      - test-worker-two
+      - test-worker-three
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo build on Rusty-CI
@@ -136,8 +136,8 @@ builders:
       - cargo build
     workers:
       - test-worker-one
-      - test-worker-second
-      - test-worker-third
+      - test-worker-two
+      - test-worker-three
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs the clippy linter on Rusty-CI
@@ -146,6 +146,6 @@ builders:
       - cargo clippy -- -Dwarnings
     workers:
       - test-worker-one
-      - test-worker-second
-      - test-worker-third
+      - test-worker-two
+      - test-worker-three
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
