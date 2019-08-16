@@ -121,9 +121,9 @@ builders:
       - cargo build
     workers:
       - test-worker-one
-      # - test-worker-two
-      # - test-worker-three
-      # - test-worker-four
+      - test-worker-two
+      - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo test on Rusty-CI
@@ -132,9 +132,9 @@ builders:
       - cargo test
     workers:
       - test-worker-one
-      # - test-worker-two
-      # - test-worker-three
-      # - test-worker-four
+      - test-worker-two
+      - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo build on Rusty-CI
@@ -143,9 +143,9 @@ builders:
       - cargo build
     workers:
       - test-worker-one
-      # - test-worker-two
-      # - test-worker-three
-      # - test-worker-four
+      - test-worker-two
+      - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs the clippy linter on Rusty-CI
@@ -154,7 +154,7 @@ builders:
       - cargo clippy -- -Dwarnings
     workers:
       - test-worker-one
-      # - test-worker-two
-      # - test-worker-three
-      # - test-worker-four
+      - test-worker-two
+      - test-worker-three
+      - test-worker-four
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
