@@ -15,4 +15,4 @@ cargo install -f --path . # Install the new release
 . venv/bin/activate       # Enter venv
 
 # Hot reload rusty-ci with new release
-rusty-ci rebuild -q rusty_ci.yaml
+bash -c "rusty-ci rebuild -q rusty_ci.yaml"
