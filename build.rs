@@ -1,6 +1,14 @@
+// ############################
+// RUSTY-CI
+// ############################
+//
+// This script runs when this crate is compiled or installed!
+//
+// Right now, all this file does is confirm
+// that the host isn't using Windows OS.
+
 extern crate os_info;
 use os_info::{get, Type};
-
 
 /// Operating systems that Rusty-CI supports
 const SUPPORTED: &[Type] = &[
@@ -18,7 +26,6 @@ const INCOMPATIBLE: &[Type] = &[
     Type::Windows,
 ];
 
-
 fn main() {
     let os_type = get().os_type();
 
@@ -27,6 +34,6 @@ fn main() {
     } else if INCOMPATIBLE.contains(&os_type) {
         panic!("{} is incompatible with Rusty-CI", os_type);
     } else {
-        println!("Rusty-CI may not function properly on {}", os_type);    
+        println!("Rusty-CI may not function properly on {}", os_type);
     }
 }
