@@ -261,7 +261,7 @@ fn main() {
     }
 }
 
-/// This function gets the "require" section from te YAML file to verify Rusty-CI version
+/// This function gets the "require" section from the YAML file to verify Rusty-CI version
 fn confirm_version(master_yaml: &Yaml) {
     info!("Verifying required Rusty-CI version...");
     if !master_yaml.has_section("requires") {
