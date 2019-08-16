@@ -40,7 +40,7 @@ workers:
     master-ip: localhost
     working-dir: 'test-worker-three'
 
-  # Third Worker responsible for testing Rusty-CI
+  # Fourth Worker responsible for testing Rusty-CI
   test-worker-four:
     master-ip: localhost
     working-dir: 'test-worker-four'
