@@ -25,10 +25,20 @@ workers:
     master-ip: localhost
     working-dir: 'rustup-updater'
 
-  # Worker responsible for testing Rusty-CI
-  test-worker:
+  # First Worker responsible for testing Rusty-CI
+  test-worker-one:
     master-ip: localhost
-    working-dir: 'test-worker'
+    working-dir: 'test-worker-one'
+
+  # Second Worker responsible for testing Rusty-CI
+  test-worker-two:
+    master-ip: localhost
+    working-dir: 'test-worker-two'
+
+  # Third Worker responsible for testing Rusty-CI
+  test-worker-third:
+    master-ip: localhost
+    working-dir: 'test-worker-third'
 
   # Worker responsible for updating Rusty-CI on this machine
   release-worker:
@@ -105,7 +115,9 @@ builders:
       - cargo test
       - cargo build
     workers:
-      - test-worker
+      - test-worker-one
+      - test-worker-second
+      - test-worker-third
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo test on Rusty-CI
@@ -113,7 +125,9 @@ builders:
     script:
       - cargo test
     workers:
-      - test-worker
+      - test-worker-one
+      - test-worker-second
+      - test-worker-third
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs cargo build on Rusty-CI
@@ -121,7 +135,9 @@ builders:
     script:
       - cargo build
     workers:
-      - test-worker
+      - test-worker-one
+      - test-worker-second
+      - test-worker-third
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # Runs the clippy linter on Rusty-CI
@@ -129,5 +145,7 @@ builders:
     script:
       - cargo clippy -- -Dwarnings
     workers:
-      - test-worker
+      - test-worker-one
+      - test-worker-second
+      - test-worker-third
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
