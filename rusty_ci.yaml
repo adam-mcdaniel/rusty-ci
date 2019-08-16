@@ -103,7 +103,7 @@ builders:
       - git pull origin master
       - cargo clippy -- -Dwarnings
       - cargo test
-      - cargo build --release
+      - cargo build
     workers:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
@@ -119,7 +119,7 @@ builders:
   # Runs cargo build on Rusty-CI
   cargo-build:
     script:
-      - cargo build --release
+      - cargo build
     workers:
       - test-worker
     repo: "https://github.com/adam-mcdaniel/rusty-ci"
