@@ -4,10 +4,10 @@ use std::str::from_utf8;
 
 /// This struct is basically identical to the std::process::Command,
 /// but when it is executed, it returns the stdout of the process as a string.
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Cmd {
-    program: String,
-    args: Vec<String>,
+    pub program: String,
+    pub args: Vec<String>,
 }
 
 impl Cmd {
@@ -23,7 +23,7 @@ impl Cmd {
     }
 
     /// Give another arg to the program we're calling
-    pub fn arg<S: Display>(&mut self, s: S) -> &mut Self {
+    pub fn arg<S: Display>(mut self, s: S) -> Self {
         self.args.push(s.to_string());
         self
     }

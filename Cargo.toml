@@ -1,6 +1,6 @@
 [package]
 name = "rusty-ci"
-version = "0.9.5"
+version = "0.9.6"
 authors = ["adam-mcdaniel <adam.mcdaniel17@gmail.com>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -16,7 +16,6 @@ categories = [
     "development-tools::testing"
 ]
 build = "build.rs"
-default-run = "rusty-ci"
 
 
 # Added bin target
@@ -44,6 +43,17 @@ path = "tests/scheduler.rs"
 [[test]]
 name = "mail"
 path = "tests/mail.rs"
+
+# Test Yaml operations
+[[test]]
+name = "yaml"
+path = "tests/yaml.rs"
+
+# Test String operations
+[[test]]
+name = "string"
+path = "tests/string.rs"
+
 
 [build-dependencies]
 os_info = "1.1.1"

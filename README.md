@@ -173,6 +173,12 @@ rusty-ci start template.yaml -q
 # All done!
 ```
 
+## Issues
+
+- Right now, `cargo tarpaulin --exclude-files src/bin.rs` shows that we only test 27.53% of our code. There needs to be more tests, and more cases for those tests.
+- The docs, as far as I remember, are not up to date with the current version of Rusty-CI. I've tried to make them generally version agnostic, but of course several features and bugs have been added and fixed since the last time I documented Rusty-CI.
+- There needs to be more stability and more security. I think these aspects can only be improved by using Rusty-CI and noticing its quirks.
+
 
 ## License
 Rusty-CI is distributed under the terms of the Apache License (Version 2.0).
