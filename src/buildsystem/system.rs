@@ -58,8 +58,6 @@ pub trait BuildSystem {
         self.write_worker_configs(&workers)?;
         info!("Reconfiguring master...");
         self.reconfigure_master()?;
-        info!("Starting workers...");
-        self.start_workers(&workers)?;
         Ok(())
     }
 

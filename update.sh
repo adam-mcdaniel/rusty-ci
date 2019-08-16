@@ -14,4 +14,6 @@ git pull         # Get new release
 cargo install -f --path . # Install the new release 
 
 # Hot reload rusty-ci with new release
-bash -c ". venv/bin/activate; rusty-ci rebuild -q rusty_ci.yaml"
+. venv/bin/activate
+rusty-ci rebuild -q rusty_ci.yaml
+rusty-ci start -q rusty_ci.yaml
