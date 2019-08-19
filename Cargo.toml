@@ -15,6 +15,7 @@ categories = [
     "command-line-utilities",
     "development-tools::testing"
 ]
+default-run = "rusty-ci"
 build = "build.rs"
 
 
