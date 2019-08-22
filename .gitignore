@@ -4,3 +4,9 @@ Cargo.lock
 .vscode
 testing
 venv
+
+# For rusty-ci
+/master
+/*-worker
+mail.yaml
+auth.token

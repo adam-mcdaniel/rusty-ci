@@ -1,8 +1,10 @@
-
 use crate::unwrap;
+use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
+
 /// This struct holds the information that is used to build the worker `buildbot.tac` file
 /// Each worker has:
 /// - a name that is used by the builders to assign work,
@@ -10,6 +12,7 @@ use std::process::exit;
 /// - a working directory name that the bot will be created in
 /// - the host address of the master bot, the ip
 /// - the port of the master bot
+#[derive(Clone)]
 pub struct Worker {
     name: String,
     dir: String,
@@ -17,7 +20,6 @@ pub struct Worker {
     masterhost: String,
     masterport: String,
 }
-
 
 impl Worker {
     fn new<S: ToString>(name: S, dir: S, password: S, masterhost: S, masterport: S) -> Self {
@@ -46,7 +48,6 @@ impl Worker {
     }
 }
 
-
 /// Convert a Yaml section to a Worker
 ///
 /// The worker requires that the yaml section has the following subsections:
@@ -58,19 +59,19 @@ impl From<Yaml> for Worker {
     fn from(yaml: Yaml) -> Self {
         let name = yaml.get_name();
 
-        for section in ["masterhost", "masterport", "basedir", "password"].iter() {
+        for section in ["master-ip", "working-dir"].iter() {
             if !yaml.has_section(section) {
                 error!("There was an error creating a worker: The '{}' section is not specified for '{}'", section, name);
                 exit(1);
             }
         }
 
-        let basedir = unwrap(&yaml, "basedir");
-        let password = unwrap(&yaml, "password");
-        let masterhost = unwrap(&yaml, "masterhost");
-        let masterport = unwrap(&yaml, "masterport");
+        let password: String = thread_rng().sample_iter(&Alphanumeric).take(30).collect();
+        let basedir = unwrap(&yaml, "working-dir");
+        let masterhost = unwrap(&yaml, "master-ip");
 
-        Self::new(name, basedir, password, masterhost, masterport)
+        // Now, instead of getting the master port from the Yaml object, we just use 9989.
+        Self::new(name, basedir, password, masterhost, String::from("9989"))
     }
 }
 
@@ -78,14 +79,14 @@ impl From<Yaml> for Worker {
 /// This returns the Python `buildbot.tac` file for an individual worker.
 impl Display for Worker {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(
+        writeln!(
             f,
             r#"import os
 
 from buildbot_worker.bot import Worker
 from twisted.application import service
 
-basedir = '{basedir}'
+basedir = '.'
 rotateLength = 10000000
 maxRotatedFiles = 10
 
@@ -124,7 +125,6 @@ s.setServiceParent(application)
 
 "#,
             name = self.name,
-            basedir = self.dir,
             password = self.password,
             masterhost = self.masterhost,
             masterport = self.masterport

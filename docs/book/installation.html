@@ -32,11 +32,11 @@
 
         
     </head>
-    <body class="navy">
+    <body class="light">
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "";
-            var default_theme = "navy";
+            var default_theme = "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -97,10 +97,10 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
                             
@@ -149,9 +149,8 @@
 <h3><a class="header" href="#install-python3" id="install-python3">Install Python3</a></h3>
 <p>You're gonna need <a href="https://www.python.org/">python3</a> to use Rusty-CI.</p>
 <p>To install on a *nix system, run the following commands.</p>
-<pre><code class="language-bash">apt install python3-dev
-apt install python3-pip
-apt install python3-venv
+<pre><code class="language-bash">apt update -y &amp;&amp; apt upgrade -y
+apt install -y build-essential python3-dev python3-pip python3-venv
 </code></pre>
 <p>You will need to be able to use <code>python3 -m pip</code> and <code>python3 -m venv</code>.</p>
 <h3><a class="header" href="#install-rust" id="install-rust">Install Rust</a></h3>
@@ -160,30 +159,31 @@ You if you're on a Unix like platform, can do so by running this shell command.<
 <pre><code class="language-bash">curl https://sh.rustup.rs -sSf | sh
 </code></pre>
 <p>If you're on Windows, go to the <a href="https://rust-lang.org">rust website</a>. You'll need to download <code>rust-init.exe</code> and follow its instructions.</p>
-<h3><a class="header" href="#install-rusty-ci-with-cargo-recommended" id="install-rusty-ci-with-cargo-recommended">Install Rusty-CI with Cargo (recommended)</a></h3>
+<h3><a class="header" href="#install-rusty-ci-from-cratesio-package-registry-recommended" id="install-rusty-ci-from-cratesio-package-registry-recommended">Install Rusty-CI from Crates.io Package Registry (recommended)</a></h3>
 <p>Now that you have Rust, you should be able to install Rusty-CI by running the following command.</p>
-<pre><code class="language-bash">cargo install rusty-ci -f
+<pre><code class="language-bash">cargo install -f rusty-ci
 </code></pre>
 <p>This will automatically add Rusty-CI to your path, so we should be all done!</p>
-<h3><a class="header" href="#build-from-source-more-tedious" id="build-from-source-more-tedious">Build from source (more tedious)</a></h3>
-<p>If you don't want to install with <code>cargo</code>, you can always build Rusty-CI from source. Here's how you would do so.</p>
+<h3><a class="header" href="#build-from-source-not-recommended" id="build-from-source-not-recommended">Build from source (not recommended)</a></h3>
+<p>If you don't want to install Rusty-CI from the package registry, you can always build Rusty-CI from source. Here's how you would do so.</p>
 <pre><code class="language-bash">git clone https://github.com/adam-mcdaniel/rusty-ci
 
 cd rusty-ci
 # Cargo will output the executable to ./target/release/rusty-ci
-cargo build --release
-
-mv ./target/release/rusty-ci .
+cargo install -f --path .
 </code></pre>
-<p>After running these commands, <code>rusty-ci</code> should be in your current working directory. To finish the installation, move the binary to any folder you'd like, and add that folder to your path.</p>
+<p>This will automatically add Rusty-CI to your path, so we should be all done!</p>
 <h3><a class="header" href="#problems-installing" id="problems-installing">Problems Installing?</a></h3>
 <p>If you run into some problems installing Rusty-CI, or if Rust can't find <code>cc</code>, you need to upgrade some of the packages on your system.</p>
 <p>Here's the commands I run to solve these errors.</p>
-<pre><code class="language-bash">sudo apt update
-sudo apt upgrade
+<pre><code class="language-bash">apt update -y &amp;&amp; apt upgrade -y
 sudo apt install build-essential
 </code></pre>
 <p>After running these commands, try running <code>cargo install rusty-ci</code> again.</p>
+<h3><a class="header" href="#cant-find-cargo-or-rusty-ci" id="cant-find-cargo-or-rusty-ci">Can't find Cargo or Rusty-CI?</a></h3>
+<p>Try running the following to add Cargo and your installed crates to your environment's path.</p>
+<pre><code class="language-bash">source $HOME/.cargo/env # Add `cargo` to your path
+</code></pre>
 <h3><a class="header" href="#still-having-problems" id="still-having-problems">Still having problems?</a></h3>
 <p>If you're still having some serious problems, <a href="https://github.com/adam-mcdaniel/rusty-ci/issues">post an issue</a> on the repository.</p>
 

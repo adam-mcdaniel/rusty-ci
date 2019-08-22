@@ -1,9 +1,7 @@
-
-use crate::unwrap;
+use crate::{unmatched_quotes, unwrap};
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
-
 
 /// This object is responsible for building the `MailNotifier` object
 /// in the buildbot master config. It contains the information for
@@ -37,35 +35,9 @@ pub struct MailNotifier {
     smtp_password: String,
 }
 
-impl MailNotifier {
-    pub fn new(
-        all_recipients: Vec<String>,
-        success_recipients: Vec<String>,
-        failure_recipients: Vec<String>,
-        from_address: String,
-        smtp_relay_host: String,
-        smtp_port: String,
-        lookup: String,
-        smtp_password: String,
-    ) -> Self {
-        Self {
-            all_recipients,
-            success_recipients,
-            failure_recipients,
-            from_address: from_address.clone(),
-            smtp_relay_host,
-            smtp_port,
-            smtp_user: from_address,
-            lookup,
-            smtp_password,
-        }
-    }
-}
-
-
 impl Display for MailNotifier {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(
+        writeln!(
             f,
             r#"
 
@@ -123,9 +95,17 @@ c['services'].append(successes)
     }
 }
 
-
 impl From<Yaml> for MailNotifier {
     fn from(yaml: Yaml) -> Self {
+        // Verify that the yaml file doesnt have unmatched quotes!
+        if let Some(line) = unmatched_quotes(&yaml) {
+            error!(
+                "There was a problem creating the mail notifier: unmatched quotes in the line '{}'",
+                line.trim()
+            );
+            exit(1);
+        }
+
         // Confirm that the merge request handler has the required sections
         for section in [
             "extra-recipients",
@@ -145,7 +125,6 @@ impl From<Yaml> for MailNotifier {
                 exit(1);
             }
         }
-
 
         let extra_recipients = yaml.get_section("extra-recipients").unwrap();
 
@@ -170,22 +149,22 @@ impl From<Yaml> for MailNotifier {
             failure_recipients.push(recipient.to_string());
         }
 
-
         let from_address = unwrap(&yaml, "from-address");
         let smtp_relay_host = unwrap(&yaml, "smtp-relay-host");
         let smtp_port = unwrap(&yaml, "smtp-port");
         let smtp_password = unwrap(&yaml, "smtp-password");
         let lookup = unwrap(&yaml, "lookup");
 
-        Self::new(
+        Self {
             all_recipients,
             success_recipients,
             failure_recipients,
-            from_address,
+            from_address: from_address.clone(),
             smtp_relay_host,
             smtp_port,
+            smtp_user: from_address,
             lookup,
             smtp_password,
-        )
+        }
     }
 }

@@ -32,11 +32,11 @@
 
         
     </head>
-    <body class="navy">
+    <body class="light">
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = "navy";
+            var default_theme = "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html" class="active"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="../usage/install.html" class="active"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -97,10 +97,10 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
                             
@@ -168,23 +168,36 @@ rusty-ci install --bash
 
 # Make the shell script executable
 chmod +x ./install.sh
+
 # Run the install script
 ./install.sh
 </code></pre>
 <p>If you do decide to either the bash or make buildsystems, be sure to read <code>rusty-ci</code>'s output and follow any instructions given.</p>
+<pre><code>$ rusty-ci install
+
+==[INFO]===&gt; Installing dependencies for rusty-ci...
+Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) y
+==[INFO]===&gt; Writing install file to `./install.sh`
+==[INFO]===&gt; Successfully wrote install file
+==[WARN]===&gt; To install dependencies run `install.sh`
+==[WARN]===&gt; Before building from a YAML file, be sure to run `. venv/bin/activate`
+==[INFO]===&gt; Next, write your VCS's api token to 'auth.token', and then run the `build` subcommand
+Successfully finished install
+</code></pre>
+<p>Now, get an access token from your version control system, and write it to a file named <code>auth.token</code>. Next, run the move on to the <code>build</code> subcommand.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../usage/help.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../usage/setup.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="../usage/setup.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../usage/build.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -196,13 +209,13 @@ chmod +x ./install.sh
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="../usage/help.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="../usage/setup.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="../usage/setup.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="../usage/build.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

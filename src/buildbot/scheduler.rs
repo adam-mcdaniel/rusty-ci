@@ -1,9 +1,7 @@
-
 use crate::unwrap;
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
-
 
 /// The scheduler struct controls when a builder is run. This is done when certain requirements specified
 /// by the scheduler are fulfilled. For example, you could define a scheduler that would trigger one or
@@ -49,7 +47,6 @@ pub struct Scheduler {
     buildernames: Vec<String>,
 }
 
-
 impl Scheduler {
     /// Create new scheduler
     fn new<S>(
@@ -73,8 +70,8 @@ impl Scheduler {
                 .map(|s| {
                     s.to_string()
                         .trim()
-                        .trim_start_matches("\"")
-                        .trim_end_matches("\"")
+                        .trim_start_matches('\"')
+                        .trim_end_matches('\"')
                         .to_string()
                 })
                 .collect(),
@@ -83,15 +80,14 @@ impl Scheduler {
                 .map(|s| {
                     s.to_string()
                         .trim()
-                        .trim_start_matches("\"")
-                        .trim_end_matches("\"")
+                        .trim_start_matches('\"')
+                        .trim_end_matches('\"')
                         .to_string()
                 })
                 .collect(),
         }
     }
 }
-
 
 impl Display for Scheduler {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
@@ -109,7 +105,7 @@ c['schedulers'].append({name})
                 depends = depends.replace("-", "_"),
                 buildernames = format!("{:?}", self.buildernames)
             ),
-            None => write!(
+            None => writeln!(
                 f,
                 "
 @util.renderer
@@ -143,7 +139,7 @@ c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
 ",
                 name = self.name.replace("-", "_"),
                 password = self.password.trim_matches('"'),
-                branch = self.branch.trim_start_matches("\"").trim_end_matches("\""),
+                branch = self.branch.trim_start_matches('\"').trim_end_matches('\"'),
                 triggers = format!("{:?}", self.file_triggers)
                     .replace("\\\"", "")
                     .replace("\\\\\\\\", "\\\\"),
@@ -152,7 +148,6 @@ c['schedulers'].append(schedulers.ForceScheduler(name=\"force_{name}\",
         }
     }
 }
-
 
 impl From<Yaml> for Scheduler {
     fn from(yaml: Yaml) -> Self {
@@ -172,7 +167,6 @@ impl From<Yaml> for Scheduler {
             depends = Some(unwrap(&yaml, "depends"));
             branch = String::from("");
             password = String::from("");
-
         } else {
             for section in ["branch", "password", "triggers"].iter() {
                 if !yaml.has_section(section) {

@@ -32,11 +32,11 @@
 
         
     </head>
-    <body class="navy">
+    <body class="light">
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = "navy";
+            var default_theme = "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html" class="active"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html" class="active"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -97,10 +97,10 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
                             
@@ -149,7 +149,7 @@
 <p>This chapter covers</p>
 <ul>
 <li>The features and usage of the <code>rusty-ci</code> executable</li>
-<li>How to properly use the input YAML file for <code>rusty-ci</code></li>
+<li>How to properly use the input YAML files for <code>rusty-ci</code></li>
 </ul>
 
                     </main>

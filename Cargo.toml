@@ -1,6 +1,6 @@
 [package]
 name = "rusty-ci"
-version = "0.7.2"
+version = "0.9.6"
 authors = ["adam-mcdaniel <adam.mcdaniel17@gmail.com>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -9,6 +9,15 @@ description = "A tool to generate buildbot projects from a YAML file"
 documentation = "https://docs.rs/rusty-ci"
 homepage = "https://github.com/adam-mcdaniel/rusty-ci"
 repository = "https://github.com/adam-mcdaniel/rusty-ci"
+categories = [
+    "config", 
+    "development-tools", 
+    "command-line-utilities",
+    "development-tools::testing"
+]
+default-run = "rusty-ci"
+build = "build.rs"
+
 
 # Added bin target
 [[bin]]
@@ -16,7 +25,7 @@ name = "rusty-ci"
 path = "src/bin.rs"
 
 
-# Build step tests
+# Step tests
 [[test]]
 name = "step"
 path = "tests/step.rs"
@@ -28,11 +37,6 @@ path = "tests/builder.rs"
 
 # Worker tests
 [[test]]
-name = "worker"
-path = "tests/worker.rs"
-
-# Worker tests
-[[test]]
 name = "scheduler"
 path = "tests/scheduler.rs"
 
@@ -41,8 +45,23 @@ path = "tests/scheduler.rs"
 name = "mail"
 path = "tests/mail.rs"
 
+# Test Yaml operations
+[[test]]
+name = "yaml"
+path = "tests/yaml.rs"
+
+# Test String operations
+[[test]]
+name = "string"
+path = "tests/string.rs"
+
+
+[build-dependencies]
+os_info = "1.1.1"
 
 [dependencies]
+rand = "0.7.0"
 rusty-yaml = "0.4.3"
-clap = "2.33"
+clap = "2.33.0"
 termcolor = "1.0.5"
+version-compare = "0.0.9"

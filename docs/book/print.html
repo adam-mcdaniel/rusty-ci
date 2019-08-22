@@ -34,11 +34,11 @@
 
         
     </head>
-    <body class="navy">
+    <body class="light">
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "";
-            var default_theme = "navy";
+            var default_theme = "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -80,7 +80,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -99,10 +99,10 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
                             
@@ -150,18 +150,26 @@
                         <h1><a class="header" href="#introduction" id="introduction">Introduction</a></h1>
 <h2><a class="header" href="#what-is-rusty-ci" id="what-is-rusty-ci">What is Rusty-CI?</a></h2>
 <p>Rusty-CI is just a user interface for <a href="https://buildbot.net">buildbot</a>. Instead of having to write the Python for your CI project to get the versatility you want, just fill out Rusty-CI's template YAML file and it'll do the rest for you.</p>
+<h2><a class="header" href="#suggestions" id="suggestions">Suggestions</a></h2>
+<p>I highly recommend running this in some sort of container.
+All features of Rusty-CI are tested using fresh Ubuntu 18.04 linux containers.</p>
 <h2><a class="header" href="#usage" id="usage">Usage</a></h2>
 <p>Here is the template YAML file that Rusty-CI will output for you to fill out with your own data.</p>
 <p>It explains itself for the most part, but I'll be covering it in more detail in a later chapter.</p>
-<pre><code class="language-yaml"># This section holds data specific to the master of the workers
+<pre><code class="language-yaml"># The required of Rusty-CI to build this CI
+requires: x.x.x
+
+# This section holds data specific to the master of the workers
 master:
   # The title subsection of the master holds the title of your web gui
   title: &quot;Rusty-CI&quot;
   title-url: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
@@ -174,7 +182,7 @@ master:
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
+  # Right now, github and gitlab are the only supported sites
   # If you're using an unsupported version control system, no worries,
   # rusty-ci just wont run on pull requests.
   version-control-system: github
@@ -187,6 +195,9 @@ merge-request-handler:
   # You dont want to run arbitrary code on your machine when anyone
   # makes a pull request. Rusty-CI will not test anyone's pull request
   # if their username is not in this list.
+  # Note that this has no effect on GitLab merge request building!
+  # Rusty-CI will only build merge requests from a branch
+  # thats already inside the repository.
   whitelist:
     - adam-mcdaniel
 
@@ -198,16 +209,11 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
-    # The absolute path to the working directory of this worker
-    # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+    master-ip: localhost
+    # The worker's files will be installed in this directory.
+    # This can also be an absolute path
+    working-dir: 'test-worker'
+
 
 # This section holds each scheduler.
 # Like the workers section, you may have as many schedulers as youd like.
@@ -255,7 +261,7 @@ builders:
   rusty-ci-test:
     # This is the shell script that the workers will run when this builder is executed
     # You can have as many instructions as youd like
-    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;... operators. Sadly, buildbot
+    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;, etc. operators. Sadly, buildbot
     # passes each item separated by whitespace as another parameter to function.
     script:
       - echo Hello world!
@@ -270,9 +276,8 @@ builders:
 <h3><a class="header" href="#install-python3" id="install-python3">Install Python3</a></h3>
 <p>You're gonna need <a href="https://www.python.org/">python3</a> to use Rusty-CI.</p>
 <p>To install on a *nix system, run the following commands.</p>
-<pre><code class="language-bash">apt install python3-dev
-apt install python3-pip
-apt install python3-venv
+<pre><code class="language-bash">apt update -y &amp;&amp; apt upgrade -y
+apt install -y build-essential python3-dev python3-pip python3-venv
 </code></pre>
 <p>You will need to be able to use <code>python3 -m pip</code> and <code>python3 -m venv</code>.</p>
 <h3><a class="header" href="#install-rust" id="install-rust">Install Rust</a></h3>
@@ -281,43 +286,44 @@ You if you're on a Unix like platform, can do so by running this shell command.<
 <pre><code class="language-bash">curl https://sh.rustup.rs -sSf | sh
 </code></pre>
 <p>If you're on Windows, go to the <a href="https://rust-lang.org">rust website</a>. You'll need to download <code>rust-init.exe</code> and follow its instructions.</p>
-<h3><a class="header" href="#install-rusty-ci-with-cargo-recommended" id="install-rusty-ci-with-cargo-recommended">Install Rusty-CI with Cargo (recommended)</a></h3>
+<h3><a class="header" href="#install-rusty-ci-from-cratesio-package-registry-recommended" id="install-rusty-ci-from-cratesio-package-registry-recommended">Install Rusty-CI from Crates.io Package Registry (recommended)</a></h3>
 <p>Now that you have Rust, you should be able to install Rusty-CI by running the following command.</p>
-<pre><code class="language-bash">cargo install rusty-ci -f
+<pre><code class="language-bash">cargo install -f rusty-ci
 </code></pre>
 <p>This will automatically add Rusty-CI to your path, so we should be all done!</p>
-<h3><a class="header" href="#build-from-source-more-tedious" id="build-from-source-more-tedious">Build from source (more tedious)</a></h3>
-<p>If you don't want to install with <code>cargo</code>, you can always build Rusty-CI from source. Here's how you would do so.</p>
+<h3><a class="header" href="#build-from-source-not-recommended" id="build-from-source-not-recommended">Build from source (not recommended)</a></h3>
+<p>If you don't want to install Rusty-CI from the package registry, you can always build Rusty-CI from source. Here's how you would do so.</p>
 <pre><code class="language-bash">git clone https://github.com/adam-mcdaniel/rusty-ci
 
 cd rusty-ci
 # Cargo will output the executable to ./target/release/rusty-ci
-cargo build --release
-
-mv ./target/release/rusty-ci .
+cargo install -f --path .
 </code></pre>
-<p>After running these commands, <code>rusty-ci</code> should be in your current working directory. To finish the installation, move the binary to any folder you'd like, and add that folder to your path.</p>
+<p>This will automatically add Rusty-CI to your path, so we should be all done!</p>
 <h3><a class="header" href="#problems-installing" id="problems-installing">Problems Installing?</a></h3>
 <p>If you run into some problems installing Rusty-CI, or if Rust can't find <code>cc</code>, you need to upgrade some of the packages on your system.</p>
 <p>Here's the commands I run to solve these errors.</p>
-<pre><code class="language-bash">sudo apt update
-sudo apt upgrade
+<pre><code class="language-bash">apt update -y &amp;&amp; apt upgrade -y
 sudo apt install build-essential
 </code></pre>
 <p>After running these commands, try running <code>cargo install rusty-ci</code> again.</p>
+<h3><a class="header" href="#cant-find-cargo-or-rusty-ci" id="cant-find-cargo-or-rusty-ci">Can't find Cargo or Rusty-CI?</a></h3>
+<p>Try running the following to add Cargo and your installed crates to your environment's path.</p>
+<pre><code class="language-bash">source $HOME/.cargo/env # Add `cargo` to your path
+</code></pre>
 <h3><a class="header" href="#still-having-problems" id="still-having-problems">Still having problems?</a></h3>
 <p>If you're still having some serious problems, <a href="https://github.com/adam-mcdaniel/rusty-ci/issues">post an issue</a> on the repository.</p>
 <h1><a class="header" href="#usage-1" id="usage-1">Usage</a></h1>
 <p>This chapter covers</p>
 <ul>
 <li>The features and usage of the <code>rusty-ci</code> executable</li>
-<li>How to properly use the input YAML file for <code>rusty-ci</code></li>
+<li>How to properly use the input YAML files for <code>rusty-ci</code></li>
 </ul>
 <h1><a class="header" href="#help-subcommand" id="help-subcommand">Help Subcommand</a></h1>
-<p>Rusty-CI has four subcommands, the first of which is the <code>help</code> subcommand.
+<p>Rusty-CI has several subcommands, the first of which is the <code>help</code> subcommand.
 To run the help subcommand, run <code>rusty-ci help</code> or alternatively <code>rusty-ci</code>.
 If you dont provide any arguments to <code>rusty-ci</code>, it will print the help message by default.</p>
-<pre><code>rusty_ci 0.6.3  
+<pre><code>rusty_ci x.x.x
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
 A continuous integration tool written in Rust
 
@@ -329,54 +335,31 @@ FLAGS:
     -V, --version    Prints version information
 
 SUBCOMMANDS:
-    build      Build rusty-ci from an input yaml file
+    build      Build rusty-ci from YAML file(s)
     help       Prints this message or the help of the given subcommand(s)
     install    Install buildbot
-    setup      Output a template YAML file for you to change to customize
-    start      Launch rusty-ci from an input yaml file
+    rebuild    Build and restart rusty-ci from input YAML file(s)
+    setup      Output a template YAML files for you to change to customize
+    start      Launch rusty-ci from an input YAML file
+    stop       Stop rusty-ci
+
+To start a project, run the `setup` subcommand.
+Be sure to follow the instructions after each subcommand very carefully!
 </code></pre>
 <p>This tells you more about the program, but it doesn't go into any depth.
 Let me explain each subcommand individually.</p>
-<h1><a class="header" href="#install-subcommand" id="install-subcommand">Install Subcommand</a></h1>
-<p>The <code>install</code> subcommand is responsible for installing Rusty-CI's dependencies. When you run the install subcommand, it will output a bash script that uses your existing <a href="https://www.python.org/">python3</a> installation to install <a href="https://buildbot.net/">buildbot</a> and its dependencies.</p>
-<p>You can also choose to output a makefile instead of a bash script, but it's not really necessary.</p>
-<h2><a class="header" href="#usage-2" id="usage-2">Usage</a></h2>
-<p>To output a Makefile for installation, run one of the following commands.</p>
-<pre><code class="language-bash"># Output an install makefile
-rusty-ci install --make
-
-# Identical
-rusty-ci install -m
-
-# Run the makefile to install
-make
-</code></pre>
-<p>To output a bash script for installation, run one of the following commands.</p>
-<pre><code class="language-bash"># Output an install shell script
-rusty-ci install
-
-# Identical
-rusty-ci install --bash
-
-# Make the shell script executable
-chmod +x ./install.sh
-# Run the install script
-./install.sh
-</code></pre>
-<p>If you do decide to either the bash or make buildsystems, be sure to read <code>rusty-ci</code>'s output and follow any instructions given.</p>
 <h1><a class="header" href="#setup-subcommand" id="setup-subcommand">Setup Subcommand</a></h1>
 <p>The setup command is very simple. All it does is write template YAML files for building your CI and controlling email notifications to any paths you'd like.</p>
-<pre><code>$ ./rusty-ci setup
-Where do you want the template master yaml file to be? out.yaml
-Are you sure? (y/n) y
-==[INFO]===&gt; Writing template yaml file to out.yaml...
-Where do you want the template mail yaml file to be? mail.yaml
-Are you sure? (y/n) y
-==[INFO]===&gt; Writing template yaml file to mail.yaml...
+<pre><code>$ ./rusty-ci setup template.yaml mail.yaml
+==[INFO]===&gt; Writing template master yaml file to template.yaml...
+==[INFO]===&gt; Writing template mail yaml file to mail.yaml...
 ==[INFO]===&gt; All done!
 ==[INFO]===&gt; Next, run the `install` subcommand command using either the `bash` or `make` flag
 </code></pre>
-<pre><code>$ more out.yaml
+<pre><code>$ more template.yaml
+
+# The required of Rusty-CI to build this CI
+requires: x.x.x
 
 # This section holds data specific to the master of the workers
 master:
@@ -385,14 +368,15 @@ master:
   title-url: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
-  # The number of seconds to wait before checking for updates on your
-repository
+  # The number of seconds to wait before checking for updates on your repository
   # Two minutes is a good poll interval
   poll-interval: 120
 
@@ -400,7 +384,6 @@ repository
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
 ...
 </code></pre>
 <pre><code>$ more mail.yaml
@@ -443,17 +426,59 @@ smtp-port: 587
 # The password used to login to the &quot;from&quot; email address account
 smtp-password: &quot;p@$$w0rd&quot;
 </code></pre>
+<p>When the setup command is finished, run the <code>install</code> subcommand.</p>
+<h1><a class="header" href="#install-subcommand" id="install-subcommand">Install Subcommand</a></h1>
+<p>The <code>install</code> subcommand is responsible for installing Rusty-CI's dependencies. When you run the install subcommand, it will output a bash script that uses your existing <a href="https://www.python.org/">python3</a> installation to install <a href="https://buildbot.net/">buildbot</a> and its dependencies.</p>
+<p>You can also choose to output a makefile instead of a bash script, but it's not really necessary.</p>
+<h2><a class="header" href="#usage-2" id="usage-2">Usage</a></h2>
+<p>To output a Makefile for installation, run one of the following commands.</p>
+<pre><code class="language-bash"># Output an install makefile
+rusty-ci install --make
+
+# Identical
+rusty-ci install -m
+
+# Run the makefile to install
+make
+</code></pre>
+<p>To output a bash script for installation, run one of the following commands.</p>
+<pre><code class="language-bash"># Output an install shell script
+rusty-ci install
+
+# Identical
+rusty-ci install --bash
+
+# Make the shell script executable
+chmod +x ./install.sh
+
+# Run the install script
+./install.sh
+</code></pre>
+<p>If you do decide to either the bash or make buildsystems, be sure to read <code>rusty-ci</code>'s output and follow any instructions given.</p>
+<pre><code>$ rusty-ci install
+
+==[INFO]===&gt; Installing dependencies for rusty-ci...
+Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) y
+==[INFO]===&gt; Writing install file to `./install.sh`
+==[INFO]===&gt; Successfully wrote install file
+==[WARN]===&gt; To install dependencies run `install.sh`
+==[WARN]===&gt; Before building from a YAML file, be sure to run `. venv/bin/activate`
+==[INFO]===&gt; Next, write your VCS's api token to 'auth.token', and then run the `build` subcommand
+Successfully finished install
+</code></pre>
+<p>Now, get an access token from your version control system, and write it to a file named <code>auth.token</code>. Next, run the move on to the <code>build</code> subcommand.</p>
 <h1><a class="header" href="#build-subcommand" id="build-subcommand">Build Subcommand</a></h1>
 <p>The <code>build</code> subcommand is responsible for constructing the buildbot master, the buildbot workers, and their respective configuration files from a YAML file.</p>
-<pre><code>rusty-ci-build 0.1.0
+<pre><code>rusty-ci-build x.x.x
 Adam McDaniel &lt;adam.mcdaniel17@gmail.com&gt;
-Build rusty-ci from an input yaml file
+Build rusty-ci from YAML file(s)
 
 USAGE:
-    rusty-ci build [OPTIONS] &lt;MASTER_YAML&gt;
+    rusty-ci build [FLAGS] [OPTIONS] &lt;MASTER_YAML&gt;
 
 FLAGS:
     -h, --help       Prints help information
+    -q, --quiet      Don't ask user anything
     -V, --version    Prints version information
 
 OPTIONS:
@@ -461,32 +486,52 @@ OPTIONS:
                               notifications
 
 ARGS:
-    &lt;MASTER_YAML&gt;    The path to the YAML file
+    &lt;MASTER_YAML&gt;    The path to the master YAML file
 </code></pre>
 <h2><a class="header" href="#usage-3" id="usage-3">Usage</a></h2>
-<p>Before you build your yaml file, you need to get an API or authentication token from your respective Version Control System, and write it to <code>auth.token</code>. This is so the output buildbot project has access to push commit statuses to your repository, and other things like that.</p>
-<p>To build from a yaml file, simply run this command.</p>
-<pre><code class="language-bash">rusty-ci build my_ci.yaml
+<!-- Before you build your YAML file, you need to get an API or authentication token from your respective Version Control System, and write it to `auth.token`. This is so the output buildbot project has access to push commit statuses to your repository, and other things like that. -->
+<p>First, confirm that you're inside your python virtual environment.</p>
+<pre><code class="language-bash">. venv/bin/activate
+</code></pre>
+<p>To build from a YAML file, simply run this command.</p>
+<pre><code class="language-bash">rusty-ci build template.yaml
 </code></pre>
 <p>If you want to build your CI with support for email notifications, run it like so.</p>
-<pre><code class="language-bash">rusty-ci build my_ci.yaml --mail my_mail.yaml
-# identical to the following
-rusty-ci build my_ci.yaml -m my_mail.yaml
+<pre><code class="language-bash">rusty-ci build template.yaml --mail mail.yaml
+# is identical to the following
+rusty-ci build template.yaml -m mail.yaml
 </code></pre>
 <p>Now, run the start subcommand.</p>
 <h1><a class="header" href="#start-subcommand" id="start-subcommand">Start Subcommand</a></h1>
-<h1><a class="header" href="#usage-4" id="usage-4">Usage</a></h1>
-<p>Before doing anything, confirm you're in your venv by running <code>. venv/bin/activate</code>!</p>
-<p>After running all the other rusty-ci subcommands, run <code>rusty-ci start YOUR_YAML_FILE.yaml</code></p>
+<h2><a class="header" href="#usage-4" id="usage-4">Usage</a></h2>
+<p>After running all the other rusty-ci subcommands, run</p>
+<pre><code class="language-bash">rusty-ci start template.yaml
+</code></pre>
 <p>This will kill the master and workers that were previously running, and start new instances of them.</p>
 <p>Now, to view your web gui, go to <a href="http://localhost:8010">http://localhost:8010</a>.</p>
+<p>If you want to RESTART your CI without killing it, use the following subcommand instead.</p>
+<pre><code class="language-bash">rusty-ci rebuild template.yaml mail.yaml
+</code></pre>
+<p>This will not start your CI if it hasn't already been started!</p>
 <h2><a class="header" href="#not-working" id="not-working">Not working?</a></h2>
-<p>If your web gui isn't loading, buildbot probably failed to start the master, or you put the wrong IP in the master section of your yaml file.</p>
+<p>Confirm you're in your python virtual environment!</p>
+<p>If your web gui isn't loading, buildbot probably failed to start the master, or you put the wrong IP in the master section of your YAML file.</p>
 <p>You probably just forgot to change the path to one of your worker's working directories, though.</p>
 <p>To see the log for the master, run <code>tail -f master/twistd.log</code>.</p>
 <p>If you see an exception, then the master ran into an error. This error will most likely be self explanatory and easy to debug, but in the case that it isn't, go to the <a href="https://buildbot.net">buildbot website</a>.</p>
+<h1><a class="header" href="#stop-subcommand" id="stop-subcommand">Stop Subcommand</a></h1>
+<h2><a class="header" href="#usage-5" id="usage-5">Usage</a></h2>
+<p>First, confirm you're in your python virtual environment.</p>
+<p>If you want to kill your CI and all of its processes, run the following.</p>
+<pre><code class="language-bash">rusty-ci stop
+</code></pre>
+<p>This will kill Rusty-CI and all other python(3) processes!</p>
 <h1><a class="header" href="#input-yaml" id="input-yaml">Input YAML</a></h1>
 <p>The input YAML file is pretty simple, but here's an explanation of each section individually.</p>
+<h2><a class="header" href="#the-requires-section" id="the-requires-section">The requires section</a></h2>
+<p>The requires section declares the minimum required Rusty-CI version to build this CI.</p>
+<pre><code class="language-yaml">requires: x.x.x
+</code></pre>
 <h2><a class="header" href="#the-master-section" id="the-master-section">The master section</a></h2>
 <p>The master section contains the data that controls the master, the bot that controls the workers.</p>
 <pre><code class="language-yaml"># This section holds data specific to the master of the workers
@@ -496,8 +541,10 @@ master:
   title-url: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
@@ -513,7 +560,7 @@ master:
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
+  # Right now, github and gitlab are the only supported sites
   # If you're using an unsupported version control system, no worries,
   # rusty-ci just wont run on pull requests.
   version-control-system: github
@@ -526,6 +573,9 @@ merge-request-handler:
   # You dont want to run arbitrary code on your machine when anyone
   # makes a pull request. Rusty-CI will not test anyone's pull request
   # if their username is not in this list.
+  # Note that this has no effect on GitLab merge request building!
+  # Rusty-CI will only build merge requests from a branch
+  # thats already inside the repository.
   whitelist:
     - adam-mcdaniel
 </code></pre>
@@ -538,16 +588,10 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
-    # The absolute path to the working directory of this worker
-    # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+    master-ip: localhost
+    # The worker's files will be installed in this directory.
+    # This can also be an absolute path
+    working-dir: 'test-worker'
 </code></pre>
 <h1><a class="header" href="#the-schedulers-section" id="the-schedulers-section">The schedulers section</a></h1>
 <p>This section lists each scheduler. Each scheduler has a regular expression that matches a branch to track, and a list of regular expressions that match file changes. A scheduler can also depend on another scheduler using the <code>depends</code> section INSTEAD of the <code>triggers</code>, <code>branch</code>, and <code>password</code> sections.</p>
@@ -600,7 +644,7 @@ builders:
   rusty-ci-test:
     # This is the shell script that the workers will run when this builder is executed
     # You can have as many instructions as youd like
-    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;... operators. Sadly, buildbot
+    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;, etc. operators. Sadly, buildbot
     # passes each item separated by whitespace as another parameter to function.
     script:
       - echo Hello world!
@@ -614,39 +658,40 @@ builders:
 <h1><a class="header" href="#tldr" id="tldr">TL;DR</a></h1>
 <p>If you were too bored to read the whole thing, just paste this stuff into your terminal (I'm assuming you're using a Debian based OS).</p>
 <pre><code class="language-bash"># Update &amp;&amp; Upgrade
-apt update &amp;&amp; apt upgrade
-apt install build-essential python3-dev python3-pip python3-venv
+apt update -y &amp;&amp; apt upgrade -y
+apt install -y build-essential python3-dev python3-pip python3-venv
 
 # Install rust
-curl https://sh.rustup.rs -sSf | sh
-source $HOME/.cargo/env
-cargo install -f rusty-ci
+curl https://sh.rustup.rs -sSf | sh # Run the rust installer
+source $HOME/.cargo/env             # Add `cargo` to your path
+cargo install -f rusty-ci           # Install the latest rusty-ci release
 
 
 # Write template yaml files
-rusty-ci setup
+rusty-ci setup template.yaml mail.yaml
 
-# Assuming that you told rusty-ci to output to template.yaml
-# Edit your file as needed
-nano template.yaml
-
-# Assuming that you told rusty-ci to output to mail.yaml
-# Edit your file as needed
-nano mail.yaml
-
+# Uncomment to modify your CI's settings to fit your project
+# nano template.yaml # Controls how your CI tests your code
+# nano mail.yaml     # Defines email update / notification settings
 
 # Install rusty-ci dependencies
-rusty-ci install
-chmod +x ./install.sh
-./install.sh
+rusty-ci install -q   # Build install.sh
+chmod +x ./install.sh # Make install.sh executable
+./install.sh          # Install!
 
 # Enter venv
-. venv/bin/activate
+. venv/bin/activate   # Enter the venv created by rusty-ci
+                      # to avoid poisoning your environment
 
 # Add an authentication token from your VCS (github)
-nano auth.token
+echo &quot;YOUR AUTH TOKEN HERE&quot; &gt; auth.token
 
-rusty-ci build template.yaml --mail mail.yaml
+# Construct your ci bot
+rusty-ci build -q template.yaml --mail mail.yaml
+
+# Spin up the workers!
+rusty-ci start template.yaml -q
+
 # All done!
 </code></pre>
 

@@ -1,0 +1,148 @@
+# Continuous integration for managing Rusty-CI repo
+requires: 0.9.0
+
+master:
+  title: "RustyCI Continuous Integration"
+  title-url: "https://github.com/adam-mcdaniel/rusty-ci"
+  # Local IP for linux container
+  webserver-ip: 10.35.66.130
+  webserver-port: 9000
+  repo: "https://github.com/adam-mcdaniel/rusty-ci"
+  poll-interval: 120
+
+
+merge-request-handler:
+  version-control-system: github
+  owner: adam-mcdaniel
+  repo-name: rusty-ci
+  whitelist:
+    - adam-mcdaniel
+
+
+workers:
+  # Worker responsible for updating Rust and Cargo
+  rustup-updater:
+    master-ip: localhost
+    working-dir: 'rustup-updater'
+
+  # First Worker responsible for testing Rusty-CI
+  test-worker-one:
+    master-ip: localhost
+    working-dir: 'test-worker-one'
+
+  # Second Worker responsible for testing Rusty-CI
+  test-worker-two:
+    master-ip: localhost
+    working-dir: 'test-worker-two'
+
+  # Third Worker responsible for testing Rusty-CI
+  test-worker-three:
+    master-ip: localhost
+    working-dir: 'test-worker-three'
+
+  # Fourth Worker responsible for testing Rusty-CI
+  test-worker-four:
+    master-ip: localhost
+    working-dir: 'test-worker-four'
+
+  # Worker responsible for updating Rusty-CI on this machine
+  release-worker:
+    master-ip: localhost
+    working-dir: 'release-worker'
+
+
+schedulers:
+  # Things to update when detecting ANY potential change
+  any-change:
+    builders:
+      update-rustup
+    # Trigger on any branch and any file change
+    branch: ".*"
+    triggers:
+      - ".*"
+    password: "ok to test"
+
+  source-change:
+    builders:
+      - merge-test
+      - cargo-test
+      - cargo-build
+      - cargo-clippy
+    branch: ".*"
+    triggers:
+      - "Cargo.toml"
+      - ".*\\.rs"
+    password: "ok to test"
+
+  # Detects a release change in master
+  release-change:
+    builders:
+      - merge-test
+      - cargo-test
+      - cargo-build
+      - cargo-clippy
+    branch: "master"
+    triggers:
+      - ".*"
+    password: "ok to test"
+
+  # If new release passes tests, update self
+  should-update:
+    builders:
+      - update-self
+    depends: "release-change"
+
+
+builders:
+  # This builder updates Rust and sets the default toolchain to stable
+  update-rustup:
+    script:
+      - rustup update
+      - rustup default stable
+    workers:
+      - rustup-updater
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  # This builder downloads and installs the updated Rusty-CI release
+  update-self:
+    script:
+      - chmod +x update.sh
+      - ./update.sh
+    workers:
+      - release-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  # Pulls master into the branch and tests the hypothetical merge
+  merge-test:
+    script:
+      - git pull origin master
+      - cargo clippy -- -Dwarnings
+      - cargo test
+      - cargo build
+    workers:
+      - test-worker-one
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  # Runs cargo test on Rusty-CI
+  cargo-test:
+    script:
+      - cargo test
+    workers:
+      - test-worker-two
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  # Runs cargo build on Rusty-CI
+  cargo-build:
+    script:
+      - cargo build
+    workers:
+      - test-worker-three
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+
+  # Runs the clippy linter on Rusty-CI
+  cargo-clippy:
+    script:
+      - cargo clippy -- -Dwarnings
+    workers:
+      - test-worker-four
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"

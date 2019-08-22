@@ -23,7 +23,6 @@ pub enum Step {
     },
 }
 
-
 /// Implementation of step struct
 impl Step {
     /// Construct a command line step
@@ -37,7 +36,12 @@ impl Step {
     /// Construct a git clone step
     pub fn git_clone<S: Display>(url: S) -> Self {
         Step::GitClone {
-            url: url.to_string().trim().trim_start_matches("\"").trim_end_matches("\"").to_string(),
+            url: url
+                .to_string()
+                .trim()
+                .trim_start_matches('\"')
+                .trim_end_matches('\"')
+                .to_string(),
             // branch: branch.to_string(),
         }
     }
@@ -45,12 +49,16 @@ impl Step {
     /// Construct a gitlab clone step
     pub fn gitlab_clone<S: Display>(url: S) -> Self {
         Step::GitLabClone {
-            url: url.to_string().trim().trim_start_matches("\"").trim_end_matches("\"").to_string(),
+            url: url
+                .to_string()
+                .trim()
+                .trim_start_matches('\"')
+                .trim_end_matches('\"')
+                .to_string(),
             // branch: branch.to_string(),
         }
     }
 }
-
 
 /// Convert Step to String / Allow string formatting for Step
 impl Display for Step {
@@ -84,4 +92,3 @@ impl Display for Step {
         }
     }
 }
-

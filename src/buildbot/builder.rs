@@ -6,8 +6,7 @@ use std::fmt::{Display, Error, Formatter};
 /// change this in the future, as needed.
 use std::process::exit;
 
-
-use crate::{unwrap, Step};
+use crate::{unquote, unwrap, Step};
 use rusty_yaml::Yaml;
 use std::path::PathBuf;
 
@@ -16,7 +15,6 @@ use std::path::PathBuf;
 /// All this constant is used for is prepending
 /// to the working dir for all paths.
 const START_DIR: &str = "./build";
-
 
 /// The Builder struct encapsulates all the operations involved in
 /// defining a builder in buildbot. A builder works by giving tasks
@@ -31,7 +29,6 @@ pub struct Builder {
     steps: Vec<Step>,
 }
 
-
 /// The implmentation of the Builder struct
 impl Builder {
     /// Create a new builder from a name, a list of worker names, and a list of steps
@@ -39,7 +36,7 @@ impl Builder {
         Self {
             name: name.to_string(),
             workernames: workernames.iter().map(|s| s.to_string()).collect(),
-            steps: steps,
+            steps,
         }
     }
 
@@ -48,7 +45,6 @@ impl Builder {
         self.name.clone()
     }
 }
-
 
 /// This impl converts a Builder into the Python code for buildbot that will
 /// give us the behaviour we want.
@@ -107,7 +103,6 @@ impl From<Yaml> for Builder {
         // We want to start in the builders starting directory
         workdir.push(START_DIR);
 
-
         // Get the url for the repo from the yaml section
         let url = unwrap(&yaml, "repo");
 
@@ -125,7 +120,7 @@ impl From<Yaml> for Builder {
             {
                 ["cd", path] => workdir.push(path),
                 _ => steps.push(Step::command(
-                    instruction.to_string(),
+                    unquote(&instruction.to_string()),
                     match workdir.to_str() {
                         Some(s) => Some(s.to_string()),
                         None => None,

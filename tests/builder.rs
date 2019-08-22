@@ -4,10 +4,10 @@ use rusty_yaml::Yaml;
 extern crate rusty_ci;
 use rusty_ci::Builder;
 
-
 #[test]
 fn builder_from_yaml() {
-    let yaml = Yaml::from(r#"xasm-build:
+    let yaml = Yaml::from(
+        r#"xasm-build:
   workers:
     - xasm-worker
     
@@ -16,7 +16,10 @@ fn builder_from_yaml() {
     - echo XASM build done!
 
   repo: "https://github.com/adam-mcdaniel/xasm"
-"#).get_section("xasm-build").unwrap();
+"#,
+    )
+    .get_section("xasm-build")
+    .unwrap();
 
     let builder = Builder::from(yaml);
     let output = builder.to_string();

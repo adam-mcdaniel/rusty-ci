@@ -1,8 +1,6 @@
 #![macro_use]
 use std::io::{stdin, stdout, Write};
 
-
-
 /// This function prompts the user with a message and returns the user's input.
 /// It also pops off trailing carriage returns.
 pub fn input<S: ToString>(prompt: S) -> String {
@@ -10,7 +8,9 @@ pub fn input<S: ToString>(prompt: S) -> String {
     print!("{}", prompt.to_string());
     let _ = stdout().flush();
 
-    stdin().read_line(&mut buf).expect("Could not get user input");
+    stdin()
+        .read_line(&mut buf)
+        .expect("Could not get user input");
 
     while let Some('\n') = buf.chars().next_back() {
         buf.pop();
@@ -20,7 +20,7 @@ pub fn input<S: ToString>(prompt: S) -> String {
         buf.pop();
     }
 
-    return buf;
+    buf
 }
 
 /// Used to prompt the user with a yes or no question.
@@ -30,8 +30,6 @@ pub fn yes_or_no<S: ToString>(prompt: S) -> bool {
 
     response.to_lowercase().trim() == "y"
 }
-
-
 
 /// This prints a format string with a specific color.
 /// The color must be one of the following.
@@ -43,11 +41,11 @@ pub fn yes_or_no<S: ToString>(prompt: S) -> bool {
 /// - Magenta
 /// - Yellow
 /// - White
-/// THIS MUST BE CALLED AGAIN WITH `White` TO RESET THE COLOR AGAIN.
-/// The color can be reset like so: `color_print!(White, "");`
 #[macro_export]
 macro_rules! color_print {
     ($color:ident, $fmt:expr $(,$e:expr)*) => {{
+        // I know this implementation is ugly as hell,
+        // the thing is: this code doesnt really matter fam
         use std::io::Write;
         use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
@@ -56,16 +54,19 @@ macro_rules! color_print {
         match buffer.set_color(ColorSpec::new().set_fg(Some(Color::$color))) {_=>{}};
         match write!(&mut buffer, $fmt $(,$e)*) {_=>{}};
         match bufwtr.print(&buffer) {_=>{}};
+
+        // Reset color
+        let mut reset_buf = BufferWriter::stderr(ColorChoice::Always).buffer();
+        match reset_buf.reset() {_=>{}};
+        match bufwtr.print(&reset_buf) {_=>{}};
     }};
 }
-
 
 /// Write green text to the console, and then reset color
 #[macro_export]
 macro_rules! green {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Green, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 
@@ -74,7 +75,6 @@ macro_rules! green {
 macro_rules! red {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Red, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 
@@ -83,7 +83,6 @@ macro_rules! red {
 macro_rules! blue {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Blue, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
 
@@ -92,21 +91,20 @@ macro_rules! blue {
 macro_rules! yellow {
     ($fmt:expr $(,$e:expr)*) => {
         color_print!(Yellow, $fmt $(,$e)*);
-        color_print!(White, "");
     };
 }
-
 
 /// Flush stdout
 #[macro_export]
 macro_rules! flush {
     () => {{
-        use std::io::Write;
         use std::io::stdout;
-        match stdout().flush() {_=>{}};
-    }}
+        use std::io::Write;
+        match stdout().flush() {
+            _ => {}
+        };
+    }};
 }
-
 
 /// Prints info message colored green
 #[macro_export]
@@ -144,7 +142,6 @@ macro_rules! error {
     };
 }
 
-
 /// Prints warning message colored yellow
 #[macro_export]
 macro_rules! warn {
@@ -156,4 +153,3 @@ macro_rules! warn {
         print!("]===> {}\n", user);
     };
 }
-

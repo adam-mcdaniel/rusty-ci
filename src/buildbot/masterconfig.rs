@@ -1,9 +1,10 @@
-use crate::{unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker};
+use crate::{
+    unmatched_quotes, unwrap, Builder, MailNotifier, MergeRequestHandler, Scheduler, Worker,
+};
 
 use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
-
 
 /// This struct represents the configuration file for the master.
 /// This file contains the Python code for the builders and the schedulers.
@@ -17,6 +18,7 @@ pub struct MasterConfig {
     title_url: String,
     git_repo: String,
     webserver_ip: String,
+    webserver_port: String,
     poll_interval: String,
     mail_notifier: Option<MailNotifier>,
     merge_request_handler: MergeRequestHandler,
@@ -25,37 +27,14 @@ pub struct MasterConfig {
     workers: Vec<Worker>,
 }
 
-
 /// This is impl the for MasterConfig struct.
 impl MasterConfig {
-    fn new(
-        title: String,
-        title_url: String,
-        git_repo: String,
-        webserver_ip: String,
-        poll_interval: String,
-        mail_notifier: Option<MailNotifier>,
-        merge_request_handler: MergeRequestHandler,
-        builders: Vec<Builder>,
-        schedulers: Vec<Scheduler>,
-        workers: Vec<Worker>,
-    ) -> Self {
-        Self {
-            title,
-            title_url,
-            git_repo,
-            webserver_ip,
-            poll_interval,
-            mail_notifier,
-            merge_request_handler,
-            builders,
-            schedulers,
-            workers,
-        }
-    }
-
     pub fn set_mail_notifier(&mut self, mail_notifier: MailNotifier) {
         self.mail_notifier = Some(mail_notifier);
+    }
+
+    pub fn get_workers(&self) -> Vec<Worker> {
+        self.workers.clone()
     }
 }
 
@@ -63,6 +42,12 @@ impl MasterConfig {
 /// This is intended to take the entire input yaml file.
 impl From<Yaml> for MasterConfig {
     fn from(yaml: Yaml) -> Self {
+        // Verify that the yaml file doesnt have unmatched quotes!
+        if let Some(line) = unmatched_quotes(&yaml) {
+            error!("There was a problem creating the master configuration file: unmatched quotes in the line '{}'", line.trim());
+            exit(1);
+        }
+
         // Verify that the yaml section contains all the necessary subsections
         for section in [
             "master",
@@ -82,13 +67,13 @@ impl From<Yaml> for MasterConfig {
         // Get the master susbsection, the subsection holding the web gui and git information
         let master = yaml.get_section("master").unwrap();
 
-
         // Verify the master subsection contains all the proper data
         for section in [
             "title",
             "title-url",
             "repo",
             "webserver-ip",
+            "webserver-port",
             "poll-interval",
         ]
         .iter()
@@ -101,7 +86,6 @@ impl From<Yaml> for MasterConfig {
 
         let merge_request_handler =
             MergeRequestHandler::from(yaml.get_section("merge-request-handler").unwrap());
-
 
         // Get schedulers, builders, and workers from the yaml file.
         // Because we previously verified that each subsection exists,
@@ -125,27 +109,29 @@ impl From<Yaml> for MasterConfig {
             workers.push(Worker::from(worker));
         }
 
-
         // Get all the data from the master subsection
         let title = unwrap(&master, "title");
         let title_url = unwrap(&master, "title-url");
         let git_repo = unwrap(&master, "repo");
         let webserver_ip = unwrap(&master, "webserver-ip");
+        let webserver_port = unwrap(&master, "webserver-port");
         let poll_interval = unwrap(&master, "poll-interval");
 
         // Return the whole master configuration file
-        Self::new(
+
+        Self {
             title,
             title_url,
             git_repo,
             webserver_ip,
+            webserver_port,
             poll_interval,
-            None,
+            mail_notifier: None,
             merge_request_handler,
             builders,
             schedulers,
             workers,
-        )
+        }
     }
 }
 
@@ -180,7 +166,7 @@ c['workers'] = [{worker_info}]
 c['protocols'] = {{'pb': {{'port': 9989}}}}
 
 
-c['www'] = dict(port=8010,
+c['www'] = dict(port={webserver_port},
                 plugins=dict(waterfall_view={{}}, console_view={{}}, grid_view={{}}))
 
 c['change_source'] = []
@@ -205,7 +191,7 @@ c['builders'] = []
 c['title'] = "{title}"
 c['titleURL'] = "{title_url}"
 
-c['buildbotURL'] = "http://{webserver_ip}:8010/"
+c['buildbotURL'] = "http://{webserver_ip}:{webserver_port}/"
 
 c['db'] = {{
     # This specifies what database buildbot uses to store its state.  You can leave
@@ -216,6 +202,7 @@ c['db'] = {{
             title = self.title,
             title_url = self.title_url,
             webserver_ip = self.webserver_ip,
+            webserver_port = self.webserver_port,
             git_repo = self.git_repo,
             merge_request_handler = self.merge_request_handler,
             mail_notifier = match &self.mail_notifier {

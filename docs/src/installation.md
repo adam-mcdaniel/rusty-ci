@@ -7,9 +7,8 @@ You're gonna need [python3](https://www.python.org/) to use Rusty-CI.
 To install on a \*nix system, run the following commands.
 
 ```bash
-apt install python3-dev
-apt install python3-pip
-apt install python3-venv
+apt update -y && apt upgrade -y
+apt install -y build-essential python3-dev python3-pip python3-venv
 ```
 
 You will need to be able to use `python3 -m pip` and `python3 -m venv`.
@@ -25,31 +24,29 @@ curl https://sh.rustup.rs -sSf | sh
 
 If you're on Windows, go to the [rust website](https://rust-lang.org). You'll need to download `rust-init.exe` and follow its instructions.
 
-### Install Rusty-CI with Cargo (recommended)
+### Install Rusty-CI from Crates.io Package Registry (recommended)
 
 Now that you have Rust, you should be able to install Rusty-CI by running the following command.
 
 ```bash
-cargo install rusty-ci -f
+cargo install -f rusty-ci
 ```
 
 This will automatically add Rusty-CI to your path, so we should be all done!
 
-### Build from source (more tedious)
+### Build from source (not recommended)
 
-If you don't want to install with `cargo`, you can always build Rusty-CI from source. Here's how you would do so.
+If you don't want to install Rusty-CI from the package registry, you can always build Rusty-CI from source. Here's how you would do so.
 
 ```bash
 git clone https://github.com/adam-mcdaniel/rusty-ci
 
 cd rusty-ci
 # Cargo will output the executable to ./target/release/rusty-ci
-cargo build --release
-
-mv ./target/release/rusty-ci .
+cargo install -f --path .
 ```
 
-After running these commands, `rusty-ci` should be in your current working directory. To finish the installation, move the binary to any folder you'd like, and add that folder to your path.
+This will automatically add Rusty-CI to your path, so we should be all done!
 
 ### Problems Installing?
 
@@ -58,12 +55,19 @@ If you run into some problems installing Rusty-CI, or if Rust can't find `cc`, y
 Here's the commands I run to solve these errors.
 
 ```bash
-sudo apt update
-sudo apt upgrade
+apt update -y && apt upgrade -y
 sudo apt install build-essential
 ```
 
 After running these commands, try running `cargo install rusty-ci` again.
+
+### Can't find Cargo or Rusty-CI?
+
+Try running the following to add Cargo and your installed crates to your environment's path.
+
+```bash
+source $HOME/.cargo/env # Add `cargo` to your path
+```
 
 ### Still having problems?
 

@@ -4,7 +4,6 @@ use rusty_yaml::Yaml;
 use std::fmt::{Display, Error, Formatter};
 use std::process::exit;
 
-
 /// A version control system is a system that allows programmers to manage
 /// changes on a product in development. A few examples include, but are not limited to,
 /// `GitHub`, `GitLab`, `Mercurial`.
@@ -54,7 +53,6 @@ pub struct MergeRequestHandler {
     repository_type: String,
 }
 
-
 impl MergeRequestHandler {
     pub fn new(
         vcs: VersionControlSystem,
@@ -62,7 +60,6 @@ impl MergeRequestHandler {
         repo_name: String,
         whitelist: Vec<String>,
     ) -> Self {
-
         let auth_token = match File::read(AUTH_TOKEN_PATH) {
             Ok(s) => s.trim().to_string(),
             Err(e) => {
@@ -74,7 +71,7 @@ impl MergeRequestHandler {
             }
         };
 
-        if auth_token.len() == 0 {
+        if auth_token.is_empty() {
             error!(
                 "You didn't write your VCS's authentication token to '{}'!",
                 AUTH_TOKEN_PATH
@@ -98,7 +95,7 @@ impl MergeRequestHandler {
 impl Display for MergeRequestHandler {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         match &self.vcs {
-            VersionControlSystem::GitHub => write!(
+            VersionControlSystem::GitHub => writeln!(
                 f,
                 "whitelist_authors = {:?}
 
@@ -174,7 +171,7 @@ def is_whitelisted(props, password):
                 owner = self.owner.trim_matches('"'),
                 repository_type = self.repository_type.trim_matches('"'),
             ),
-            VersionControlSystem::GitLab => write!(
+            VersionControlSystem::GitLab => writeln!(
                 f,
                 "
 def is_whitelisted(props, password): return True
@@ -190,7 +187,7 @@ c['services'].append(gitlab_status_service)
 ",
                 token = self.auth_token.trim_matches('"'),
             ),
-            VersionControlSystem::Bitbucket =>  write!(
+            VersionControlSystem::Bitbucket =>  writeln!(
                 f,
                 r#"whitelist_authors = {:?}
 
@@ -219,7 +216,6 @@ def is_whitelisted(props, password): return True
         }
     }
 }
-
 
 impl From<Yaml> for MergeRequestHandler {
     fn from(yaml: Yaml) -> Self {
@@ -265,7 +261,6 @@ impl From<Yaml> for MergeRequestHandler {
                     .to_string(),
             );
         }
-
 
         // Return the constructed Self
         Self::new(vcs, owner, repo_name, whitelist)

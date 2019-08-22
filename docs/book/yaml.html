@@ -32,11 +32,11 @@
 
         
     </head>
-    <body class="navy">
+    <body class="light">
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "";
-            var default_theme = "navy";
+            var default_theme = "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="yaml.html" class="active"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="usage/install.html"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="usage/start.html"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="yaml.html" class="active"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -97,10 +97,10 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
                             
@@ -147,6 +147,10 @@
                     <main>
                         <h1><a class="header" href="#input-yaml" id="input-yaml">Input YAML</a></h1>
 <p>The input YAML file is pretty simple, but here's an explanation of each section individually.</p>
+<h2><a class="header" href="#the-requires-section" id="the-requires-section">The requires section</a></h2>
+<p>The requires section declares the minimum required Rusty-CI version to build this CI.</p>
+<pre><code class="language-yaml">requires: x.x.x
+</code></pre>
 <h2><a class="header" href="#the-master-section" id="the-master-section">The master section</a></h2>
 <p>The master section contains the data that controls the master, the bot that controls the workers.</p>
 <pre><code class="language-yaml"># This section holds data specific to the master of the workers
@@ -156,8 +160,10 @@ master:
   title-url: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: &quot;https://github.com/adam-mcdaniel/rusty-ci&quot;
@@ -173,7 +179,7 @@ master:
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
+  # Right now, github and gitlab are the only supported sites
   # If you're using an unsupported version control system, no worries,
   # rusty-ci just wont run on pull requests.
   version-control-system: github
@@ -186,6 +192,9 @@ merge-request-handler:
   # You dont want to run arbitrary code on your machine when anyone
   # makes a pull request. Rusty-CI will not test anyone's pull request
   # if their username is not in this list.
+  # Note that this has no effect on GitLab merge request building!
+  # Rusty-CI will only build merge requests from a branch
+  # thats already inside the repository.
   whitelist:
     - adam-mcdaniel
 </code></pre>
@@ -198,16 +207,10 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
-    # The absolute path to the working directory of this worker
-    # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+    master-ip: localhost
+    # The worker's files will be installed in this directory.
+    # This can also be an absolute path
+    working-dir: 'test-worker'
 </code></pre>
 <h1><a class="header" href="#the-schedulers-section" id="the-schedulers-section">The schedulers section</a></h1>
 <p>This section lists each scheduler. Each scheduler has a regular expression that matches a branch to track, and a list of regular expressions that match file changes. A scheduler can also depend on another scheduler using the <code>depends</code> section INSTEAD of the <code>triggers</code>, <code>branch</code>, and <code>password</code> sections.</p>
@@ -260,7 +263,7 @@ builders:
   rusty-ci-test:
     # This is the shell script that the workers will run when this builder is executed
     # You can have as many instructions as youd like
-    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;... operators. Sadly, buildbot
+    # Mind you, you cannot use the |, &gt;, &lt;, &gt;&gt;, &lt;&lt;, etc. operators. Sadly, buildbot
     # passes each item separated by whitespace as another parameter to function.
     script:
       - echo Hello world!
@@ -277,7 +280,7 @@ builders:
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="usage/start.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="usage/stop.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
@@ -295,7 +298,7 @@ builders:
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="usage/start.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="usage/stop.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 

@@ -32,11 +32,11 @@
 
         
     </head>
-    <body class="navy">
+    <body class="light">
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = "navy";
+            var default_theme = "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.2.</strong> Install Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.3.</strong> Setup Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html" class="active"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../usage/usage.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../usage/help.html"><strong aria-hidden="true">3.1.</strong> Help Subcommand</a></li><li><a href="../usage/setup.html"><strong aria-hidden="true">3.2.</strong> Setup Subcommand</a></li><li><a href="../usage/install.html"><strong aria-hidden="true">3.3.</strong> Install Subcommand</a></li><li><a href="../usage/build.html"><strong aria-hidden="true">3.4.</strong> Build Subcommand</a></li><li><a href="../usage/start.html" class="active"><strong aria-hidden="true">3.5.</strong> Start Subcommand</a></li><li><a href="../usage/stop.html"><strong aria-hidden="true">3.6.</strong> Stop Subcommand</a></li></ol></li><li><a href="../yaml.html"><strong aria-hidden="true">4.</strong> Input YAML</a></li><li><a href="../tldr.html"><strong aria-hidden="true">5.</strong> Too Long, Didn't Read</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -97,10 +97,10 @@
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
                             
@@ -146,13 +146,19 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#start-subcommand" id="start-subcommand">Start Subcommand</a></h1>
-<h1><a class="header" href="#usage" id="usage">Usage</a></h1>
-<p>Before doing anything, confirm you're in your venv by running <code>. venv/bin/activate</code>!</p>
-<p>After running all the other rusty-ci subcommands, run <code>rusty-ci start YOUR_YAML_FILE.yaml</code></p>
+<h2><a class="header" href="#usage" id="usage">Usage</a></h2>
+<p>After running all the other rusty-ci subcommands, run</p>
+<pre><code class="language-bash">rusty-ci start template.yaml
+</code></pre>
 <p>This will kill the master and workers that were previously running, and start new instances of them.</p>
 <p>Now, to view your web gui, go to <a href="http://localhost:8010">http://localhost:8010</a>.</p>
+<p>If you want to RESTART your CI without killing it, use the following subcommand instead.</p>
+<pre><code class="language-bash">rusty-ci rebuild template.yaml mail.yaml
+</code></pre>
+<p>This will not start your CI if it hasn't already been started!</p>
 <h2><a class="header" href="#not-working" id="not-working">Not working?</a></h2>
-<p>If your web gui isn't loading, buildbot probably failed to start the master, or you put the wrong IP in the master section of your yaml file.</p>
+<p>Confirm you're in your python virtual environment!</p>
+<p>If your web gui isn't loading, buildbot probably failed to start the master, or you put the wrong IP in the master section of your YAML file.</p>
 <p>You probably just forgot to change the path to one of your worker's working directories, though.</p>
 <p>To see the log for the master, run <code>tail -f master/twistd.log</code>.</p>
 <p>If you see an exception, then the master ran into an error. This error will most likely be self explanatory and easy to debug, but in the case that it isn't, go to the <a href="https://buildbot.net">buildbot website</a>.</p>
@@ -168,7 +174,7 @@
                         
 
                         
-                            <a rel="next" href="../yaml.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../usage/stop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -186,7 +192,7 @@
                 
 
                 
-                    <a href="../yaml.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="../usage/stop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

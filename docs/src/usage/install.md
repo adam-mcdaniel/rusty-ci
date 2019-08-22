@@ -30,8 +30,25 @@ rusty-ci install --bash
 
 # Make the shell script executable
 chmod +x ./install.sh
+
 # Run the install script
 ./install.sh
 ```
 
 If you do decide to either the bash or make buildsystems, be sure to read `rusty-ci`'s output and follow any instructions given.
+
+
+```
+$ rusty-ci install
+
+==[INFO]===> Installing dependencies for rusty-ci...
+Do you already have python3-dev, python3-pip, and python3-venv installed? (y/n) y
+==[INFO]===> Writing install file to `./install.sh`
+==[INFO]===> Successfully wrote install file
+==[WARN]===> To install dependencies run `install.sh`
+==[WARN]===> Before building from a YAML file, be sure to run `. venv/bin/activate`
+==[INFO]===> Next, write your VCS's api token to 'auth.token', and then run the `build` subcommand
+Successfully finished install
+```
+
+Now, get an access token from your version control system, and write it to a file named `auth.token`. Next, run the move on to the `build` subcommand.

@@ -2,7 +2,6 @@
 
 A tool to generate [buildbot](https://buildbot.net/) projects from a YAML file
 
-
 ## Description
 
 Rusty-CI is meant to be a simple continuous integration tool that takes very little time to set up. Within 10 minutes of reading this README, you could have Rusty-CI testing your repository!
@@ -20,7 +19,83 @@ It works by constructing a webserver and several workers from one or two YAML fi
 
 ## Documentation
 
-You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/), and the code documentation [here](https://docs.rs/rusty-ci).
+You can find the usage documentation [here](https://adam-mcdaniel.github.io/rusty-ci/book/introduction.html), and the code documentation [here](https://docs.rs/rusty-ci).
+
+
+```
+$ rusty-ci
+
+rusty_ci x.x.x
+Adam McDaniel <adam.mcdaniel17@gmail.com>
+A continuous integration tool written in Rust
+
+USAGE:
+    rusty-ci [SUBCOMMAND]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    build      Build rusty-ci from YAML file(s)
+    help       Prints this message or the help of the given subcommand(s)
+    install    Install buildbot
+    rebuild    Build and restart rusty-ci from input YAML file(s)
+    setup      Output a template YAML files for you to change to customize
+    start      Launch rusty-ci from an input YAML file
+    stop       Stop rusty-ci
+
+To start a project, run the `setup` subcommand.
+Be sure to follow the instructions after each subcommand very carefully!
+```
+
+## Example
+
+This example Rusty-CI input YAML tests all branches and pull requests that begin with `feature/` and that contain a change in files ending with `.rs`, `.yaml`, or `.sh`. It will only test pull requests from `adam-mcdaniel` or pull requests authorized by `adam-mcdaniel` commenting the phrase `ok to test`. These pass phrases can be used on a per test basis; so different phrases can authorize different tests.
+
+```yaml
+requires: 0.9.0
+
+master:
+  title: "Rusty-CI"
+  title-url: "https://github.com/adam-mcdaniel/rusty-ci"
+  webserver-ip: localhost
+  webserver-port: 8010
+  repo: "https://github.com/adam-mcdaniel/rusty-ci"
+  poll-interval: 120
+
+merge-request-handler:
+  version-control-system: github
+  owner: adam-mcdaniel
+  repo-name: rusty-ci
+  whitelist:
+    - adam-mcdaniel
+
+workers:
+  test-worker:
+    master-ip: localhost
+    working-dir: 'test-worker'
+
+schedulers:
+  ci-change:
+    builders:
+      - rusty-ci-test
+    branch: "feature/.*"
+    triggers:
+      - '.*\.rs'
+      - '.*\.yaml'
+      - '.*\.sh'
+    password: "ok to test"
+
+builders:
+  rusty-ci-test:
+    script:
+      - echo Hello world!
+      - echo Im an instruction in a script!
+    workers:
+      - test-worker
+    repo: "https://github.com/adam-mcdaniel/rusty-ci"
+```
 
 ## Installation
 
@@ -97,6 +172,12 @@ rusty-ci start template.yaml -q
 
 # All done!
 ```
+
+## Issues
+
+- Right now, `cargo tarpaulin --exclude-files src/bin.rs` shows that we only test 27.53% of our code. There needs to be more tests, and more cases for those tests.
+- The docs, as far as I remember, are not up to date with the current version of Rusty-CI. I've tried to make them generally version agnostic, but of course several features and bugs have been added and fixed since the last time I documented Rusty-CI.
+- There needs to be more stability and more security. I think these aspects can only be improved by using Rusty-CI and noticing its quirks.
 
 
 ## License

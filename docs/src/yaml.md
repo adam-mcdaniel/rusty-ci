@@ -2,6 +2,15 @@
 
 The input YAML file is pretty simple, but here's an explanation of each section individually.
 
+
+## The requires section
+
+The requires section declares the minimum required Rusty-CI version to build this CI.
+
+```yaml
+requires: x.x.x
+```
+
 ## The master section
 
 The master section contains the data that controls the master, the bot that controls the workers.
@@ -14,8 +23,10 @@ master:
   title-url: "https://github.com/adam-mcdaniel/rusty-ci"
 
   # This is the ip of the web-gui
-  # The port is 8010
   webserver-ip: localhost
+
+  # This is the port of the web-gui
+  webserver-port: 8010
 
   # The address of your repository
   repo: "https://github.com/adam-mcdaniel/rusty-ci"
@@ -36,7 +47,7 @@ Right now, this is only supported for `github.com`.
 # pull requests / merge requests on your repository
 merge-request-handler:
   # This is basically the website you're using for version control
-  # Right now, github is the only supported site
+  # Right now, github and gitlab are the only supported sites
   # If you're using an unsupported version control system, no worries,
   # rusty-ci just wont run on pull requests.
   version-control-system: github
@@ -49,6 +60,9 @@ merge-request-handler:
   # You dont want to run arbitrary code on your machine when anyone
   # makes a pull request. Rusty-CI will not test anyone's pull request
   # if their username is not in this list.
+  # Note that this has no effect on GitLab merge request building!
+  # Rusty-CI will only build merge requests from a branch
+  # thats already inside the repository.
   whitelist:
     - adam-mcdaniel
 ```
@@ -65,16 +79,10 @@ workers:
   # The name of this worker is `test-worker`
   test-worker:
     # The ip of the master
-    masterhost: localhost
-    # The port of the master
-    # This is not the same as the web gui port!
-    masterport: 9989
-    # The absolute path to the working directory of this worker
-    # The worker files will be installed in this directory
-    basedir: '/home/adam/Desktop/rusty-ci/testing/test-worker'
-    # The password for this worker
-    # This is used by the master to give the worker a job
-    password: pass
+    master-ip: localhost
+    # The worker's files will be installed in this directory.
+    # This can also be an absolute path
+    working-dir: 'test-worker'
 ```
 # The schedulers section
 
@@ -136,7 +144,7 @@ builders:
   rusty-ci-test:
     # This is the shell script that the workers will run when this builder is executed
     # You can have as many instructions as youd like
-    # Mind you, you cannot use the |, >, <, >>, <<... operators. Sadly, buildbot
+    # Mind you, you cannot use the |, >, <, >>, <<, etc. operators. Sadly, buildbot
     # passes each item separated by whitespace as another parameter to function.
     script:
       - echo Hello world!

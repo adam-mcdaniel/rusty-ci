@@ -1,14 +1,10 @@
-#[macro_use]
 extern crate rusty_ci;
 use rusty_ci::Step;
 
 #[test]
 fn command_step() {
     assert_eq!(
-        Step::command(
-            "cmake ..",
-            Some("build")
-        ).to_string(),
+        Step::command("cmake ..", Some("build")).to_string(),
         format!(
             "steps.ShellCommand(command={:?}, workdir=\"{}\")",
             vec!["cmake", ".."],
@@ -16,7 +12,6 @@ fn command_step() {
         )
     );
 }
-
 
 #[test]
 fn git_clone_step() {
@@ -29,7 +24,6 @@ fn git_clone_step() {
         )
     );
 }
-
 
 #[test]
 fn git_lab_clone_step() {
