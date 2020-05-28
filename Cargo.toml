@@ -57,7 +57,7 @@ path = "tests/string.rs"
 
 
 [build-dependencies]
-os_info = "1.1.1"
+os_info = { version = "2.0.6", default-features = false }
 
 [dependencies]
 rand = "0.7.0"

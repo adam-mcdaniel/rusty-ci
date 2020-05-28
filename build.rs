@@ -16,6 +16,8 @@ const SUPPORTED: &[Type] = &[
     Type::Ubuntu,
     // We probably support Debian!
     Type::Debian,
+    // Ubuntu-based, so probably is supported.
+    Type::Pop,
     // We support linux?
     Type::Linux,
 ];
