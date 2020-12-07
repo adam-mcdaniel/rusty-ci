@@ -10,6 +10,7 @@ use std::process::exit;
 pub enum VersionControlSystem {
     GitHub,
     GitLab,
+    Bitbucket,
     Unsupported,
 }
 
@@ -169,7 +170,6 @@ def is_whitelisted(props, password):
                 name = self.repo_name.trim_matches('"'),
                 owner = self.owner.trim_matches('"'),
                 repository_type = self.repository_type.trim_matches('"'),
-
             ),
             VersionControlSystem::GitLab => writeln!(
                 f,
@@ -187,7 +187,29 @@ c['services'].append(gitlab_status_service)
 ",
                 token = self.auth_token.trim_matches('"'),
             ),
-            VersionControlSystem::Unsupported => writeln!(
+            VersionControlSystem::Bitbucket =>  writeln!(
+                f,
+                r#"whitelist_authors = {:?}
+
+try:
+    c['change_source'].append(changes.BitbucketPullrequestPoller(
+        owner=\"{owner}\",
+        slug=\"{name}\",
+        # right now just poll every 60 seconds
+        # this will need to change in the future, but this is just for testing.
+        pollInterval=120))
+except Exception as e:
+    print(f\"Could not create merge request handler: {{str(e)}}\")
+
+
+
+def is_whitelisted(props, password): return True
+"#,
+                self.whitelist,
+                name = self.repo_name.trim_matches('"'),
+                owner = self.owner.trim_matches('"'),
+            ),
+            VersionControlSystem::Unsupported => write!(
                 f,
                 "print('We currently dont support building merge requests on your VCS.')"
             ),
@@ -209,6 +231,7 @@ impl From<Yaml> for MergeRequestHandler {
         let vcs: VersionControlSystem = match unwrap(&yaml, "version-control-system").as_str() {
             "github" => VersionControlSystem::GitHub,
             "gitlab" => VersionControlSystem::GitLab,
+            "bitbucket" => VersionControlSystem::Bitbucket,
             _ => {
                 warn!(
                     "We do not support building merge requests on your version control system yet!"
